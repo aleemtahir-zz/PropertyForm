@@ -2,7 +2,7 @@
 @section('content')
 
 <div id="c-forms-container" class="cognito c-safari c-lrg">
-    <form method="post" action="{{url('development')}}" enctype="multipart/form-data">
+    <form id="dev_form" method="post" action="{{url('development')}}" enctype="multipart/form-data">
         {{ csrf_field() }}
         <div class="c-forms-form" tabindex="0">
             <div class="c-editor" style="display:none;">
@@ -45,9 +45,12 @@
                                               <div class="c-validation"></div>
 
                                           </div> 
-                                          <div style="margin-top: 13px;" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-5 c-sml-span-6"><button type="button" class="c-button" onclick="fetchRecordDev()">Fetch Record</button></div>
+                                          <div style="margin-top: 13px;" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-5 c-sml-span-6">
+                                            <button type="button" class="c-button" onclick="fetchRecordDev()">Fetch Record
+                                              <i id="gear1" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i></button></div>
 
                                           <div  id="c-message" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-8 c-sml-span-6">
+
                                           </div> 
                                           <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-16 c-sml-span-12">
                                               <div class="c-label  "><label for="c-24-1629">Name of Development</label></div>
@@ -209,7 +212,7 @@
                                   <div class="c-button-section">
                                       <div class="c-action"><button type="button" class="c-page-nav c-page-next-page c-button">Next</button></div>
                                   </div>
-                                  <div class="c-page-numbering">2 / 4</div>
+                                  <div class="c-page-numbering">1 / 4</div>
                               </div>
                           </div>
                       </div>
@@ -622,7 +625,7 @@
                                                 <div class="c-label  "><label for="c-23-1359">Company Logo</label></div>
                                                 <div class="c-editor c-fileupload" data-allowed-types="jpg,jpeg,gif,png" data-max-file-count="1" data-max-file-size="100">
                                                     <div class="c-fileupload-dropzone c-background-highlight">
-                                                        <div class="c-upload-button" tabindex="0">Upload<input type="file" name="developer[logo]" multiple="" tabindex="-1"></div>
+                                                        <div class="c-upload-button" tabindex="0">Upload<input type="file" name="developer_logo" multiple="" tabindex="-1"></div>
                                                         <span class="c-fileupload-dropzone-message">or drag files here.</span>
                                                     </div>
                                                     <div class="c-validation c-warning"></div>
@@ -636,7 +639,7 @@
                                     <div class="c-button-section">
                                         <div class="c-action"><button type="button" class="c-page-nav c-page-previous-page c-button">Back</button><button type="button" class="c-page-nav c-page-next-page c-button">Next</button></div>
                                     </div>
-                                    <div class="c-page-numbering">1 / 4</div>
+                                    <div class="c-page-numbering">2 / 4</div>
                                 </div>
                             </div>
                       </div>
@@ -1022,7 +1025,11 @@
                                   <div class="c-validation"></div>
                               </div>
                               <div class="c-button-section">
-                                  <div class="c-action"><button type="button" class="c-page-nav c-page-previous-page c-button">Back</button><button class="c-button" type="submit" id="c-submit-button">Submit</button></div>
+                                  <div class="c-action"><button type="button" class="c-page-nav c-page-previous-page c-button">Back</button>
+                                    <button class="c-button sub" type="submit" ">Submit
+                                      <i id="gear2" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>
+                                    </button>
+                                  </div>
                               </div>
                               <div class="c-page-numbering" >4 / 4</div>
                           </div>

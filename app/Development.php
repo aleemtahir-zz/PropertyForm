@@ -50,13 +50,19 @@ class Development extends Model
         }  
 
         //Upload Developer Logo
-        $dev_logo = upload_logo('logo');
-        //pre($dev_logo);
-        $logo_path = "";
-        if($dev_logo['status'] == 1)
-        {
-          $logo_path = $dev_logo['path'];
+        $logo_path = '';
+        $filename = 'developer_logo';
+        
+        if(isset($_FILES[$filename])){
+          $dev_logo = upload_logo($filename);
+          //pre($dev_logo);
+          $logo_path = "";
+          if($dev_logo['status'] == 1)
+          {
+            $logo_path = $dev_logo['path'];
+          }  
         }
+        
 
         //******************
         //ADD DEVELOPER INFO
@@ -321,6 +327,7 @@ class Development extends Model
 
     function get_development($id='')
     {
+      /*DB::enableQueryLog();*/
       if(empty($id))
         return 0;
       else
@@ -375,6 +382,7 @@ class Development extends Model
                         ->join('tbl_foriegn_currency as fc', 'cp.fc_id', '=', 'fc.id')
                         ->where('dt.id', '=', $id)
                         ->get(); 
+        /*dd(DB::getQueryLog());*/
 
         $mapper = array(
           'dt'  => 'developement',

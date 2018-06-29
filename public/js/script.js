@@ -143,12 +143,22 @@ $(document).ready(function(){
 		$('select').css('color','black');        
 	})
 
+/*	Form Loader
+====================================*/
+	$('#dev_form').submit(function() {
+	    $('#gear2').show(); 
+	    return true;
+	  });
+
+
+/*END Document Ready
+====================================*/
 });
 
 
 
-//Development Form
-
+/*Fetch Development Form Record
+=====================================*/
 function fetchRecordDev()
 {
 	var folio_key = $('#c-25-1628').val();
@@ -167,35 +177,45 @@ function fetchRecordDev()
             type: 'POST',
             data: { key : folio_key },
             dataType: 'JSON',
+            beforeSend: function () {
+            	/*Font Awesome
+				====================================*/
+				$('#gear1').css('display','block');
+				
+            },
             success: function (data) { 
-            	var form_data = data;
+            	setTimeout(function(){ 
+            		$('#gear1').css('display','none'); 
 
-            	if(data == '')
-            	{	
-            		$('input').val('');
-					$('#c-message').text('*No record found!.') ; 
-            	}
-            	else
-            	{
-            		$('#c-message').empty(); 
-            		$.each(form_data, function(key, value){
-	            		console.log(key+'  :'+value.key);
-            			console.log($("input[name='"+value.key+"']"));
+            		var form_data = data;
 
-            			$("input[name='"+value.key+"']").val(value.value);
-	            	});
-            		/*$('input#c-26-1627').val(form_data.plan_no);
-            		$('input#c-40-1620').val(form_data.common_lots_i);
-            		$('input#c-41-1619').val(form_data.common_lots_s);
-            		$('input#c-38-1622').val(form_data.residential_lots_i);
-            		$('input#c-39-1621').val(form_data.residential_lots_s);
-            		$('input#c-43-1617').val(form_data.rsrv_road_no);
-            		$('textarea#c-42-1618').val(form_data.lot_ids);
-            		$('input#c-36-1624').val(form_data.total_lots_i);
-            		$('input#c-37-1623').val(form_data.total_lots_s);*/
-            	}
+	            	if(data == '')
+	            	{	
+	            		$('input').val('');
+						$('#c-message').text('*No record found!.') ; 
+	            	}
+	            	else
+	            	{
+	            		$('#c-message').empty(); 
+	            		$.each(form_data, function(key, value){
+		            		//console.log(key+'  :'+value.key);
+	            			var i = $("input[name='"+value.key+"']");
+	            			var t = $("textarea[name='"+value.key+"']");
+	            			var s = $("select[name='"+value.key+"']");
 
-                
+	            			if(i.length)
+	            				$("input[name='"+value.key+"']").val(value.value);
+	            			if(t.length)
+	            				$("textarea[name='"+value.key+"']").val(value.value);
+	            			if(s.length){
+	            				$("select[name='"+value.key+"']").val(value.value);
+	            				$("select[name='"+value.key+"']").css('color','black')
+	            			}
+
+		            	});
+
+	            	}
+            	}, 300);         	
             }
         }); 
 	}
@@ -205,7 +225,5 @@ function fetchRecordDev()
 		$('textarea').val('');
 		$('#c-message').text('*Please Fill Volume/Folio Field.') ; 
 	}
-
-	
 
 }

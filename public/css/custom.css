@@ -17,3 +17,10 @@ select{
     color:red;
     margin-top: 25px;
 }
+
+/*FontAwesome
+=======================================*/
+button i{
+	float: right;
+	margin-left: 5px;
+}

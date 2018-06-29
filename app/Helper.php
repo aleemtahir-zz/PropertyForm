@@ -409,7 +409,8 @@ function upload_logo( $filename='')
   // Check if $uploadOk is set to 0 by an error
   if ($uploadOk != 0) 
   {
-      //pre($_FILES[$filename]["tmp_name"]); die;
+      /*pre($target_file);
+      pre($_FILES[$filename]["tmp_name"]); die;*/
       if (move_uploaded_file($_FILES[$filename]["tmp_name"], $target_file)) {
           $msg = "The file ". basename( $_FILES[$filename]["name"]). " has been uploaded.";
       } 
