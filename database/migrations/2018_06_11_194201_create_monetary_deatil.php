@@ -13,7 +13,7 @@ class CreateMonetaryDeatil extends Migration
      */
     public function up()
     {
-        Schema::table('tbl_monetary_detail', function (Blueprint $table) {
+        Schema::create('tbl_monetary_detail', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('fc_id')->unsigned()->nullable(); 
             $table->foreign('fc_id')->references('id')->on('tbl_foriegn_currency'); 

@@ -131,18 +131,18 @@ class Property extends Model
 
       	//MAPPER
       	$mapper = array(
-		    'price_i','jprice_i','deposit','second_pay','third_pay','fourth_pay','final_pay',
+		    'price_i','jprice_i','deposit','second_pay','final_pay',
 		    'half_title','half_agreement','half_stamp_duty','half_reg_fee','inc_cost','maintenance_expense',
 		    'identification_fee'
-		);
+		    );
 
-		foreach ($mapper as $key) {
+    		foreach ($mapper as $key) {
 
-			if( !array_key_exists($key, $payment) )
-			  $payment[$key] = null;
-		}
+    			if( !array_key_exists($key, $payment) )
+    			  $payment[$key] = null;
+    		}
 
-		    $price_w  = null;
+  	    $price_w  = null;
         $jprice_w = null;
 
         if(!empty($payment['price_i']))
@@ -151,8 +151,9 @@ class Property extends Model
         if(!empty($payment['jprice_i']))
           $jprice_w = convertNumberToWord($payment['jprice_i']);
 
+
         /*CHECK PAYMENT INFO IF EXIST ALREADY*/
-        $payment_info = DB::table('tbl_dev_contract_payment')
+        $payment_info = DB::table('tbl_monetary_detail')
                        ->select('id')
                        ->where('fc_id', '=', $fc_id)
                        ->where('price_i', '=', $payment['price_i'])
@@ -161,39 +162,42 @@ class Property extends Model
                        ->where('j_price_w', '=', $jprice_w)
                        ->where('deposit', '=', $payment['deposit'])
                        ->where('second_payment', '=', $payment['second_pay'])
-                       ->where('third_payment', '=', $payment['third_pay'])
-                       ->where('fourth_payment', '=', $payment['fourth_pay'])
                        ->where('final_payment', '=', $payment['final_pay'])
+                       ->where('half_title', '=', $payment['half_title'])
+                       ->where('half_agreement', '=', $payment['half_agreement'])
+                       ->where('half_stamp_duty', '=', $payment['half_stamp_duty'])
+                       ->where('half_reg_fee', '=', $payment['half_reg_fee'])
+                       ->where('inc_cost', '=', $payment['inc_cost'])
+                       ->where('maintenance_expense', '=', $payment['maintenance_expense'])
+                       ->where('identification_fee', '=', $payment['identification_fee'])
                        ->orderBy('id', 'desc')
                        ->first();
-
-
+        
         if( empty($payment_info) ){
 
           /*INSERT CONTRACT PAYMENT DETAIL */
-          DB::table('tbl_dev_contract_payment')->insert(
+          DB::table('tbl_monetary_detail')->insert(
                 [
-                    'fc_id'         	=> $fc_id, 
-                    'price_i'       	=> $payment['price_i'],
-                    'price_w'       	=> $price_w,
-                    'j_price_i'     	=> $payment['jprice_i'],
-                    'j_price_w'      	=> $jprice_w,
-                    'deposit'       	=> $payment['deposit'],
-                    'second_payment'	=> $payment['second_pay'],
-                    'third_payment' 	=> $payment['third_pay'],
-                    'fourth_payment'	=> $payment['fourth_pay'],
-                    'final_payment' 	=> $payment['final_pay'],
-                    'half_title' 		=> $payment['half_title'],
-                    'half_agreement' 	=> $payment['half_agreement'],
-                    'half_stamp_duty' 	=> $payment['half_stamp_duty'],
-                    'half_reg_fee' 		=> $payment['half_reg_fee'],
-                    'inc_cost' 			=> $payment['inc_cost'],
+                    'fc_id'         	 => $fc_id, 
+                    'price_i'       	 => $payment['price_i'],
+                    'price_w'       	 => $price_w,
+                    'j_price_i'     	 => $payment['jprice_i'],
+                    'j_price_w'      	 => $jprice_w,
+                    'deposit'       	 => $payment['deposit'],
+                    'second_payment'	 => $payment['second_pay'],
+                    'final_payment' 	 => $payment['final_pay'],
+                    'half_title' 		   => $payment['half_title'],
+                    'half_agreement' 	 => $payment['half_agreement'],
+                    'half_stamp_duty'  => $payment['half_stamp_duty'],
+                    'half_reg_fee' 		 => $payment['half_reg_fee'],
+                    'inc_cost' 			   => $payment['inc_cost'],
                     'maintenance_expense' 	=> $payment['maintenance_expense'],
-                    'identification_fee' 	=> $payment['identification_fee'],
+                    'identification_fee' 	  => $payment['identification_fee'],
                 ]
             );
             /*GET CONTRACT PAYMENT ID */
             $payment_id = DB::getPdo()->lastInsertId();
+            pre($payment_id); die;
         } 
         else
         {
@@ -387,7 +391,7 @@ class Property extends Model
         $count = (count($vendor_id) >= count($buyer_id)) ? count($vendor_id) : count($buyer_id);
         
         for ($i=0; $i < $count ; $i++) { 
-          $data[$i]['id']           = $folio_key; 
+          $data[$i]['id']           = $folio_key.'_'.$property['lot_no']; 
         	$data[$i]['lot_no'] 		  = $property['lot_no']; 
         	$data[$i]['folio_no'] 		= $property['folio_no']; 
         	$data[$i]['plan_no'] 		  = $property['plan_no']; 
@@ -407,9 +411,9 @@ class Property extends Model
         {
         	$table_name    = 'tbl_property_detail';
           $property_data = [
-              'id'                => $folio_key, 
-              'folio_no'          => $property['folio_no'], 
+              'id'                => $folio_key.'_'.$property['lot_no'], 
               'lot_no'            => $property['lot_no'], 
+              'folio_no'          => $property['folio_no'], 
               'plan_no'           => $property['plan_no'], 
               'address_id'        => $address_id, 
               'developer_id'      => $property['vendor_id'], 
@@ -545,6 +549,7 @@ class Property extends Model
     public function get_property($values='')
     {
       /*DB::enableQueryLog();*/
+      /*dd(DB::getQueryLog());*/
 
       $folio  = $values['folio'];
       $lot    = $values['lot'];
@@ -556,8 +561,12 @@ class Property extends Model
         $folio  = explode(',', $folio);
         $folio  = $folio[0];  //1st part is key
 
+        //id
+        $id = $folio.'_'.$lot;
+
+        //pre($folio);
         /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
-        $dev_info = DB::table('tbl_property_detail as p')
+        $property_info = DB::table('tbl_property_detail as p')
                         ->select('p.id as p-folio_no','p.plan_no as p-plan_no', 
                           //Property Address
                           'pa.line1 as p-address-line1','pa.line2 as p-address-line2','pa.city as p-address-city','pa.state as p-address-state', 'pa.postal as p-address-postal',
@@ -573,67 +582,68 @@ class Property extends Model
                           //'co.capacity as c-co-capacity','co.landline as c-co-landline',
                           
                           //Vendor                       
-                          'v.company_name as v-company_name','v.fnmae as v-first','v.mname as v-middle','v.lname as v-last','v.suffix as v-suffix','v.trn_no as v-trn_no','v.dob as v-dob','v.occupation as v-occupation','v.phone as v-phone','v.mobile as v-mobile','v.email as v-email'
+                          'v.company_name as v-company_name','v.fname as v-first','v.mname as v-middle','v.lname as v-last','v.suffix as v-suffix','v.trn_no as v-trn_no','v.dob as v-dob','v.occupation as v-occupation','v.phone as v-phone','v.mobile as v-mobile','v.email as v-email',
                           //Vendor Address
                           'va.line1 as v-address-line1','va.line2 as v-address-line2','va.city as v-address-city','va.state as v-address-state', 'va.postal as v-address-postal','va.country as v-address-country',
 
                           //Buyer                       
-                          'b.company_name as b-company_name','b.fnmae as b-first','b.mname as b-middle','b.lname as b-last','b.suffix as b-suffix','b.trn_no as b-trn_no','b.dob as b-dob','b.occupation as b-occupation','b.bussiness_place as b-bussiness_place','b.phone as b-phone','b.mobile as b-mobile','b.email as b-email'
+                          //'b.company_name as b-company_name',
+                          'b.fname as b-first','b.mname as b-middle','b.lname as b-last','b.suffix as b-suffix','b.trn_no as b-trn_no','b.dob as b-dob','b.occupation as b-occupation','b.bussiness_place as b-bussiness_place','b.phone as b-phone','b.mobile as b-mobile','b.email as b-email',
                           //Buyer Address
                           'ba.line1 as b-address-line1','ba.line2 as b-address-line2','ba.city as b-address-city','ba.state as b-address-state', 'ba.postal as b-address-postal','ba.country as b-address-country',
 
                           //Attorney 
                           'a.company_name as a-firm_name',
-                          //Developer Officer 1
+                          //Attorney Officer
                           'ao.title as a-pa-title','ao.first_name as a-pa-first','ao.last_name as a-pa-last',
                           //Attorney Address
                           'aa.line1 as a-address-line1','aa.line2 as a-address-line2','aa.city as a-address-city','aa.state as a-address-state', 'aa.postal as a-address-postal','aa.country as a-address-country',
 
-                          //Developer Officer 1
-                          //'do2.title as d-do2-title2','do2.first_name as d-do2-first2','do2.last_name as d-do2-last2','do2.suffix as d-do2-suffix2',
-                          //'do2.capacity as d-do2-capacity2','do2.landline as d-do2-landline2',
-                          //Contract Payment
-                          //'cp.price_i as cp-price_i','cp.j_price_i as cp-jprice_i','cp.deposit as cp-deposit','cp.second_payment as cp-second_pay','cp.third_payment as cp-third_pay','cp.fourth_payment as cp-fourth_pay','cp.final_payment as cp-final_pay',
-                          //Contract Payment Foriegn Currency
-                          //'fc.name as cp-fc-name','fc.symbol as cp-fc-symbol','fc.exchange_rate as cp-fc-rate'
+                          //Payment
+                          'm.price_i as m-price_i','m.price_w as m-price_w','m.j_price_i as m-jprice_i', 
+                          'm.j_price_w as m-jprice_w','m.deposit as m-deposit', 
+                          'm.second_payment as m-second_pay','m.final_payment as m-final_pay',
+                          'm.half_title as m-half_title','m.half_agreement as m-half_agreement',
+                          'm.half_stamp_duty as m-half_stamp_duty', 'm.half_reg_fee as m-half_reg_fee',
+                          'm.inc_cost as m-inc_cost','m.maintenance_expense as m-maintenance_expense',
+                          'm.identification_fee as m-identification_fee',
+                          //Payment Foriegn Currency
+                          'fc.name as m-fc-name','fc.symbol as m-fc-symbol','fc.exchange_rate as m-fc-rate'
                         )
                         ->join('tbl_address as pa', 'p.address_id', '=', 'pa.id')
                         ->join('tbl_developer_detail as v', 'p.developer_id', '=', 'v.id')
                         ->join('tbl_address as va', 'v.address_id', '=', 'va.id')
-                        ->join('tbl_tbl_purchaser_detail as b', 'p.purchaser_id', '=', 'b.id')
+                        ->join('tbl_purchaser_detail as b', 'p.purchaser_id', '=', 'b.id')
                         ->join('tbl_address as ba', 'b.address_id', '=', 'ba.id')
                         ->join('tbl_attorney_detail as a', 'p.attorney_id', '=', 'a.id')
                         ->join('tbl_person_info as ao', 'a.officer_id', '=', 'ao.id')
                         ->join('tbl_address as aa', 'a.address_id', '=', 'aa.id')
-
-                        ->join('tbl_person_info as do2', 'd.officer_id_2', '=', 'do2.id')
-                        ->join('tbl_contractor_detail as c', 'dt.contractor_id', '=', 'c.id')
-                        ->join('tbl_address as ca', 'c.address_id', '=', 'ca.id')
-                        ->join('tbl_person_info as co', 'c.officer_id', '=', 'co.id')
-                        ->join('tbl_dev_contract_payment as cp', 'dt.payment_id', '=', 'cp.id')
-                        ->join('tbl_foriegn_currency as fc', 'cp.fc_id', '=', 'fc.id')
-                        ->where('dt.id', '=', $id)
+                        ->join('tbl_monetary_detail as m', 'p.payment_id', '=', 'm.id')
+                        ->join('tbl_foriegn_currency as fc', 'm.fc_id', '=', 'fc.id')
+                        ->where('p.id', '=', $id)
                         ->get(); 
         /*dd(DB::getQueryLog());*/
 
         $mapper = array(
-          'dt'  => 'property',
-          'd'   => 'vendor',
-          'c'   => 'contractor',
+          'p'   => 'property',
+          'v'   => 'vendor',
+          'b'   => 'buyer',
+          'm'   => 'monetary',
+          'a'   => 'attorney',
           'cp'  => 'payment',
         );                
 
         try{
-          $dev_info = (array) $dev_info[0];
+          $property_info = (array) $property_info[0];
         }
         catch(\Exception $e)
         {
           //pre($e->getMessage());
-          $dev_info = '';  
-          return $dev_info;
+          $property_info = '';  
+          return $property_info;
         }
 
-        foreach ($dev_info as $key => $value) 
+        foreach ($property_info as $key => $value) 
         {
             $pieces = explode('-', $key);
             $i = $pieces[0];
@@ -646,14 +656,14 @@ class Property extends Model
               $input = $mapper[$i]."[".$pieces[0]."]";
             }
 
-            $dev_info[$key]    = array(
+            $property_info[$key]    = array(
               'key'   => $input,
               'value' => $value
             );          
             
         }                
                          
-        return $dev_info;
+        return $property_info;
       }
     }
 

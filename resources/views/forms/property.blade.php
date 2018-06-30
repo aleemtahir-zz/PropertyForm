@@ -43,7 +43,7 @@
                                     </div>
 
                                     <div style="margin-top: 13px;" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-5 c-sml-span-6">
-                                    <button type="button" class="c-button" onclick="fetchRecordProp()">Fetch Record
+                                    <button type="button" class="c-button" onclick="onClickFolio()">Fetch Record
                                           <i id="gear-folio" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>
                                     </button>
                                     </div>
@@ -59,7 +59,7 @@
                                     </div>
                                     
                                     <div style="margin-top: 13px;" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-5 c-sml-span-6">
-                                    <button type="button" class="c-button" onclick="fetchRecordProp()">Fetch Record
+                                    <button type="button" class="c-button" onclick="onClickLot()">Fetch Record
                                           <i id="gear-lot" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>
                                     </button>
                                     </div>

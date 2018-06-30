@@ -14,7 +14,7 @@ class CreatePropertyDetail extends Migration
     public function up()
     {
         Schema::create('tbl_property_detail', function (Blueprint $table) {
-            $table->string('id')->nullable();
+            $table->string('id')->primary();
             $table->string('lot_no')->nullable();
             $table->string('folio_no')->nullable();
             $table->string('plan_no')->nullable();
@@ -28,7 +28,7 @@ class CreatePropertyDetail extends Migration
             $table->foreign('payment_id')->references('id')->on('tbl_dev_contract_payment');
             $table->integer('address_id')->unsigned()->nullable();
             $table->foreign('address_id')->references('id')->on('tbl_address');
-            $table->primary(array('id', 'lot_no')); 
+            //$table->primary(array('id', 'lot_no')); 
         });
     }
 

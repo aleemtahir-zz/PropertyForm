@@ -230,10 +230,9 @@ function fetchRecordDev()
 
 /*Fetch Property Form Record
 =====================================*/
-function fetchRecordProp()
+function onClickFolio()
 {
 	var folio_key 	= $('#c-2-768').val();
-	var lot_key 	= $('#c-0-770').val();
 
 	if(folio_key)
 	{
@@ -264,14 +263,87 @@ function fetchRecordProp()
 	            	if(data == '')
 	            	{	
 	            		$('input').val('');
-						$('#c-message').text('*No record found!.') ; 
+						$('#c-message-folio').text('*No record found!.') ; 
 	            	}
 	            	else
 	            	{
-	            		$('#c-message').empty(); 
+	            		$('#c-message-folio').empty(); 
+	            		$.each(form_data, function(key, value){
+		            		//console.log(value.key+'  :'+value.value);
+		            		//console.log(value.key);
+		            		//console.log($("input[name*='"+value.key+"']"));
+	            			var i = $("input[name*='"+value.key+"']");
+	            			var t = $("textarea[name*='"+value.key+"']");
+	            			var s = $("select[name*='"+value.key+"']");
+
+	            			if(i.length)
+	            				$("input[name*='"+value.key+"']").val(value.value);
+	            			if(t.length)
+	            				$("textarea[name*='"+value.key+"']").val(value.value);
+	            			if(s.length){
+	            				$("select[name*='"+value.key+"']").val(value.value);
+	            				$("select[name*='"+value.key+"']").css('color','black')
+	            			}
+
+		            	});
+
+	            	}
+            	}, 300);         	
+            }
+        }); 
+	}
+	else
+	{	
+		$('input').val('');
+		$('textarea').val('');
+		$('#c-message-folio').text('*Please Fill Volume/Folio Field.') ; 
+	}
+
+}
+
+function onClickLot()
+{
+	var folio_key 	= $('#c-2-768').val();
+	var lot_key 	= $('#c-0-770').val();
+
+	if(folio_key && lot_key)
+	{
+		$.ajaxSetup({
+		  headers: {
+		    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		  }
+		});
+		
+		$.ajax({
+            /* the route pointing to the post function */
+            url: 'updatePropertyView',
+            type: 'post',
+            data: { folio : folio_key, lot : lot_key },
+            dataType: 'JSON',
+            beforeSend: function () {
+            	/*Font Awesome
+				====================================*/
+				$('#gear-lot').css('display','block');
+				
+            },
+            success: function (data) { 
+            	setTimeout(function(){ 
+            		$('#gear-lot').css('display','none'); 
+
+            		var form_data = data;
+
+	            	if(data == '')
+	            	{	
+	            		$('input').val('');
+						$('#c-message-lot').text('*No record found!.') ; 
+	            	}
+	            	else
+	            	{
+	            		$('#c-message-lot').empty(); 
 	            		$.each(form_data, function(key, value){
 		            		console.log(value.key+'  :'+value.value);
-		            		//console.log(value.key);
+		            		console.log(value.key);
+		            		console.log(value.value);
 		            		console.log($("input[name*='"+value.key+"']"));
 	            			var i = $("input[name*='"+value.key+"']");
 	            			var t = $("textarea[name*='"+value.key+"']");
@@ -287,19 +359,32 @@ function fetchRecordProp()
 	            			}
 
 		            	});
-	            				$("input[name*='vendor[email]']").val('aleem@sdas.com');
-	            				
 
 	            	}
             	}, 300);         	
             }
         }); 
 	}
-	else
+	else if(!folio_key && !lot_key)
 	{	
 		$('input').val('');
 		$('textarea').val('');
 		$('#c-message-folio').text('*Please Fill Volume/Folio Field.') ; 
+		$('#c-message-lot').text('*Please Fill Lot No. Field.') ; 
+	}
+	else if(!folio_key)
+	{	
+		$('input').not('#c-0-770').val('');
+		$('textarea').val('');
+		$('#c-message-lot').text('') ; 
+		$('#c-message-folio').text('*Please Fill Volume/Folio Field.') ; 
+	}
+	else if(!lot_key)
+	{	
+		$('input').not('#c-2-768').val('');
+		$('textarea').val('');
+		$('#c-message-folio').text('') ; 
+		$('#c-message-lot').text('*Please Fill Lot No. Field.') ; 
 	}
 
 }
