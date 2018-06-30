@@ -145,8 +145,8 @@ $(document).ready(function(){
 
 /*	Form Loader
 ====================================*/
-	$('#dev_form').submit(function() {
-	    $('#gear2').show(); 
+	$('#form').submit(function() {
+	    $('#gear-sub').show(); 
 	    return true;
 	  });
 
@@ -173,7 +173,7 @@ function fetchRecordDev()
 		
 		$.ajax({
             /* the route pointing to the post function */
-            url: 'updateView',
+            url: 'updateDevelopmentView',
             type: 'POST',
             data: { key : folio_key },
             dataType: 'JSON',
@@ -224,6 +224,82 @@ function fetchRecordDev()
 		$('input').val('');
 		$('textarea').val('');
 		$('#c-message').text('*Please Fill Volume/Folio Field.') ; 
+	}
+
+}
+
+/*Fetch Property Form Record
+=====================================*/
+function fetchRecordProp()
+{
+	var folio_key 	= $('#c-2-768').val();
+	var lot_key 	= $('#c-0-770').val();
+
+	if(folio_key)
+	{
+		$.ajaxSetup({
+		  headers: {
+		    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		  }
+		});
+		
+		$.ajax({
+            /* the route pointing to the post function */
+            url: 'updatePropertyView',
+            type: 'post',
+            data: { folio : folio_key },
+            dataType: 'JSON',
+            beforeSend: function () {
+            	/*Font Awesome
+				====================================*/
+				$('#gear-folio').css('display','block');
+				
+            },
+            success: function (data) { 
+            	setTimeout(function(){ 
+            		$('#gear-folio').css('display','none'); 
+
+            		var form_data = data;
+
+	            	if(data == '')
+	            	{	
+	            		$('input').val('');
+						$('#c-message').text('*No record found!.') ; 
+	            	}
+	            	else
+	            	{
+	            		$('#c-message').empty(); 
+	            		$.each(form_data, function(key, value){
+		            		console.log(value.key+'  :'+value.value);
+		            		//console.log(value.key);
+		            		console.log($("input[name*='"+value.key+"']"));
+	            			var i = $("input[name*='"+value.key+"']");
+	            			var t = $("textarea[name*='"+value.key+"']");
+	            			var s = $("select[name*='"+value.key+"']");
+
+	            			if(i.length)
+	            				$("input[name*='"+value.key+"']").val(value.value);
+	            			if(t.length)
+	            				$("textarea[name*='"+value.key+"']").val(value.value);
+	            			if(s.length){
+	            				$("select[name*='"+value.key+"']").val(value.value);
+	            				$("select[name*='"+value.key+"']").css('color','black')
+	            			}
+
+		            	});
+	            				$("input[name*='vendor[email]']").val('aleem@sdas.com');
+	            				
+
+	            	}
+            	}, 300);         	
+            }
+        }); 
+	}
+	else
+	{	
+		$('input').val('');
+		$('textarea').val('');
+		$('#c-message-folio').text('*Please Fill Volume/Folio Field.') ; 
 	}
 
 }

@@ -16,10 +16,8 @@ Route::get('/', function () {
 });
 
 Route::resource('property','PropertyController');
-Route::post('updateView', 'DevController@updateView');
-//Route::get('development', 'DevController@index');
-//Route::post('development/store', 'DevController@store');
+Route::post('updateDevelopmentView', 'DevController@updateView');
+Route::post('updatePropertyView', 'PropertyController@updateProperty');
 Route::resource('development','DevController');
 Route::resource('payment','PaymentController');
 Route::resource('upload','UploadController');
-Route::get('test', 'UploadController@test');

@@ -9,6 +9,7 @@ use Exception;
 
 class Development extends Model
 {
+    //User Trait
     use InsertOnDuplicateKey;
 
     public function add_developer($developer)

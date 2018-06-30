@@ -2,7 +2,7 @@
 @section('content')
 <div id="c-forms-container" class="cognito c-safari c-lrg">
 
-<form method="post" action="{{url('property')}}">
+<form id="form" method="post" action="{{url('property')}}">
   {{ csrf_field() }}
   <div class="c-forms-form" tabindex="0">
     <div class="c-editor" style="display:none;">
@@ -36,26 +36,52 @@
                                     <h3>Property Details</h3>
                                 </div>
                                 <div class="">
-                                    <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-5 c-sml-span-5">
+                                    <div class="c-text-singleline c-field c-col-12 c-sml-col-1 c-span-7 c-sml-span-12">
+                                        <div class="c-label  "><label for="c-2-768">Volume/Folio No</label></div>
+                                        <div class="c-editor"><input name="property[folio_no]" type="text" id="c-2-768" placeholder=""></div>
+                                        <div class="c-validation"></div>
+                                    </div>
+
+                                    <div style="margin-top: 13px;" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-5 c-sml-span-6">
+                                    <button type="button" class="c-button" onclick="fetchRecordProp()">Fetch Record
+                                          <i id="gear-folio" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>
+                                    </button>
+                                    </div>
+
+                                    <div  id="c-message-folio" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-8 c-sml-span-6">
+
+                                    </div>
+
+                                    <div class="c-text c-field c-col-1 c-sml-col-1 c-span-7 c-sml-span-12">
                                         <div class="c-label  "><label for="c-0-770">Lot No</label></div>
                                         <div class="c-editor"><input name="property[lot_no]" type="text" id="c-0-770" placeholder=""></div>
                                         <div class="c-validation"></div>
                                     </div>
-                                    <div class="c-text-singleline c-field c-col-6 c-sml-col-6 c-span-6 c-sml-span-7">
+                                    
+                                    <div style="margin-top: 13px;" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-5 c-sml-span-6">
+                                    <button type="button" class="c-button" onclick="fetchRecordProp()">Fetch Record
+                                          <i id="gear-lot" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>
+                                    </button>
+                                    </div>
+
+                                    <div  id="c-message-lot" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-8 c-sml-span-6">
+
+                                    </div>
+
+
+                                    {{-- <div class="c-text-singleline c-field c-col-6 c-sml-col-6 c-span-6 c-sml-span-7">
                                         <div class="c-label  "><label for="c-1-769">Volume No</label></div>
                                         <div class="c-editor"><input name="property[volume_no]" type="text" id="c-1-769" placeholder=""></div>
                                         <div class="c-validation"></div>
-                                    </div>
-                                    <div class="c-text-singleline c-field c-col-12 c-sml-col-1 c-span-7 c-sml-span-12">
-                                        <div class="c-label  "><label for="c-2-768">Folio No</label></div>
-                                        <div class="c-editor"><input name="property[folio_no]" type="text" id="c-2-768" placeholder=""></div>
-                                        <div class="c-validation"></div>
-                                    </div>
-                                    <div class="c-text-singleline c-field c-col-19 c-sml-col-1 c-span-6 c-sml-span-12">
+                                    </div> --}}
+                                    
+                                    <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-6 c-sml-span-12">
                                         <div class="c-label  "><label for="c-3-767">Plan No</label></div>
                                         <div class="c-editor"><input name="property[plan_no]" type="text" id="c-3-767" placeholder=""></div>
                                         <div class="c-validation"></div>
                                     </div>
+
+
                                     <div class="c-address c-address-international c-field c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
                                         <div class="c-label "><label>Property Address</label></div>
                                         <div>
@@ -1427,7 +1453,9 @@
                       <div class="c-validation"></div>
                   </div>
                   <div class="c-button-section">
-                      <div class="c-action"><button type="button" class="c-page-nav c-page-previous-page c-button">Back</button><button class="c-button" id="c-submit-button">Submit</button></div>
+                      <div class="c-action"><button type="button" class="c-page-nav c-page-previous-page c-button">Back</button><button class="c-button" id="c-submit-button">Submit
+                      <i id="gear-sub" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>
+                      </button></div>
                   </div>
                   <div class="c-page-numbering">5 / 5</div>
                 </div>

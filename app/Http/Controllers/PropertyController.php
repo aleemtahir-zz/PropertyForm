@@ -13,7 +13,7 @@ class PropertyController extends Controller
      */
     public function index()
     {
-        //
+        return view('forms.property');
     }
 
     /**
@@ -34,7 +34,7 @@ class PropertyController extends Controller
      */
     public function store(Request $request)
     {
-        echo "<pre>"; print_r($request->all()); echo "</pre>";
+        //echo "<pre>"; print_r($request->all()); echo "</pre>";
         $PropertyObj = new Property();
 
         $vendor             = $request->input('vendor');
@@ -51,10 +51,9 @@ class PropertyController extends Controller
 
         
         $property           = $request->input('property');
-        $property_id        = $PropertyObj->add_property($property, $ids);
-        die;
+        $PropertyObj->add_property($property, $ids);
 
-        //return view('forms.response');
+        return view('forms.response');
     }
 
     /**
@@ -65,8 +64,6 @@ class PropertyController extends Controller
      */
     public function show($id)
     {
-
-        return view('forms.property');
 
         /*// load your template
         $TBS->LoadTemplate('templates/membership.docx');
@@ -109,5 +106,29 @@ class PropertyController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function updateProperty(Request $request)
+    {   
+
+        $response   = '';
+        $lot        = $request->input('lot');
+        $folio      = $request->input('folio');
+
+        if(!empty($folio) && !empty($lot))
+        {
+            $values['folio'] = $folio;
+            $values['lot'] = $lot;
+            $PropObj    = new Property();
+            $response   = $PropObj->get_property($values);
+        }
+        else if(!empty($folio))
+        {
+            $PropObj    = new Property();
+            $response   = $PropObj->get_development($folio);
+        }
+
+
+        return json_encode($response);
     }
 }

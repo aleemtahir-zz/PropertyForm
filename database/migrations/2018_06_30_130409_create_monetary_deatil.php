@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDevContractPayment extends Migration
+class CreateMonetaryDeatil extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateDevContractPayment extends Migration
      */
     public function up()
     {
-        Schema::create('tbl_dev_contract_payment', function (Blueprint $table) {
+        Schema::table('tbl_monetary_detail', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('fc_id')->unsigned()->nullable(); 
             $table->foreign('fc_id')->references('id')->on('tbl_foriegn_currency'); 
@@ -23,9 +23,14 @@ class CreateDevContractPayment extends Migration
             $table->string('j_price_w')->nullable();
             $table->integer('deposit')->nullable();
             $table->integer('second_payment')->nullable();
-            $table->integer('third_payment')->nullable();
-            $table->integer('fourth_payment')->nullable();
             $table->integer('final_payment')->nullable();
+            $table->integer('half_title')->nullable();
+            $table->integer('half_agreement')->nullable();
+            $table->integer('half_stamp_duty')->nullable();
+            $table->integer('half_reg_fee')->nullable();
+            $table->integer('inc_cost')->nullable();
+            $table->integer('maintenance_expense')->nullable();
+            $table->integer('identification_fee')->nullable();
         });
     }
 
@@ -36,6 +41,8 @@ class CreateDevContractPayment extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('tbl_dev_contract_payment');
+        Schema::table('tbl_monetary_detail', function (Blueprint $table) {
+            //
+        });
     }
 }

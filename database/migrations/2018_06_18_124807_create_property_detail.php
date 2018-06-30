@@ -14,7 +14,7 @@ class CreatePropertyDetail extends Migration
     public function up()
     {
         Schema::create('tbl_property_detail', function (Blueprint $table) {
-            $table->string('id');
+            $table->string('id')->nullable();
             $table->string('lot_no')->nullable();
             $table->string('folio_no')->nullable();
             $table->string('plan_no')->nullable();

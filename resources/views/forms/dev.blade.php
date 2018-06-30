@@ -2,7 +2,7 @@
 @section('content')
 
 <div id="c-forms-container" class="cognito c-safari c-lrg">
-    <form id="dev_form" method="post" action="{{url('development')}}" enctype="multipart/form-data">
+    <form id="form" method="post" action="{{url('development')}}" enctype="multipart/form-data">
         {{ csrf_field() }}
         <div class="c-forms-form" tabindex="0">
             <div class="c-editor" style="display:none;">
@@ -1026,8 +1026,8 @@
                               </div>
                               <div class="c-button-section">
                                   <div class="c-action"><button type="button" class="c-page-nav c-page-previous-page c-button">Back</button>
-                                    <button class="c-button sub" type="submit" ">Submit
-                                      <i id="gear2" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>
+                                    <button class="c-button" type="submit" ">Submit
+                                      <i id="gear-sub" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>
                                     </button>
                                   </div>
                               </div>

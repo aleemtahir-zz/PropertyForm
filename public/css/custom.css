@@ -17,6 +17,18 @@ select{
     color:red;
     margin-top: 25px;
 }
+#c-message-folio{
+    font-weight: bold;
+    font-size: 0.95em;
+    color:red;
+    margin-top: 25px;
+}
+#c-message-lot{
+    font-weight: bold;
+    font-size: 0.95em;
+    color:red;
+    margin-top: 25px;
+}
 
 /*FontAwesome
 =======================================*/
