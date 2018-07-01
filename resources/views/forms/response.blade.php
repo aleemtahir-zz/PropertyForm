@@ -2,7 +2,8 @@
 @section('content')
 
 <div id="c-forms-container" class="cognito c-safari c-lrg">
-	<form method="post">
+
+	{!! Form::open(array('id' => 'form', 'route' => 'merge', 'method' => 'post')); !!}
 		<div class="c-forms-form" tabindex="0">
 			<div class="c-forms-confirmation" style="display: block;">
 				<div class="c-forms-heading">
@@ -21,38 +22,28 @@
 					<div class="c-choice-radiobuttons c-field c-col-13 c-sml-col-1 c-span-12 c-sml-span-12">
                         <legend class="c-label  ">Merge Data into Documents</legend>
                         <div class="c-helptext">Choose documents</div>
-                        <div class="c-editor"> <!-- c-columns-0 -->
-                            <div class="c-choice-option">
-                            	<label>
-                            		<input name="doc[]" type="radio" id="c-43-520" value="membership">
-                            		<span>Doc1</span>
-                            	</label>
-                            </div>
-                            <div class="c-choice-option">
-                            	<label>
-                            		<input name="doc[]" type="radio" id="c-43-521" value="template2">
-                            		<span>Doc2</span>
-                            	</label>
-                            </div>
-                            <div class="c-choice-option">
-                            	<label>
-                            		<input name="doc[]" type="radio" id="c-43-522" value="template3">
-                            		<span>Doc3</span>
-                            	</label>
-                            </div>
-                            <div class="c-choice-option">
-                            	<label>
-                            		<input name="doc[]" type="radio" id="c-43-523" value="template4">
-                            		<span>Doc4</span>
-                            	</label>
-                            </div>
+
+                        @foreach ($templates as $name)
+                        <div class="row">
+							<div class="col-md-6">
+								{!! Form::checkbox('services[]', $name); !!}  
+					        	{!! Form::label('service' . $name, $name) !!} 
+							</div>
+							<div class="col-md-6">
+								{!! Form::button('Merge <i id="gear-sub" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>', 
+								['type' => 'submit','class' => 'c-button', 'name' => 'mergeBtn', 'value' => $name]); !!}
+
+							</div>
+					        <br>                        	
                         </div>
+					    @endforeach
+
                         <div class="c-validation"></div>
                         
                     </div>
 					<div class="c-button-section">
 	                    <div class="c-action">
-	                    	<button type="submit" class="c-button">Merge</button>
+	                    	{!! Form::button('Merge', array('class' => 'c-button', 'type' => 'submit')); !!}
 	                    </div>
 	                </div>
 				</div>
@@ -65,7 +56,8 @@
 				</ul> -->
 			</div>
 		</div>
-	</form>
+
+	{!! Form::close(); !!}
 
 </div>	
 

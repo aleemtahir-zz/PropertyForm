@@ -18,6 +18,10 @@ Route::get('/', function () {
 Route::resource('property','PropertyController');
 Route::post('updateDevelopmentView', 'DevController@updateView');
 Route::post('updatePropertyView', 'PropertyController@updateProperty');
+Route::post('merge',[
+    'as' => 'merge',
+    'uses' => 'PropertyController@mergeDownload'
+]);
 Route::resource('development','DevController');
 Route::resource('payment','PaymentController');
 Route::resource('upload','UploadController');

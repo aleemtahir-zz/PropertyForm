@@ -146,7 +146,10 @@ $(document).ready(function(){
 /*	Form Loader
 ====================================*/
 	$('#form').submit(function() {
-	    $('#gear-sub').show(); 
+		$('#gear-sub').show(); 
+		setTimeout(function(){ 
+	    	$('#gear-sub').hide();
+	    },400);
 	    return true;
 	  });
 
@@ -388,3 +391,6 @@ function onClickLot()
 	}
 
 }
+
+/*Merge & Download
+=================================*/
