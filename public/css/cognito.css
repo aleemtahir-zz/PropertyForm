@@ -46,7 +46,7 @@
     width: 100%
 }
 
-.cognito input[type=text],.cognito input[type=password],.cognito textarea,.cognito .c-dropdown {
+.cognito input[type=text],.cognito input[type=number],.cognito input[type=password],.cognito textarea,.cognito .c-dropdown {
     display: block;
     width: 100%;
     margin: 0;
@@ -91,7 +91,7 @@
     list-style-type: none
 }
 
-.cognito input[type=text],.cognito input[type=password],.cognito select,.cognito textarea,.c-payment .c-payment-field {
+.cognito input[type=text],.cognito input[type=number],.cognito input[type=password],.cognito select,.cognito textarea,.c-payment .c-payment-field {
     border: 1px solid #ccc;
     padding: 5px;
     -webkit-appearance: none;
@@ -540,7 +540,7 @@
     clear: left
 }
 
-.cognito INPUT[type=text],.cognito INPUT[type=password],.cognito textarea,.cognito select {
+.cognito INPUT[type=text],.cognito input[type=number],.cognito INPUT[type=password],.cognito textarea,.cognito select {
     width: 100%;
     height: auto
 }
@@ -2952,7 +2952,7 @@
     padding: 5px 0!important
 }
 
-.c-table-section input[type=text],.c-table-section input[type=password],.c-table-section textarea,.c-table-section select {
+.c-table-section input[type=text],.cognito input[type=number],.c-table-section input[type=password],.c-table-section textarea,.c-table-section select {
     transition: height linear 0s!important
 }
 

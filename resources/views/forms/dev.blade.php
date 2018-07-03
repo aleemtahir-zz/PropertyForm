@@ -30,6 +30,15 @@
                             </ol>
                         </div>
                     </div>
+                     @if (count($errors) > 0)
+                         <div class = "alert alert-danger">
+                            <ul>
+                               @foreach ($errors->all() as $error)
+                                  <li>{{ $error }}</li>
+                               @endforeach
+                            </ul>
+                         </div>
+                      @endif
                     <div class="c-forms-pages">
                       <div class="c-page-page1" style="display: block;">
                           <div class="c-forms-template">
@@ -39,19 +48,30 @@
                                           <h3>DEVELOPMENT DETAILS</h3>
                                       </div>
                                       <div class="">
-                                          <div class="c-field c-col-17 c-sml-col-1 c-span-10 c-sml-span-6">
-                                              <div class="c-label  "><label for="c-25-1628">Volume / Folio</label></div>
-                                              <div class="c-editor"><input name="developement[folio_no]" type="text" id="c-25-1628" placeholder=""></div>
+                                        <div {{-- style="width: 80px; margin: 0 20px 0 20px; "  --}}class="container row">
+                                            <div style="margin: 10px 0 0 3px; position: absolute; " class="c-label  ">
+                                              <label for="c-25-1628">Volume / Folio</label>
+                                            </div>
+                                            <div style="margin-top: 22px;" class="c-field c-col-1 c-sml-col-1 c-span-2 c-sml-span-2">
+                                              <div style=" " class="c-editor"><input name="developement[volume_no]" type="text" id="c-25-1627" placeholder="1234"></div>
+
+                                            </div>
+                                            <span style="font-weight: bold; position: relative; margin-top: 30px">/</span>
+
+                                            <div style="margin-top: 22px; padding-left: 0; width: 65px;" class="c-field c-text-singleline c-col-17 c-sml-col-1 c-span-3 c-sml-span-2">
+                                              <div class="c-editor"><input name="developement[folio_no]" type="text" id="c-25-1628" placeholder="1234"></div>
                                               <div class="c-validation"></div>
 
-                                          </div> 
-                                          <div style="margin-top: 13px;" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-5 c-sml-span-6">
-                                            <button type="button" class="c-button" onclick="fetchRecordDev()">Fetch Record
-                                              <i id="gear1" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i></button></div>
+                                            </div>
+                                            <div style="margin-top: 13px;" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-5 c-sml-span-6">
+                                              <button type="button" class="c-button" onclick="fetchRecordDev()">Fetch Record
+                                                <i id="gear1" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i></button></div>
 
-                                          <div  id="c-message" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-8 c-sml-span-6">
+                                            <div  id="c-message" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-8 c-sml-span-6">
 
-                                          </div> 
+                                            </div>  
+                                          </div>  
+                                          
                                           <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-16 c-sml-span-12">
                                               <div class="c-label  "><label for="c-24-1629">Name of Development</label></div>
                                               <div class="c-editor"><input name="developement[name]" type="text" id="c-24-1629" placeholder="eg  City View Villas"></div>

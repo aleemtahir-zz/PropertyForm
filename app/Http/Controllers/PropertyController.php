@@ -183,32 +183,35 @@ class PropertyController extends Controller
         $TBS->LoadTemplate('templates/'.$file_name.'.docx');
 
         //pre($data); die;
-        foreach ($data as $key => $value) {
+        if(!empty($data)){
+            foreach ($data as $key => $value) {
 
             $array[$value['prefix']][$value['key']] = $value['value'];
-            
-        }
-        //pre($array); die;
-        try{
-            // replace variables
-            $TBS->MergeField('date', $date);
-            $TBS->MergeField('v', $array['v']);
-            $TBS->MergeField('p', $array['p']);
-            $TBS->MergeField('b', $array['b']);
-        }
-        catch(\Exception $e)
-        {
-          pre($e->getMessage());
-          //$property_info = '';  
-          //return $property_info;
-        }
+    
+            }
+            //pre($array); die;
+            try{
+                // replace variables
+                $TBS->MergeField('date', $date);
+                $TBS->MergeField('v', $array['v']);
+                $TBS->MergeField('p', $array['p']);
+                $TBS->MergeField('b', $array['b']);
+            }
+            catch(\Exception $e)
+            {
+              pre($e->getMessage());
+              //$property_info = '';  
+              //return $property_info;
+            }
 
-        // send the file
-        $var = file_get_contents('counter.txt');
-        $var++;
-        file_put_contents('counter.txt', $var);
-        $file = $array['v']['middle'].'_'.$array['b']['middle'].$var;
-        $TBS->Show(OPENTBS_DOWNLOAD, $file.'.docx');
+            // send the file
+            $var = file_get_contents('counter.txt');
+            $var++;
+            file_put_contents('counter.txt', $var);
+            $file = $array['v']['middle'].'_'.$array['b']['middle'].$var;
+            $TBS->Show(OPENTBS_DOWNLOAD, $file.'.docx');    
+        }
+        
 
         //Show Word Templates
         $templates = array(

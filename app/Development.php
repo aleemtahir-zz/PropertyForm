@@ -144,6 +144,7 @@ class Development extends Model
         $total_lots_s       = null;
         $common_lots_s      = null;
         $residential_lots_s = null;
+        pre($developement); die;
         $folio_key = explode(',', $developement['folio_no']);
         $folio_key = $folio_key[0];
 

@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Development;
+use Mail;
+use App\Http\Requests\DevForm;
 
 class DevController extends Controller
 {
@@ -33,8 +35,10 @@ class DevController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(DevForm $request)
     {
+
+        print_r($request->all()); die;
         $DevObj = new Development();
 
         //echo "<pre>"; print_r($request->all()); echo "</pre>";
@@ -50,6 +54,13 @@ class DevController extends Controller
 
         $developement       = $request->input('developement');
         $developement_id    = $DevObj->add_developement($developement, $ids);
+
+        /*$data = array('name'=>"Aleem Tahir");
+        Mail::send('forms.thank_you',$data, function ($message) {
+            $message->from('hmf@williamswebs.com','Company Name');
+            $message->to('aleemtahir@gmail.com ');
+            $message->subject('Contact form submitted on domainname.com ');
+        });*/
 
         return view('forms.thank_you');
 
