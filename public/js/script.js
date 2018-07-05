@@ -164,9 +164,12 @@ $(document).ready(function(){
 =====================================*/
 function fetchRecordDev()
 {
-	var folio_key = $('#c-25-1628').val();
+	var volume_no 	= $('#c-25-1627').val();
+	var folio_no 	= $('#c-25-1628').val();
 
-	if(folio_key)
+	var folio_key = volume_no+'/'+folio_no;
+
+	if(volume_no && folio_no)
 	{
 		$.ajaxSetup({
 		  headers: {
@@ -222,11 +225,17 @@ function fetchRecordDev()
             }
         }); 
 	}
-	else
+	else if(!volume_no)
 	{	
 		$('input').val('');
 		$('textarea').val('');
-		$('#c-message').text('*Please Fill Volume/Folio Field.') ; 
+		$('#c-message').text('*Please Fill Volume No. Field.') ; 
+	}
+	else if(!folio_no)
+	{	
+		$('input').val('');
+		$('textarea').val('');
+		$('#c-message').text('*Please Fill Folio No. Field.') ; 
 	}
 
 }

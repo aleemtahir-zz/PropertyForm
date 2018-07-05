@@ -124,10 +124,11 @@ class DevController extends Controller
         $req = $request->session()->get('request');
 
         $data = array('name'=>"Aleem Tahir", 'data' => $req);
-        Mail::send('forms.thank_you',$data, function ($message) use ($to_address) /*variable innheriting*/{
+        Mail::send('layouts.email',$data, function ($message) use ($to_address) /*variable innheriting*/{
             $message->from('hmf@williamswebs.com','Company Name');
             $message->to($to_address);
             $message->subject('Contact form submitted on domainname.com ');
         });
+        return view('forms.thank_you');
     }
 }

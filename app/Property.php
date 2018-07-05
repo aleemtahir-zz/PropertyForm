@@ -197,7 +197,7 @@ class Property extends Model
             );
             /*GET CONTRACT PAYMENT ID */
             $payment_id = DB::getPdo()->lastInsertId();
-            pre($payment_id); die;
+            //pre($payment_id); die;
         } 
         else
         {

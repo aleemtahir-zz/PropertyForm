@@ -13,7 +13,7 @@
 				<div class="c-forms-confirmation-message c-html"><span>Thank you for filling out the form. Your response has been recorded.</span></div>
 				<div class="c-forms-confirmation-message">
 					<div class="c-button-section">
-						<div class="c-field c-col-1 c-sml-col-1 c-span-4 c-sml-span-2">
+						<div class="c-field c-col-1 c-sml-col-1 c-span-2 c-sml-span-2">
                           <div class="c-editor">
                           	{!! Form::label('email', 'E-Mail Address'); !!}
                           	{!! Form::text('email', 'aleemtahir@gmail.com', ['style' => 'width:150px']); !!}

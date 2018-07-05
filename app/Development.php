@@ -145,8 +145,10 @@ class Development extends Model
         $common_lots_s      = null;
         $residential_lots_s = null;
         //pre($developement); die;
-        $folio_key = explode(',', $developement['folio_no']);
-        $folio_key = $folio_key[0];
+        /*$folio_key = explode(',', $developement['folio_no']);
+        $folio_key = $folio_key[0];*/
+
+        $folio_key = $developement['volume_no'].'/'.$developement['folio_no'];
 
         if(!empty($developement['t_lots_i']))
           $total_lots_s = convertNumberToWord($developement['t_lots_i']);
@@ -161,6 +163,7 @@ class Development extends Model
         $data = [
                     'id'                => $folio_key, 
                     'name'              => $developement['name'], 
+                    'volume_no'          => $developement['volume_no'], 
                     'folio_no'          => $developement['folio_no'], 
                     'plan_no'           => $developement['plan_no'], 
                     'address_id'        => $address_id, 
@@ -339,7 +342,7 @@ class Development extends Model
 
         /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
         $dev_info = DB::table('tbl_developement_detail as dt')
-                        ->select('dt.name as dt-name','dt.folio_no as dt-folio_no','dt.plan_no as dt-plan_no','dt.total_lots_i as dt-t_lots_i', 'dt.total_lots_s as dt-t_lots_w', 'dt.residential_lots_i as dt-r_lots_i',
+                        ->select('dt.name as dt-name','dt.volume_no as dt-volume_no','dt.folio_no as dt-folio_no','dt.plan_no as dt-plan_no','dt.total_lots_i as dt-t_lots_i', 'dt.total_lots_s as dt-t_lots_w', 'dt.residential_lots_i as dt-r_lots_i',
                           'dt.residential_lots_s as dt-r_lots_w', 'dt.common_lots_i as dt-c_lots_i',
                           'dt.common_lots_s as dt-c_lots_w', 'dt.lot_ids as dt-lot_ids', 'dt.rsrv_road_no as dt-rsrv_road', 
                           //Development Address

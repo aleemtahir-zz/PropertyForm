@@ -48,7 +48,7 @@
                                           <h3>DEVELOPMENT DETAILS</h3>
                                       </div>
                                       <div class="">
-                                        <div {{-- style="width: 80px; margin: 0 20px 0 20px; "  --}}class="container row">
+                                        <div class="container row">
                                             <div style="margin: 10px 0 0 3px; position: absolute; " class="c-label  ">
                                               <label for="c-25-1628">Volume / Folio</label>
                                             </div>
