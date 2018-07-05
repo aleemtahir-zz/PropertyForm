@@ -16,6 +16,7 @@ class DevController extends Controller
      */
     public function index()
     {
+        //return view('forms.thank_you');
         return view('forms.dev');
     }
 
@@ -38,7 +39,7 @@ class DevController extends Controller
     public function store(DevForm $request)
     {
 
-        print_r($request->all()); die;
+        //print_r($request->all()); die;
         $DevObj = new Development();
 
         //echo "<pre>"; print_r($request->all()); echo "</pre>";
@@ -55,12 +56,8 @@ class DevController extends Controller
         $developement       = $request->input('developement');
         $developement_id    = $DevObj->add_developement($developement, $ids);
 
-        /*$data = array('name'=>"Aleem Tahir");
-        Mail::send('forms.thank_you',$data, function ($message) {
-            $message->from('hmf@williamswebs.com','Company Name');
-            $message->to('aleemtahir@gmail.com ');
-            $message->subject('Contact form submitted on domainname.com ');
-        });*/
+        // Store result
+        $request->session()->put('request', $request->input('developement[folio_no]'));
 
         return view('forms.thank_you');
 
@@ -119,5 +116,18 @@ class DevController extends Controller
         $response = $DevObj->get_development($id);
 
         return json_encode($response);
+    }
+
+    public function sendEmail(Request $request)
+    {
+        $to_address = $request->input('email');
+        $req = $request->session()->get('request');
+
+        $data = array('name'=>"Aleem Tahir", 'data' => $req);
+        Mail::send('forms.thank_you',$data, function ($message) use ($to_address) /*variable innheriting*/{
+            $message->from('hmf@williamswebs.com','Company Name');
+            $message->to($to_address);
+            $message->subject('Contact form submitted on domainname.com ');
+        });
     }
 }

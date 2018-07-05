@@ -22,6 +22,10 @@ Route::post('merge',[
     'as' => 'merge',
     'uses' => 'PropertyController@mergeDownload'
 ]);
+Route::post('sendemail',[
+    'as' => 'sendemail',
+    'uses' => 'DevController@sendEmail'
+]);
 Route::resource('development','DevController');
 Route::resource('payment','PaymentController');
 Route::resource('upload','UploadController');

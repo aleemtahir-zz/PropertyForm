@@ -57,7 +57,7 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'hmf@williamswebs.com'),
-        'name' => env('MAIL_FROM_NAME', 'Company Name'),
+        'name' => env('MAIL_FROM_NAME', 'Test Company Name'),
     ],
 
     /*

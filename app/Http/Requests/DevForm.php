@@ -24,8 +24,8 @@ class DevForm extends FormRequest
     public function rules()
     {
         return [
-            'developement.volume_no'  =>'required|numeric|max:4',
-            'developement.folio_no'   =>'required|numeric|max:4'
+            'developement.volume_no'  =>'required|numeric',
+            'developement.folio_no'   =>'required|numeric'
         ];
     }
     /**
