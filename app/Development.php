@@ -148,7 +148,7 @@ class Development extends Model
         /*$folio_key = explode(',', $developement['folio_no']);
         $folio_key = $folio_key[0];*/
 
-        $folio_key = $developement['volume_no'].'/'.$developement['folio_no'];
+        $folio_key = $developement['volume_no'].'_'.$developement['folio_no'];
 
         if(!empty($developement['t_lots_i']))
           $total_lots_s = convertNumberToWord($developement['t_lots_i']);

@@ -13,8 +13,23 @@ class Property extends Model
     //User Trait
     use InsertOnDuplicateKey;
 
-    public function add_developer($developer)
+    public function check_developer($data)
     {
+      $folio_key = $data['volume_no'].'_'.$data['folio_no'];
+      $dev_info = DB::table('tbl_developement_detail')
+                         ->select('developer_id')
+                         ->where('id', $folio_key)
+                         ->first();
+      $dev_id = '';                   
+      if(!empty($dev_info))
+        $dev_id = $dev_info->developer_id;
+      
+      return $dev_id;                    
+    }
+
+    public function add_developer($developer, $devId='')
+    {
+
     	  $address_id   = null;
 
         $company_name = $developer['company_name'];
@@ -23,7 +38,7 @@ class Property extends Model
         //UNSET KEYS WHICH ARE EMPTY
         //scanArray($developer);
         $developer = arrangeMultiArray($developer);
-
+        $i = 0;
         foreach ($developer as $key => $developer) {
 
         	//GET ADDRESS ID
@@ -41,68 +56,81 @@ class Property extends Model
 	        //******************
 
 	        $mapper = array(
-			    'name','last','middle','suffix','trn_no','dob','occupation',
-			    'phone','mobile','email','logo'
-			);
+  			    'name','last','middle','suffix','trn_no','dob','occupation',
+  			    'phone','mobile','email'
+    			);
 
-			foreach ($mapper as $key) {
+    			foreach ($mapper as $key) {
 
-				if( !array_key_exists($key, $developer) )
-				  $developer[$key] = null;
-			}
+    				if( !array_key_exists($key, $developer) )
+    				  $developer[$key] = null;
+    			}
 
-			if( !empty($developer['dob']) ){
-				$developer['dob'] = date('Y-m-d',strtotime($developer['dob']));
-			}
+    			if( !empty($developer['dob']) ){
+    				$developer['dob'] = date('Y-m-d',strtotime($developer['dob']));
+    			}
 
-	        /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
-	        $dev_info = DB::table('tbl_developer_detail')
-	                       ->select('id')
-	                       ->where('company_name', $company_name)
-	                       ->where('fname', $developer['first'])
-	                       ->where('mname', $developer['middle'])
-	                       ->where('lname', $developer['last'])
-	                       ->where('suffix', $developer['suffix'])
-	                       ->where('trn_no', $developer['trn_no'])
-	                       ->where('dob', $developer['dob'])
-	                       ->where('occupation', $developer['occupation'])
-	                       ->where('phone', $developer['phone'])
-	                       ->where('mobile', $developer['mobile'])
-	                       ->where('email', $developer['email'])
-	                       ->where('address_id', $address_id)
-	                       ->where('logo', $developer['logo'])
-	                       ->orderBy('id', 'desc')
-	                       ->first();
+          $developer_data = array(
+              'company_name'  => $company_name, 
+              'fname'         => $developer['first'], 
+              'mname'         => $developer['middle'], 
+              'lname'         => $developer['last'], 
+              'suffix'        => $developer['suffix'], 
+              'trn_no'        => $developer['trn_no'], 
+              'dob'           => $developer['dob'], 
+              'occupation'    => $developer['occupation'], 
+              'phone'         => $developer['phone'], 
+              'mobile'        => $developer['mobile'],
+              'email'         => $developer['email'],
+              'address_id'    => $address_id
+          );
+
+          if( !empty($devId) && $i == 0 )
+          {
+            $table_name = 'tbl_developer_detail';
+            //Update Developer
+            DB::table($table_name)
+              ->where('id', $devId)
+              ->update($developer_data);
+ 
+            $i++;
+            $dev_id[] = $devId;
+          }
+          else
+          {
+            /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
+            $dev_info = DB::table('tbl_developer_detail')
+                           ->select('id')
+                           ->where('company_name', $company_name)
+                           ->where('fname', $developer['first'])
+                           ->where('mname', $developer['middle'])
+                           ->where('lname', $developer['last'])
+                           ->where('suffix', $developer['suffix'])
+                           ->where('trn_no', $developer['trn_no'])
+                           ->where('dob', $developer['dob'])
+                           ->where('occupation', $developer['occupation'])
+                           ->where('phone', $developer['phone'])
+                           ->where('mobile', $developer['mobile'])
+                           ->where('email', $developer['email'])
+                           ->where('address_id', $address_id)
+                           ->orderBy('id', 'desc')
+                           ->first();
 
 
-	        if( empty($dev_info) ){
+            if( empty($dev_info) ){
 
-	          /*INSERT DEV INFO */
-	          DB::table('tbl_developer_detail')->insert(
-	                [
-	                    'company_name'  => $company_name, 
-	                    'fname'  		=> $developer['first'], 
-	                    'mname'  		=> $developer['middle'], 
-	                    'lname'  		=> $developer['last'], 
-	                    'suffix'  		=> $developer['suffix'], 
-	                    'trn_no'  		=> $developer['trn_no'], 
-	                    'dob'  			=> $developer['dob'], 
-	                    'occupation'  	=> $developer['occupation'], 
-	                    'phone'  		=> $developer['phone'], 
-	                    'mobile'        => $developer['mobile'],
-	                    'email'         => $developer['email'],
-	                    'address_id'    => $address_id,
-	                    'logo'          => $developer['logo']
-	                ]
-	            );
-	            /*GET DEV ID */
-	            $dev_id[] = DB::getPdo()->lastInsertId();
-	        } 
-	        else
-	        {
-	          $dev_id[] = $dev_info->id;
+              /*INSERT DEV INFO */
+              DB::table('tbl_developer_detail')->insert($developer_data);
+                /*GET DEV ID */
+                $dev_id[] = DB::getPdo()->lastInsertId();
+            } 
+            else
+            {
+              $dev_id[] = $dev_info->id;
 
-	        }
+            }  
+          }
+	        
         }
 
         return $dev_id;
@@ -365,8 +393,8 @@ class Property extends Model
     public function add_property($property, $ids)
     { 
         $address_id     = null;
-        $vendor_id   	= $ids['vendor'];
-        $buyer_id  		= $ids['buyer'];
+        $vendor_id   	  = $ids['vendor'];
+        $buyer_id  		  = $ids['buyer'];
         $payment_id     = $ids['payment'];
         $attorney_id    = $ids['attorney'];
 
@@ -386,60 +414,78 @@ class Property extends Model
           $folio_key = explode(',', $property['folio_no']);
           $folio_key = $folio_key[0];
         }
-          
-        //PREPARE PROPERTY DATA
-        $count = (count($vendor_id) >= count($buyer_id)) ? count($vendor_id) : count($buyer_id);
-        
-        for ($i=0; $i < $count ; $i++) { 
-          $data[$i]['id']           = $folio_key.'_'.$property['lot_no']; 
-        	$data[$i]['lot_no'] 		  = $property['lot_no']; 
-        	$data[$i]['folio_no'] 		= $property['folio_no']; 
-        	$data[$i]['plan_no'] 		  = $property['plan_no']; 
-        	$data[$i]['address_id'] 	= $address_id; 
-        	$data[$i]['address_id'] 	= $address_id; 
-        	$data[$i]['vendor_id'] 		= (isset($vendor_id[$i])) ? $vendor_id[$i] : null; 
-        	$data[$i]['buyer_id'] 		= (isset($buyer_id[$i])) ? $buyer_id[$i] : null; 
-        	$data[$i]['payment_id'] 	= $payment_id; 
-        	$data[$i]['attorney_id'] 	= $attorney_id; 
-        }
-        
+
+        $folio_key = $property['volume_no'].'_'.$property['folio_no'];
+    
         //******************
         //ADD property INFO
         //******************
-        
-        foreach ($data as $key => $property) 
+
+        //Get Key ID
+        $key = DB::table('tbl_key_id')
+             ->select('id')
+             ->where('volume_no', '=', $property['volume_no'])
+             ->where('folio_no', '=', $property['folio_no'])
+             ->where('lot_no', '=', $property['lot_no'])
+             ->orderBy('id', 'desc')
+             ->first();
+
+        if(empty($key))
         {
-        	$table_name    = 'tbl_property_detail';
-          $property_data = [
-              'id'                => $folio_key.'_'.$property['lot_no'], 
-              'lot_no'            => $property['lot_no'], 
-              'folio_no'          => $property['folio_no'], 
-              'plan_no'           => $property['plan_no'], 
-              'address_id'        => $address_id, 
-              'developer_id'      => $property['vendor_id'], 
-              'purchaser_id'      => $property['buyer_id'], 
-              'payment_id'        => $property['payment_id'], 
-              'attorney_id'       => $property['attorney_id'] 
-              
-          ];
+          DB::table('tbl_key_id')->insert(
+              [
+                  'volume_no' => $property['volume_no'], 
+                  'folio_no'  => $property['folio_no'],
+                  'lot_no'    => $property['lot_no'],
+              ]
+          );
+          /*GET DEV ID */
+          $key_id = DB::getPdo()->lastInsertId();
+        }
+        else
+        {
+          $key_id = $key->id;
 
-          //Insert Update Development Data
-          Property::insertOnDuplicateKey($property_data,$table_name);
+        }
 
-	        // if( empty($property_info) ){
 
-	        //     /*INSERT property DETAIL */
-	        //     DB::table('tbl_property_detail')->insert(
-	                
-	        //     );
-	        //     GET property ID 
-	        //     $property_id[] = DB::getPdo()->lastInsertId();
-	        // } 
-	        // else
-	        // {
-	        //   $property_id[] = $property_info->id;
+        //Insert Property
+        $table_name    = 'tbl_property_detail';
+        $property_data = [
+            'id'                => $key_id, 
+            'lot_no'            => $property['lot_no'], 
+            'volume_no'         => $property['volume_no'], 
+            'folio_no'          => $property['folio_no'], 
+            'plan_no'           => $property['plan_no'], 
+            'address_id'        => $address_id, 
+            'payment_id'        => $payment_id, 
+            'attorney_id'       => $attorney_id
+            
+        ];
 
-	        // }	
+        //Insert Update Property Data
+        Property::insertOnDuplicateKey($property_data,$table_name);
+
+        //INSERT VENDOR ASSOCIATION
+        foreach ($vendor_id as $key => $value) {
+            $vendorUpdate = array();
+            $table_name   = 'tbl_property_vendor_assoc';
+            $vendorUpdate['property_id']  = $key_id;
+            $vendorUpdate['developer_id'] = $value;
+
+            //Insert Ignore Vendor
+            Property::insertIgnore($vendorUpdate,$table_name);
+        }
+
+        //INSERT BUYER ASSOCIATION
+        foreach ($buyer_id as $key => $value) {
+            $buyerUpdate = array();
+            $table_name   = 'tbl_property_buyer_assoc';
+            $buyerUpdate['property_id']  = $key_id;
+            $buyerUpdate['purchaser_id'] = $value;
+
+            //Insert Ignore Vendor
+            Property::insertIgnore($buyerUpdate,$table_name);
         }
 
         
@@ -562,7 +608,10 @@ class Property extends Model
         $folio  = $folio[0];  //1st part is key
 
         //id
-        $id = $folio.'_'.$lot;
+        $arr = explode('_', $folio);
+        $volume_no  = $arr[0];
+        $folio_no   = $arr[1];
+        $lot_no     = $lot;
 
         //pre($folio);
         /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
@@ -582,15 +631,15 @@ class Property extends Model
                           //'co.capacity as c-co-capacity','co.landline as c-co-landline',
                           
                           //Vendor                       
-                          'v.company_name as v-company_name','v.fname as v-first','v.mname as v-middle','v.lname as v-last','v.suffix as v-suffix','v.trn_no as v-trn_no','v.dob as v-dob','v.occupation as v-occupation','v.phone as v-phone','v.mobile as v-mobile','v.email as v-email',
+                          /*'v.company_name as v-company_name','v.fname as v-first','v.mname as v-middle','v.lname as v-last','v.suffix as v-suffix','v.trn_no as v-trn_no','v.dob as v-dob','v.occupation as v-occupation','v.phone as v-phone','v.mobile as v-mobile','v.email as v-email',*/
                           //Vendor Address
-                          'va.line1 as v-address-line1','va.line2 as v-address-line2','va.city as v-address-city','va.state as v-address-state', 'va.postal as v-address-postal','va.country as v-address-country',
+                          /*'va.line1 as v-address-line1','va.line2 as v-address-line2','va.city as v-address-city','va.state as v-address-state', 'va.postal as v-address-postal','va.country as v-address-country',*/
 
                           //Buyer                       
                           //'b.company_name as b-company_name',
-                          'b.fname as b-first','b.mname as b-middle','b.lname as b-last','b.suffix as b-suffix','b.trn_no as b-trn_no','b.dob as b-dob','b.occupation as b-occupation','b.bussiness_place as b-bussiness_place','b.phone as b-phone','b.mobile as b-mobile','b.email as b-email',
+                          /*'b.fname as b-first','b.mname as b-middle','b.lname as b-last','b.suffix as b-suffix','b.trn_no as b-trn_no','b.dob as b-dob','b.occupation as b-occupation','b.bussiness_place as b-bussiness_place','b.phone as b-phone','b.mobile as b-mobile','b.email as b-email',*/
                           //Buyer Address
-                          'ba.line1 as b-address-line1','ba.line2 as b-address-line2','ba.city as b-address-city','ba.state as b-address-state', 'ba.postal as b-address-postal','ba.country as b-address-country',
+                          /*'ba.line1 as b-address-line1','ba.line2 as b-address-line2','ba.city as b-address-city','ba.state as b-address-state', 'ba.postal as b-address-postal','ba.country as b-address-country',*/
 
                           //Attorney 
                           'a.company_name as a-firm_name',
@@ -611,16 +660,18 @@ class Property extends Model
                           'fc.name as m-fc-name','fc.symbol as m-fc-symbol','fc.exchange_rate as m-fc-rate'
                         )
                         ->join('tbl_address as pa', 'p.address_id', '=', 'pa.id')
-                        ->join('tbl_developer_detail as v', 'p.developer_id', '=', 'v.id')
-                        ->join('tbl_address as va', 'v.address_id', '=', 'va.id')
-                        ->join('tbl_purchaser_detail as b', 'p.purchaser_id', '=', 'b.id')
-                        ->join('tbl_address as ba', 'b.address_id', '=', 'ba.id')
+                        //->join('tbl_developer_detail as v', 'p.developer_id', '=', 'v.id')
+                        //->join('tbl_address as va', 'v.address_id', '=', 'va.id')
+                        //->join('tbl_purchaser_detail as b', 'p.purchaser_id', '=', 'b.id')
+                        //->join('tbl_address as ba', 'b.address_id', '=', 'ba.id')
                         ->join('tbl_attorney_detail as a', 'p.attorney_id', '=', 'a.id')
                         ->join('tbl_person_info as ao', 'a.officer_id', '=', 'ao.id')
                         ->join('tbl_address as aa', 'a.address_id', '=', 'aa.id')
                         ->join('tbl_monetary_detail as m', 'p.payment_id', '=', 'm.id')
                         ->join('tbl_foriegn_currency as fc', 'm.fc_id', '=', 'fc.id')
-                        ->where('p.id', '=', $id)
+                        ->where('p.volume_no', '=', $volume_no)
+                        ->where('p.folio_no', '=', $folio_no)
+                        ->where('p.lot_no', '=', $lot_no)
                         ->get(); 
         /*dd(DB::getQueryLog());*/
 

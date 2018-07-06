@@ -36,10 +36,24 @@
                                     <h3>Property Details</h3>
                                 </div>
                                 <div class="">
-                                    <div class="c-text-singleline c-field c-col-12 c-sml-col-1 c-span-7 c-sml-span-12">
+                                    <!-- <div class="c-text-singleline c-field c-col-12 c-sml-col-1 c-span-7 c-sml-span-12">
                                         <div class="c-label  "><label for="c-2-768">Volume/Folio No</label></div>
                                         <div class="c-editor"><input name="property[folio_no]" type="text" id="c-2-768" placeholder=""></div>
                                         <div class="c-validation"></div>
+                                    </div> -->
+                                    <div style="margin: 10px 0 0 3px; position: absolute; left: 0;" class="c-label  ">
+                                      <label for="c-25-1628">Volume / Folio</label>
+                                    </div>
+                                    <div style="margin-top: 22px;" class="c-field c-col-1 c-sml-col-1 c-span-2 c-sml-span-2">
+                                      <div style=" " class="c-editor"><input name="property[volume_no]" type="text" id="c-25-1627" placeholder="1234"></div>
+
+                                    </div>
+                                    <span style="font-weight: bold; position: absolute; margin-top: 30px">/</span>
+
+                                    <div style="margin-top: 22px; padding-left: 0; width: 65px;" class="c-field c-text-singleline c-col-17 c-sml-col-1 c-span-3 c-sml-span-2">
+                                      <div class="c-editor"><input name="property[folio_no]" type="text" id="c-2-768" placeholder="1234"></div>
+                                      <div class="c-validation"></div>
+
                                     </div>
 
                                     <div style="margin-top: 13px;" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-5 c-sml-span-6">

@@ -16,7 +16,7 @@
 						<div class="c-field c-col-1 c-sml-col-1 c-span-4 c-sml-span-2">
                           <div class="c-editor">
                           	{!! Form::label('email', 'E-Mail Address'); !!}
-                          	{!! Form::text('email', 'aleemtahir@gmail.com', ['style' => 'width:150px']); !!}
+                          	{!! Form::text('email', 'aleemtahir@gmail.com', ['style' => 'width:180px']); !!}
                           </div>
                         </div>
 	                    <div class="c-action">
@@ -25,7 +25,7 @@
 	                </div>
 					<div class="c-button-section at-btn">
 	                    <div class="c-action">
-	                    	<a href='{!! url('property/show'); !!}' target="_blank">Go To Property Form</a>
+	                    	<a href='{!! url('property'); !!}' target="_blank">Go To Property Form</a>
 	                    </div>
 	                </div>	
 	            </div>

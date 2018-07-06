@@ -40,8 +40,11 @@ class PropertyController extends Controller
         //echo "<pre>"; print_r($request->all()); echo "</pre>";
         $PropertyObj = new Property();
 
+        $data     = $request->input('property');
+        $devId  = $PropertyObj->check_developer($data);
+
         $vendor             = $request->input('vendor');
-        $ids['vendor']      = $PropertyObj->add_developer($vendor);
+        $ids['vendor']      = $PropertyObj->add_developer($vendor, $devId);
 
         $payment            = $request->input('monetary');
         $ids['payment']     = $PropertyObj->add_payment($payment);
@@ -52,7 +55,6 @@ class PropertyController extends Controller
         $attorney           = $request->input('attorney');
         $ids['attorney']    = $PropertyObj->add_attorney($attorney);
 
-        
         $property           = $request->input('property');
         $PropertyObj->add_property($property, $ids);
 

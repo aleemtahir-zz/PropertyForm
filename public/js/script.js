@@ -167,7 +167,7 @@ function fetchRecordDev()
 	var volume_no 	= $('#c-25-1627').val();
 	var folio_no 	= $('#c-25-1628').val();
 
-	var folio_key = volume_no+'/'+folio_no;
+	var folio_key = volume_no+'_'+folio_no;
 
 	if(volume_no && folio_no)
 	{
@@ -244,9 +244,12 @@ function fetchRecordDev()
 =====================================*/
 function onClickFolio()
 {
-	var folio_key 	= $('#c-2-768').val();
+	var volume_no 	= $('#c-25-1627').val();
+	var folio_no 	= $('#c-2-768').val();
 
-	if(folio_key)
+	folio_key = volume_no+'_'+folio_no;
+
+	if(volume_no && folio_no)
 	{
 		$.ajaxSetup({
 		  headers: {
@@ -304,19 +307,29 @@ function onClickFolio()
             }
         }); 
 	}
-	else
+	else if(!volume_no)
 	{	
 		$('input').val('');
 		$('textarea').val('');
-		$('#c-message-folio').text('*Please Fill Volume/Folio Field.') ; 
+		$('#c-message-folio').text('*Please Fill Volume No. Field.') ; 
+	}
+	else if(!folio_no)
+	{	
+		$('input').val('');
+		$('textarea').val('');
+		$('#c-message-folio').text('*Please Fill Folio No. Field.') ; 
 	}
 
 }
 
 function onClickLot()
 {
-	var folio_key 	= $('#c-2-768').val();
+	var volume_no 	= $('#c-25-1627').val();
+	var folio_no 	= $('#c-2-768').val();
 	var lot_key 	= $('#c-0-770').val();
+
+	if(folio_no && volume_no)
+		folio_key = volume_no+'_'+folio_no;		
 
 	if(folio_key && lot_key)
 	{

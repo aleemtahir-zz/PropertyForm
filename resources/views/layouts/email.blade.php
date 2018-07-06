@@ -11,7 +11,8 @@
 					</div>
 				</div>
 				<div class="c-forms-confirmation-message c-html"><span>Thank you for filling out the form. Your response has been recorded.</span></div>
-				<div class="c-forms-confirmation-message">
+				<div class="c-forms-confirmation-message c-html"><span>Your Volume/Folio No. is {}.</span></div>
+				<!-- <div class="c-forms-confirmation-message">
 					<div class="c-button-section">
 						<div class="c-field c-col-1 c-sml-col-1 c-span-2 c-sml-span-2">
                           <div class="c-editor">
@@ -28,7 +29,7 @@
 	                    	<a href='{!! url('property/show'); !!}' target="_blank">Go To Property Form</a>
 	                    </div>
 	                </div>	
-	            </div>
+	            </div> -->
 			</div>
 			
 			<div class="c-footer-terms" >
