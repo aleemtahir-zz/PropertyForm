@@ -27,7 +27,7 @@ class Property extends Model
       return $dev_id;                    
     }
 
-    public function add_developer($developer, $devId='')
+    public function add_developer($developer, $devId='', &$error=false)
     {
 
     	  $address_id   = null;
@@ -47,7 +47,7 @@ class Property extends Model
 	          $address_obj = $developer['address'];
 	          nullToString($address_obj);
 
-	          $address_id = get_address($address_obj);
+	          $address_id = get_address($address_obj, $error);
 
 	        }
 	          
@@ -70,6 +70,9 @@ class Property extends Model
     				$developer['dob'] = date('Y-m-d',strtotime($developer['dob']));
     			}
 
+          //Transaction
+          DB::beginTransaction();
+
           $developer_data = array(
               'company_name'  => $company_name, 
               'fname'         => $developer['first'], 
@@ -86,13 +89,21 @@ class Property extends Model
           );
 
           if( !empty($devId) && $i == 0 )
-          {
+          { 
             $table_name = 'tbl_developer_detail';
-            //Update Developer
-            DB::table($table_name)
-              ->where('id', $devId)
-              ->update($developer_data);
+            
+            try {
+              //Update Developer
+              DB::table($table_name)
+                ->where('id', $devId)
+                ->update($developer_data);
  
+            } catch (Exception $e) {
+              DB::rollback();
+              $error = $e;
+              return;
+            }
+
             $i++;
             $dev_id[] = $devId;
           }
@@ -119,10 +130,18 @@ class Property extends Model
 
             if( empty($dev_info) ){
 
-              /*INSERT DEV INFO */
-              DB::table('tbl_developer_detail')->insert($developer_data);
-                /*GET DEV ID */
-                $dev_id[] = DB::getPdo()->lastInsertId();
+              try {
+                  /*INSERT DEV INFO */
+                  DB::table('tbl_developer_detail')->insert($developer_data);
+              } catch (Exception $e) {
+                DB::rollback();
+                $error = $e;
+                return;
+              }
+
+
+              /*GET DEV ID */
+              $dev_id[] = DB::getPdo()->lastInsertId();
             } 
             else
             {
@@ -136,7 +155,7 @@ class Property extends Model
         return $dev_id;
     }
 
-    public function add_payment($payment)
+    public function add_payment($payment, &$error=false)
     { 
         $fc_id       = null;
 
@@ -203,29 +222,37 @@ class Property extends Model
         
         if( empty($payment_info) ){
 
-          /*INSERT CONTRACT PAYMENT DETAIL */
-          DB::table('tbl_monetary_detail')->insert(
+          try {
+            /*INSERT CONTRACT PAYMENT DETAIL */
+            DB::table('tbl_monetary_detail')->insert(
                 [
-                    'fc_id'         	 => $fc_id, 
-                    'price_i'       	 => $payment['price_i'],
-                    'price_w'       	 => $price_w,
-                    'j_price_i'     	 => $payment['jprice_i'],
-                    'j_price_w'      	 => $jprice_w,
-                    'deposit'       	 => $payment['deposit'],
-                    'second_payment'	 => $payment['second_pay'],
-                    'final_payment' 	 => $payment['final_pay'],
-                    'half_title' 		   => $payment['half_title'],
-                    'half_agreement' 	 => $payment['half_agreement'],
+                    'fc_id'            => $fc_id, 
+                    'price_i'          => $payment['price_i'],
+                    'price_w'          => $price_w,
+                    'j_price_i'        => $payment['jprice_i'],
+                    'j_price_w'        => $jprice_w,
+                    'deposit'          => $payment['deposit'],
+                    'second_payment'   => $payment['second_pay'],
+                    'final_payment'    => $payment['final_pay'],
+                    'half_title'       => $payment['half_title'],
+                    'half_agreement'   => $payment['half_agreement'],
                     'half_stamp_duty'  => $payment['half_stamp_duty'],
-                    'half_reg_fee' 		 => $payment['half_reg_fee'],
-                    'inc_cost' 			   => $payment['inc_cost'],
-                    'maintenance_expense' 	=> $payment['maintenance_expense'],
-                    'identification_fee' 	  => $payment['identification_fee'],
+                    'half_reg_fee'     => $payment['half_reg_fee'],
+                    'inc_cost'         => $payment['inc_cost'],
+                    'maintenance_expense'   => $payment['maintenance_expense'],
+                    'identification_fee'    => $payment['identification_fee'],
                 ]
-            );
-            /*GET CONTRACT PAYMENT ID */
-            $payment_id = DB::getPdo()->lastInsertId();
-            //pre($payment_id); die;
+            );  
+          } catch (Exception $e) {
+            DB::rollback();
+            $error = $e;
+            return;
+          }
+
+          
+          /*GET CONTRACT PAYMENT ID */
+          $payment_id = DB::getPdo()->lastInsertId();
+          //pre($payment_id); die;
         } 
         else
         {
@@ -236,7 +263,7 @@ class Property extends Model
         return $payment_id;
     }
 
-    public function add_purchaser($purchaser)
+    public function add_purchaser($purchaser, &$error=false)
     {
     	$address_id   = null;
 
@@ -252,7 +279,7 @@ class Property extends Model
 	          $address_obj = $purchaser['address'];
 	          nullToString($address_obj);
 
-	          $address_id = get_address($address_obj);
+	          $address_id = get_address($address_obj, $error);
 
 	        }
 	          
@@ -294,25 +321,32 @@ class Property extends Model
 
 	        if( empty($dev_info) ){
 
-	          /*INSERT DEV INFO */
-	          DB::table('tbl_purchaser_detail')->insert(
-	                [
-	                    'fname'  		=> $purchaser['first'], 
-	                    'mname'  		=> $purchaser['middle'], 
-	                    'lname'  		=> $purchaser['last'], 
-	                    'suffix'  		=> $purchaser['suffix'], 
-	                    'trn_no'  		=> $purchaser['trn_no'], 
-	                    'dob'  			=> $purchaser['dob'], 
-	                    'occupation'  	=> $purchaser['occupation'], 
-	                    'bussiness_place'=> $purchaser['bussiness_place'], 
-	                    'phone'  		=> $purchaser['phone'], 
-	                    'mobile'        => $purchaser['mobile'],
-	                    'email'         => $purchaser['email'],
-	                    'address_id'    => $address_id
-	                ]
-	            );
-	            /*GET DEV ID */
-	            $dev_id[] = DB::getPdo()->lastInsertId();
+            try {
+              /*INSERT DEV INFO */
+              DB::table('tbl_purchaser_detail')->insert(
+                  [
+                      'fname'     => $purchaser['first'], 
+                      'mname'     => $purchaser['middle'], 
+                      'lname'     => $purchaser['last'], 
+                      'suffix'      => $purchaser['suffix'], 
+                      'trn_no'      => $purchaser['trn_no'], 
+                      'dob'       => $purchaser['dob'], 
+                      'occupation'    => $purchaser['occupation'], 
+                      'bussiness_place'=> $purchaser['bussiness_place'], 
+                      'phone'     => $purchaser['phone'], 
+                      'mobile'        => $purchaser['mobile'],
+                      'email'         => $purchaser['email'],
+                      'address_id'    => $address_id
+                  ]
+              );    
+            } catch (Exception $e) {
+              DB::rollback();
+              $error = $e;
+              return;
+            }
+	          
+            /*GET DEV ID */
+            $dev_id[] = DB::getPdo()->lastInsertId();
 	        } 
 	        else
 	        {
@@ -325,7 +359,7 @@ class Property extends Model
     }
 
 
-    public function add_attorney($attorney)
+    public function add_attorney($attorney, &$error=false)
     {
     	$address_id  = null;
         $officer_id  = null;
@@ -339,7 +373,7 @@ class Property extends Model
           $address_obj = $attorney['address'];
           nullToString($address_obj);
 
-          $address_id = get_address($address_obj);
+          $address_id = get_address($address_obj, $error);
 
         }
           
@@ -349,7 +383,7 @@ class Property extends Model
             $pa = $attorney['pa'];
             nullToString($pa);
 
-            $officer_id = get_officer($pa,'attorney_officer');
+            $officer_id = get_officer($pa, $error,'attorney_officer');
         }
 
 
@@ -369,16 +403,24 @@ class Property extends Model
 
         if( empty($cont_info) ){
 
-          /*INSERT DEV INFO */
-          DB::table('tbl_attorney_detail')->insert(
+
+          try {
+            /*INSERT DEV INFO */
+            DB::table('tbl_attorney_detail')->insert(
                 [
                     'company_name'  => $attorney['firm_name'], 
                     'officer_id'  => $officer_id,
                     'address_id'=> $address_id,
                 ]
-            );
-            /*GET DEV ID */
-            $cont_id = DB::getPdo()->lastInsertId();
+            );    
+          } catch (Exception $e) {
+            DB::rollback();
+            $error = $e;
+            return;
+          }
+          
+          /*GET DEV ID */
+          $cont_id = DB::getPdo()->lastInsertId();
         } 
         else
         {
@@ -390,7 +432,7 @@ class Property extends Model
     }
 
 
-    public function add_property($property, $ids)
+    public function add_property($property, $ids, &$error=false)
     { 
         $address_id     = null;
         $vendor_id   	  = $ids['vendor'];
@@ -404,7 +446,7 @@ class Property extends Model
           $address_obj = $property['address'];
           nullToString($address_obj);
 
-          $address_id = get_address($address_obj);
+          $address_id = get_address($address_obj, $error);
 
         }
 
@@ -448,23 +490,28 @@ class Property extends Model
 
         }
 
+        try {
+          //Insert Property
+          $table_name    = 'tbl_property_detail';
+          $property_data = [
+              'id'                => $key_id, 
+              'lot_no'            => $property['lot_no'], 
+              'volume_no'         => $property['volume_no'], 
+              'folio_no'          => $property['folio_no'], 
+              'plan_no'           => $property['plan_no'], 
+              'address_id'        => $address_id, 
+              'payment_id'        => $payment_id, 
+              'attorney_id'       => $attorney_id
+              
+          ];
 
-        //Insert Property
-        $table_name    = 'tbl_property_detail';
-        $property_data = [
-            'id'                => $key_id, 
-            'lot_no'            => $property['lot_no'], 
-            'volume_no'         => $property['volume_no'], 
-            'folio_no'          => $property['folio_no'], 
-            'plan_no'           => $property['plan_no'], 
-            'address_id'        => $address_id, 
-            'payment_id'        => $payment_id, 
-            'attorney_id'       => $attorney_id
-            
-        ];
-
-        //Insert Update Property Data
-        Property::insertOnDuplicateKey($property_data,$table_name);
+          //Insert Update Property Data
+          Property::insertOnDuplicateKey($property_data,$table_name);          
+        } catch (Exception $e) {
+          DB::rollback();
+          $error = $e;
+          return;
+        }
 
         //INSERT VENDOR ASSOCIATION
         foreach ($vendor_id as $key => $value) {
@@ -473,8 +520,15 @@ class Property extends Model
             $vendorUpdate['property_id']  = $key_id;
             $vendorUpdate['developer_id'] = $value;
 
-            //Insert Ignore Vendor
-            Property::insertIgnore($vendorUpdate,$table_name);
+            try {
+              //Insert Ignore Vendor
+              Property::insertIgnore($vendorUpdate,$table_name);
+              
+            } catch (Exception $e) {
+              DB::rollback();
+              $error = $e;
+              return;
+            }
         }
 
         //INSERT BUYER ASSOCIATION
@@ -484,11 +538,18 @@ class Property extends Model
             $buyerUpdate['property_id']  = $key_id;
             $buyerUpdate['purchaser_id'] = $value;
 
-            //Insert Ignore Vendor
-            Property::insertIgnore($buyerUpdate,$table_name);
+            try {
+              //Insert Ignore Vendor
+              Property::insertIgnore($buyerUpdate,$table_name);
+              
+            } catch (Exception $e) {
+              DB::rollback();
+              $error = $e;
+              return;
+            }
         }
 
-        
+        DB::commit();
         //return $property_id;
     }
 
@@ -723,18 +784,19 @@ class Property extends Model
       /*DB::enableQueryLog();*/
       /*dd(DB::getQueryLog());*/
 
+      $volume  = $values['volume'];
       $folio  = $values['folio'];
       $lot    = $values['lot'];
 
-      if(empty($folio) || empty($lot))
+      if(empty($volume) || empty($folio) || empty($lot))
         return 0;
       else
       {
-        $folio  = explode(',', $folio);
-        $folio  = $folio[0];  //1st part is key
+        /*$folio  = explode(',', $folio);
+        $folio  = $folio[0]; */ //1st part is key
 
         //id
-        $id = $folio.'_'.$lot;
+        //$id = $folio.'_'.$lot;
 
         //pre($folio);
         /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
@@ -792,19 +854,23 @@ class Property extends Model
                         )
                         ->join('tbl_developement_detail as dt', 'p.folio_no', '=', 'dt.folio_no')
                         ->join('tbl_address as pa', 'p.address_id', '=', 'pa.id')
-                        ->join('tbl_developer_detail as v', 'p.developer_id', '=', 'v.id')
+                        ->join('tbl_property_vendor_assoc as pva', 'pva.property_id', '=', 'p.id')
+                        ->join('tbl_developer_detail as v', 'pva.developer_id', '=', 'v.id')
                         ->join('tbl_address as va', 'v.address_id', '=', 'va.id')
-                        ->join('tbl_purchaser_detail as b', 'p.purchaser_id', '=', 'b.id')
+                        ->join('tbl_property_buyer_assoc as pba', 'pba.property_id', '=', 'p.id')
+                        ->join('tbl_purchaser_detail as b', 'pba.purchaser_id', '=', 'b.id')
                         ->join('tbl_address as ba', 'b.address_id', '=', 'ba.id')
                         ->join('tbl_attorney_detail as a', 'p.attorney_id', '=', 'a.id')
                         ->join('tbl_person_info as ao', 'a.officer_id', '=', 'ao.id')
                         ->join('tbl_address as aa', 'a.address_id', '=', 'aa.id')
                         ->join('tbl_monetary_detail as m', 'p.payment_id', '=', 'm.id')
                         ->join('tbl_foriegn_currency as fc', 'm.fc_id', '=', 'fc.id')
-                        ->where('p.id', '=', $id)
+                        ->where('p.volume_no', '=', $volume)
+                        ->where('p.folio_no', '=', $folio)
+                        ->where('p.lot_no', '=', $lot)
                         ->get(); 
         /*dd(DB::getQueryLog());*/
-
+        
         $mapper = array(
           'p'   => 'property',
           'v'   => 'vendor',

@@ -4,8 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Development;
-use Mail;
 use App\Http\Requests\DevForm;
+use Mail;
+use Exception;
 
 class DevController extends Controller
 {
@@ -40,26 +41,42 @@ class DevController extends Controller
     {
 
         //print_r($request->all()); die;
+        $error = false;
         $DevObj = new Development();
 
-        //echo "<pre>"; print_r($request->all()); echo "</pre>";
+        $data     = $request->input('developement');
+        $devId    = $DevObj->check_developer($data);
 
         $developer          = $request->input('developer');
-        $ids['developer']   = $DevObj->add_developer($developer);
+        $ids['developer']   = $DevObj->add_developer($developer, $devId, $error);
+
+        if($error)
+            return back()->withErrors($error->getMessage())->withInput();
 
         $contractor         = $request->input('contractor');
-        $ids['contractor']  = $DevObj->add_contractor($contractor);
+        $ids['contractor']  = $DevObj->add_contractor($contractor, $error);
+
+        if($error)
+            return back()->withErrors($error->getMessage())->withInput();
 
         $payment            = $request->input('payment');
-        $ids['payment']     = $DevObj->add_payment($payment);
+        $ids['payment']     = $DevObj->add_payment($payment, $error);
+
+        if($error)
+            return back()->withErrors($error->getMessage())->withInput();
 
         $developement       = $request->input('developement');
-        $developement_id    = $DevObj->add_developement($developement, $ids);
+        $developement_id    = $DevObj->add_developement($developement, $ids, $error);
 
-        // Store result
-        $request->session()->put('request', $request->input('developement[folio_no]'));
+        if(!$error)
+        {
+            // Store result
+            $request->session()->put('devRequest', $request->input('developement'));
 
-        return view('forms.thank_you');
+            return view('forms.thank_you');
+        }
+        else
+            return back()->withErrors($error->getMessage())->withInput();
 
     }
 
@@ -121,13 +138,12 @@ class DevController extends Controller
     public function sendEmail(Request $request)
     {
         $to_address = $request->input('email');
-        $req = $request->session()->get('request');
+        $data = $request->session()->get('devRequest');
 
-        $data = array('name'=>"Aleem Tahir", 'data' => $req);
-        Mail::send('layouts.email',$data, function ($message) use ($to_address,$data) /*variable innheriting*/{
+        Mail::send('layouts.email',$data, function ($message) use ($to_address) /*variable innheriting*/{
             $message->from('hmf@williamswebs.com','Company Name');
             $message->to($to_address);
-            $message->subject('Here is your Volume/Folio no. '.$data);
+            $message->subject('HMF Property Code');
         });
         return view('forms.thank_you');
     }

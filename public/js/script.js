@@ -149,9 +149,34 @@ $(document).ready(function(){
 		$('#gear-sub').show(); 
 		setTimeout(function(){ 
 	    	$('#gear-sub').hide();
-	    },400);
+	    },600);
 	    return true;
 	  });
+
+var fc = $('#fc_name').val();
+var mapper = {'United States Dollar': 'USD', 'Canadian Dollar': 'CAD', 'Pound Sterling': 'UKP'};
+
+$('#fc_symbol').val('');		        
+$('#fc_symbol').val(mapper[fc]);	
+/*Foriegn Currency
+=====================================*/
+	$('#fc_name').change(function(){
+		var fc = $('#fc_name').val();
+		var mapper = {'United States Dollar': 'USD', 'Canadian Dollar': 'CAD', 'Pound Sterling': 'UKP'};
+
+		$('#fc_symbol').val('');		        
+		$('#fc_symbol').val(mapper[fc]);		        
+	})
+
+/*Calculate Price
+=====================================*/
+	$('#c_price').change(function(){
+		var price = $('#c_price').val();
+		var pricej = $('#c_pricej').val();		        
+		var rate = $('#fc_rate').val();		        
+
+		$('#c_pricej').val(price*rate);		        
+	})	
 
 
 /*END Document Ready
@@ -331,7 +356,7 @@ function onClickLot()
 	if(folio_no && volume_no)
 		folio_key = volume_no+'_'+folio_no;		
 
-	if(folio_key && lot_key)
+	if(volume_no && folio_no  && lot_key)
 	{
 		$.ajaxSetup({
 		  headers: {
@@ -390,14 +415,14 @@ function onClickLot()
             }
         }); 
 	}
-	else if(!folio_key && !lot_key)
+	else if(!volume_no && !folio_no && !lot_key)
 	{	
 		$('input').val('');
 		$('textarea').val('');
 		$('#c-message-folio').text('*Please Fill Volume/Folio Field.') ; 
 		$('#c-message-lot').text('*Please Fill Lot No. Field.') ; 
 	}
-	else if(!folio_key)
+	else if(!volume_no && !folio_no)
 	{	
 		$('input').not('#c-0-770').val('');
 		$('textarea').val('');

@@ -117,7 +117,7 @@ function convertNumberToWord($num = false)
     return $words;
 }
 
-function get_address($address)
+function get_address($address, &$error=false)
 {
 
   $mapper = array(
@@ -150,8 +150,10 @@ function get_address($address)
 
   if( empty($result) ){
 
-    /*INSERT ADDRESS*/
-    DB::table('tbl_address')->insert(
+
+    try {
+      /*INSERT ADDRESS*/
+      DB::table('tbl_address')->insert(
           [
               'line1'     => $address['line1'], 
               'line2'     => $address['line2'], 
@@ -161,8 +163,13 @@ function get_address($address)
               'country'   => $address['country']
           ]
       );
-      /*GET ADDRESS ID */
-      $address_id = DB::getPdo()->lastInsertId();
+    } catch (Exception $e) {
+        DB::rollBack();
+        $error = $e;
+    }
+    
+    /*GET ADDRESS ID */
+    $address_id = DB::getPdo()->lastInsertId();
   } 
   else
   {
@@ -173,7 +180,7 @@ function get_address($address)
   return $address_id;
 }
 
-function get_officer($officer, $source='', $postfix='')
+function get_officer($officer, &$error=false, $source='', $postfix='')
 {
 
   $mapper = array(
@@ -191,24 +198,30 @@ function get_officer($officer, $source='', $postfix='')
       $officer[$key] = '';
   }
 
-  /*CHECK DEVELOPER OFFICER IF EXIST ALREADY*/
-  $result = DB::table('tbl_person_info')
-                 ->select('id')
-                 ->where('title', '=', $officer['title'.$postfix]) 
-                 ->where('first_name', '=', $officer['first'.$postfix])
-                 ->where('last_name', '=', $officer['last'.$postfix])
-                 ->where('suffix', '=', $officer['suffix'.$postfix])
-                 ->where('capacity', '=', $officer['capacity'.$postfix])
-                 ->where('landline', '=', $officer['landline'.$postfix])
-                 ->where('source', '=', $source)
-                 ->orderBy('id', 'desc')
-                 ->first();
+  try{
+    /*CHECK DEVELOPER OFFICER IF EXIST ALREADY*/
+    $result = DB::table('tbl_person_info')
+                   ->select('id')
+                   ->where('title', '=', $officer['title'.$postfix]) 
+                   ->where('first_name', '=', $officer['first'.$postfix])
+                   ->where('last_name', '=', $officer['last'.$postfix])
+                   ->where('suffix', '=', $officer['suffix'.$postfix])
+                   ->where('capacity', '=', $officer['capacity'.$postfix])
+                   ->where('landline', '=', $officer['landline'.$postfix])
+                   ->where('source', '=', $source)
+                   ->orderBy('id', 'desc')
+                   ->first();
+    
+  }
+  catch(\Exception $e){
+    $error = $e;
+  }
 
 
   if( empty($result) ){
-
-    /*INSERT DEV OFFICER */
-    DB::table('tbl_person_info')->insert(
+    try {
+      /*INSERT DEV OFFICER */
+      DB::table('tbl_person_info')->insert(
           [
               'title'     => $officer['title'.$postfix], 
               'first_name'=> $officer['first'.$postfix], 
@@ -219,8 +232,14 @@ function get_officer($officer, $source='', $postfix='')
               'source'      => $source
           ]
       );
-      /*GET DEV OFFICER ID */
-      $officer_id = DB::getPdo()->lastInsertId();
+    } catch (Exception $e) {
+        DB::rollBack();
+        $error = $e;
+        //return back()->withErrors($e->getMessage())->withInput();
+    }
+    
+    /*GET DEV OFFICER ID */
+    $officer_id = DB::getPdo()->lastInsertId();
   } 
   else
   {

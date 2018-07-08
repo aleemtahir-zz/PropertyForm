@@ -7,29 +7,11 @@
 			<div class="c-forms-confirmation" style="display: block;">
 				<div class="c-forms-heading">
 					<div class="c-forms-form-title">
-						<h2>Property Form</h2>
+						<h2>HMF Property</h2>
 					</div>
 				</div>
 				<div class="c-forms-confirmation-message c-html"><span>Thank you for filling out the form. Your response has been recorded.</span></div>
-				<div class="c-forms-confirmation-message c-html"><span>Your Volume/Folio No. is {}.</span></div>
-				<!-- <div class="c-forms-confirmation-message">
-					<div class="c-button-section">
-						<div class="c-field c-col-1 c-sml-col-1 c-span-2 c-sml-span-2">
-                          <div class="c-editor">
-                          	{!! Form::label('email', 'E-Mail Address'); !!}
-                          	{!! Form::text('email', 'aleemtahir@gmail.com', ['style' => 'width:150px']); !!}
-                          </div>
-                        </div>
-	                    <div class="c-action">
-	                    	{!! Form::button('Send', array('class' => 'c-button', 'type' => 'submit')); !!}
-	                    </div>
-	                </div>
-					<div class="c-button-section at-btn">
-	                    <div class="c-action">
-	                    	<a href='{!! url('property/show'); !!}' target="_blank">Go To Property Form</a>
-	                    </div>
-	                </div>	
-	            </div> -->
+				<div class="c-forms-confirmation-message c-html"><span>Your Volume/Folio No. is {!! $volume_no !!}/{!! $folio_no !!}.</span></div>
 			</div>
 			
 			<div class="c-footer-terms" >

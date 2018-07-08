@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Exception;
 use App\Property;
 use Carbon\Carbon;
+use App\Http\Requests\PropFromRequest;
 
 class PropertyController extends Controller
 {
@@ -35,39 +36,59 @@ class PropertyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PropFromRequest $request)
     {
         //echo "<pre>"; print_r($request->all()); echo "</pre>";
+        $error = false;
         $PropertyObj = new Property();
 
         $data     = $request->input('property');
         $devId  = $PropertyObj->check_developer($data);
 
         $vendor             = $request->input('vendor');
-        $ids['vendor']      = $PropertyObj->add_developer($vendor, $devId);
+        $ids['vendor']      = $PropertyObj->add_developer($vendor, $devId, $error);
+
+        if($error)
+            return back()->withErrors($error->getMessage())->withInput();
 
         $payment            = $request->input('monetary');
-        $ids['payment']     = $PropertyObj->add_payment($payment);
+        $ids['payment']     = $PropertyObj->add_payment($payment, $error);
+
+        if($error)
+            return back()->withErrors($error->getMessage())->withInput();
 
         $buyer              = $request->input('buyer');
-        $ids['buyer']       = $PropertyObj->add_purchaser($buyer);
+        $ids['buyer']       = $PropertyObj->add_purchaser($buyer, $error);
+
+        if($error)
+            return back()->withErrors($error->getMessage())->withInput();
 
         $attorney           = $request->input('attorney');
-        $ids['attorney']    = $PropertyObj->add_attorney($attorney);
+        $ids['attorney']    = $PropertyObj->add_attorney($attorney, $error);
+
+        if($error)
+            return back()->withErrors($error->getMessage())->withInput();
 
         $property           = $request->input('property');
-        $PropertyObj->add_property($property, $ids);
+        $PropertyObj->add_property($property, $ids, $error);
 
-        // Store all input
-        $request->session()->put('request', $request->all());
+        if($error)
+            return back()->withErrors($error->getMessage())->withInput();
+        else
+        {
+          // Store all input
+          $request->session()->put('propRequest', $request->all());
 
-        //Show Word Templates
-        $templates = array(
-            'developer_name_maintenance_agreement'/*,
-            'membership' */
-        );
+          //Show Word Templates
+          $templates = array(
+              'developer_name_maintenance_agreement'/*,
+              'membership' */
+          );
 
-        return view('forms.response',compact('templates'));
+          return view('forms.response',compact('templates'));
+          
+        }
+
     }
 
     /**
@@ -159,7 +180,9 @@ class PropertyController extends Controller
                 $file_name = 'membership';
             break;
         }
-        $req = $request->session()->get('request');
+        $req = $request->session()->get('propRequest');
+        //pre($req); die;
+        $values['volume']    = $req['property']['volume_no']; 
         $values['folio']    = $req['property']['folio_no']; 
         $values['lot']      = $req['property']['lot_no'];
 
