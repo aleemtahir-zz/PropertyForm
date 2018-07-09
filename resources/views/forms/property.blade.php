@@ -862,7 +862,7 @@
                                   </div>
                                   <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-8 c-sml-span-12">
                                       <div class="c-label  "><label for="c-44-1038">Incorporation Costs</label></div>
-                                      <div class="c-editor"><input max="monetary[inc_cost]" type="text" id="c-44-1038" placeholder=""></div>
+                                      <div class="c-editor"><input value="{!!old('monetary.inc_cost')!!}" name="monetary[inc_cost]" type="text" id="inc_cost" placeholder=""></div>
                                       <div class="c-validation"></div>
                                   </div>
                                   <div class="c-currency c-field c-col-9 c-sml-col-1 c-span-8 c-sml-span-12">

@@ -8,17 +8,16 @@
 			<div class="c-forms-confirmation" style="display: block;">
 				<div class="c-forms-heading">
 					<div class="c-forms-form-title">
-						<h2>Property Form</h2>
+						<h2>HMF Property Form</h2>
 					</div>
 				</div>
 				<div class="c-forms-confirmation-message c-html"><span>Thank you for filling out the form. Your response has been recorded.</span></div>
 				<div class="c-forms-confirmation-message">
-					<!-- <div class="c-forms-document-links">
-						<a class="c-forms-document-link" target="_blank" href="">
-						<span class="ms-word-file-icon-32x32"></span>
-						<span>HMF Property Sales Data Form - 13</span>
-						</a>
-					</div> -->
+					@if(session()->has('message'))
+					    <div class="alert alert-danger">
+					        {{ session()->get('message') }}
+					    </div>
+					@endif
 					<div class="c-choice-radiobuttons c-field c-col-13 c-sml-col-1 c-span-12 c-sml-span-12">
                         <legend class="c-label  ">Merge Data into Documents</legend>
                         <div class="c-helptext">Choose documents</div>
@@ -26,11 +25,11 @@
                         @foreach ($templates as $name)
                         <div class="row">
 							<div class="col-md-6">
-								{!! Form::checkbox('services[]', $name); !!}  
+								{!! Form::checkbox('templates[]', $name); !!}  
 					        	{!! Form::label('service' . $name, $name) !!} 
 							</div>
 							<div class="col-md-6">
-								{!! Form::button('Merge <i id="gear-sub" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>', 
+								{!! Form::button('Merge', 
 								['type' => 'submit','class' => 'c-button', 'name' => 'mergeBtn', 'value' => $name]); !!}
 
 							</div>
@@ -41,9 +40,15 @@
                         <div class="c-validation"></div>
                         
                     </div>
-					<div class="c-button-section">
+                    <div style=" padding-left: 0; width: 265px;" class="c-field c-text-singleline c-col-17 c-sml-col-1 c-span-8 c-sml-span-2">
+	                    <div class="c-editor">
+	                    	<input name="filename" type="text" id="filename" placeholder="File Name">
+	                    </div>
+	                    <div class="c-helptext">Write Filename in which you want to save it.</div>
+	                </div>
+					<div class="c-button-section" style="padding-left: 0 !important">
 	                    <div class="c-action">
-	                    	{!! Form::button('Merge', array('class' => 'c-button', 'type' => 'submit')); !!}
+	                    	{!! Form::button('Merge All <i id="gear-sub" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>', array('class' => 'c-button','name' => 'mergeAll', 'type' => 'submit')); !!}
 	                    </div>
 	                </div>
 				</div>

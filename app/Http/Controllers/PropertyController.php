@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PropFromRequest;
+use Illuminate\Support\Facades\Redirect;
 use Illuminate\Http\Request;
 use Exception;
 use App\Property;
 use Carbon\Carbon;
-use App\Http\Requests\PropFromRequest;
 
 class PropertyController extends Controller
 {
@@ -81,8 +82,9 @@ class PropertyController extends Controller
 
           //Show Word Templates
           $templates = array(
-              'developer_name_maintenance_agreement'/*,
-              'membership' */
+            'application_for_membership',
+            'building_agreement',
+            'developer_name_maintenance_agreement'
           );
 
           return view('forms.response',compact('templates'));
@@ -100,12 +102,13 @@ class PropertyController extends Controller
     public function show($id)
     {
         //Show Word Templates
-        /*$templates = array(
-            'developer_name_maintenance_agreement',
-            'membership' 
+        $templates = array(
+            'application_for_membership',
+            'building_agreement',
+            'developer_name_maintenance_agreement' 
         );
 
-        return view('forms.response',compact('templates'));*/
+        return view('forms.response',compact('templates'));
         //return view('forms.property');
     }
 
@@ -163,25 +166,22 @@ class PropertyController extends Controller
             $response   = $PropObj->get_development($folio);
         }
 
-
+        //pre($response); die;
         return json_encode($response);
     }
 
     public function mergeDownload(Request $request)
     {   
-        $file_name = '';
-        switch($request->mergeBtn) {
-
-            case 'developer_name_maintenance_agreement': 
-                $file_name = 'developer_name_maintenance_agreement';
-            break;
-
-            case 'membership': 
-                $file_name = 'membership';
-            break;
-        }
+        
+        if($request->templates)
+          $template_name = $request->templates;
+        elseif($request->mergeBtn)
+          $template_name[] = $request->mergeBtn;
+        else
+          return Redirect::to('property/show')->with('message', 'Please Select Any Template.');
+        
         $req = $request->session()->get('propRequest');
-        //pre($req); die;
+         
         $values['volume']    = $req['property']['volume_no']; 
         $values['folio']    = $req['property']['folio_no']; 
         $values['lot']      = $req['property']['lot_no'];
@@ -189,59 +189,35 @@ class PropertyController extends Controller
         $PropertyObj = new Property(); 
         $data = $PropertyObj->get_all($values);
 
-        //Date
-        $date['day']    = date('l');
-        $date['month']  = date('F');
-        $date['year']   = date('Y');
-
-        // Include classes 
-        // Load the TinyButStrong template engine 
-        require_once base_path('vendor/mbence/opentbs-bundle/MBence/OpenTBSBundle/lib/tbs_class.php'); 
-        // Load the OpenTBS plugin 
-        require_once base_path('vendor/mbence/opentbs-bundle/MBence/OpenTBSBundle/lib/tbs_plugin_opentbs.php'); 
-
-        // Initialize the TBS instance 
-        $TBS = new \clsTinyButStrong; // new instance of TBS 
-        $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN); // load the OpenTBS plugin
-
-        // load your template
-        $TBS->LoadTemplate('templates/'.$file_name.'.docx');
-
-        //pre($data); die;
-        if(!empty($data)){
-            foreach ($data as $key => $value) {
-
-            $array[$value['prefix']][$value['key']] = $value['value'];
-    
-            }
-            //pre($array); die;
-            try{
-                // replace variables
-                $TBS->MergeField('date', $date);
-                $TBS->MergeField('v', $array['v']);
-                $TBS->MergeField('p', $array['p']);
-                $TBS->MergeField('b', $array['b']);
-            }
-            catch(\Exception $e)
-            {
-              pre($e->getMessage());
-              //$property_info = '';  
-              //return $property_info;
-            }
-
-            // send the file
-            $var = file_get_contents('counter.txt');
-            $var++;
-            file_put_contents('counter.txt', $var);
-            $file = $array['v']['middle'].'_'.$array['b']['middle'].$var;
-            $TBS->Show(OPENTBS_DOWNLOAD, $file.'.docx');    
+        //Organize Data
+        foreach ($data as $key => $value) {
+          $array[$value['prefix']][$value['key']] = $value['value'];
         }
         
+  
+        //File Counter
+        $var = file_get_contents('counter.txt');
+        $var++;
+        file_put_contents('counter.txt', $var);
+
+        //File Save As Name
+        if(!empty($request->filename))
+          $file = $request->filename;
+        else
+          $file = $array['b']['middle'].'_'.$array['v']['middle'].'_'.$array['p']['volume_no'].'/'.$array['p']['folio_no'].'_'.$var;
+
+        $file = str_replace('__', '_', $file);
+
+        //Action
+        saveDoc($template_name, $file, $array);
+
 
         //Show Word Templates
         $templates = array(
-            'developer_name_maintenance_agreement'/*,
-            'membership' */
+            'application_for_membership',
+            'building_agreement',
+            'developer_name_maintenance_agreement'
+
         );
 
         return view('forms.response',compact('templates'));

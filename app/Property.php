@@ -597,17 +597,17 @@ class Property extends Model
                           //Contract Payment Foriegn Currency
                           'fc.name as cp-fc-name','fc.symbol as cp-fc-symbol','fc.exchange_rate as cp-fc-rate'
                         )
-                        ->join('tbl_address as dta', 'dt.address_id', '=', 'dta.id')
-                        ->join('tbl_developer_detail as d', 'dt.developer_id', '=', 'd.id')
-                        ->join('tbl_address as da', 'd.address_id', '=', 'da.id')
-                        ->join('tbl_person_info as so', 'dt.surveyor_id', '=', 'so.id')
-                        ->join('tbl_person_info as do1', 'd.officer_id_1', '=', 'do1.id')
-                        ->join('tbl_person_info as do2', 'd.officer_id_2', '=', 'do2.id')
-                        ->join('tbl_contractor_detail as c', 'dt.contractor_id', '=', 'c.id')
-                        ->join('tbl_address as ca', 'c.address_id', '=', 'ca.id')
-                        ->join('tbl_person_info as co', 'c.officer_id', '=', 'co.id')
-                        ->join('tbl_dev_contract_payment as cp', 'dt.payment_id', '=', 'cp.id')
-                        ->join('tbl_foriegn_currency as fc', 'cp.fc_id', '=', 'fc.id')
+                        ->leftJoin('tbl_address as dta', 'dt.address_id', '=', 'dta.id')
+                        ->leftJoin('tbl_developer_detail as d', 'dt.developer_id', '=', 'd.id')
+                        ->leftJoin('tbl_address as da', 'd.address_id', '=', 'da.id')
+                        ->leftJoin('tbl_person_info as so', 'dt.surveyor_id', '=', 'so.id')
+                        ->leftJoin('tbl_person_info as do1', 'd.officer_id_1', '=', 'do1.id')
+                        ->leftJoin('tbl_person_info as do2', 'd.officer_id_2', '=', 'do2.id')
+                        ->leftJoin('tbl_contractor_detail as c', 'dt.contractor_id', '=', 'c.id')
+                        ->leftJoin('tbl_address as ca', 'c.address_id', '=', 'ca.id')
+                        ->leftJoin('tbl_person_info as co', 'c.officer_id', '=', 'co.id')
+                        ->leftJoin('tbl_dev_contract_payment as cp', 'dt.payment_id', '=', 'cp.id')
+                        ->leftJoin('tbl_foriegn_currency as fc', 'cp.fc_id', '=', 'fc.id')
                         ->where('dt.id', '=', $id)
                         ->get(); 
         /*dd(DB::getQueryLog());*/
@@ -684,23 +684,23 @@ class Property extends Model
                           //Development Surveyor
                           //'so.title as dt-surveyor-title','so.first_name as dt-surveyor-first','so.last_name as dt-surveyor-last',
                           //Development Contractor
-                          //'c.company_name as c-company_name',
+                          'c.company_name as c-company_name',
                           //Contractor Address
-                          //'ca.line1 as c-address-line1','ca.line2 as c-address-line2','ca.city as c-address-city','ca.state as c-address-state', 'ca.country as c-address-country', 
+                          'ca.line1 as c-address-line1','ca.line2 as c-address-line2','ca.city as c-address-city','ca.state as c-address-state', 'ca.country as c-address-country', 
                           //Contractor Officer
-                          //'co.title as c-co-title','co.first_name as c-co-first','co.last_name as c-co-last','co.suffix as c-co-suffix',
-                          //'co.capacity as c-co-capacity','co.landline as c-co-landline',
+                          'co.title as c-co-title','co.first_name as c-co-first','co.last_name as c-co-last','co.suffix as c-co-suffix',
+                          'co.capacity as c-co-capacity','co.landline as c-co-landline',
                           
                           //Vendor                       
-                          /*'v.company_name as v-company_name','v.fname as v-first','v.mname as v-middle','v.lname as v-last','v.suffix as v-suffix','v.trn_no as v-trn_no','v.dob as v-dob','v.occupation as v-occupation','v.phone as v-phone','v.mobile as v-mobile','v.email as v-email',*/
+                          'v.company_name as v-company_name','v.fname as v-first','v.mname as v-middle','v.lname as v-last','v.suffix as v-suffix','v.trn_no as v-trn_no','v.dob as v-dob','v.occupation as v-occupation','v.phone as v-phone','v.mobile as v-mobile','v.email as v-email',
                           //Vendor Address
-                          /*'va.line1 as v-address-line1','va.line2 as v-address-line2','va.city as v-address-city','va.state as v-address-state', 'va.postal as v-address-postal','va.country as v-address-country',*/
+                          'va.line1 as v-address-line1','va.line2 as v-address-line2','va.city as v-address-city','va.state as v-address-state', 'va.postal as v-address-postal','va.country as v-address-country',
 
                           //Buyer                       
                           //'b.company_name as b-company_name',
-                          /*'b.fname as b-first','b.mname as b-middle','b.lname as b-last','b.suffix as b-suffix','b.trn_no as b-trn_no','b.dob as b-dob','b.occupation as b-occupation','b.bussiness_place as b-bussiness_place','b.phone as b-phone','b.mobile as b-mobile','b.email as b-email',*/
+                          'b.fname as b-first','b.mname as b-middle','b.lname as b-last','b.suffix as b-suffix','b.trn_no as b-trn_no','b.dob as b-dob','b.occupation as b-occupation','b.bussiness_place as b-bussiness_place','b.phone as b-phone','b.mobile as b-mobile','b.email as b-email',
                           //Buyer Address
-                          /*'ba.line1 as b-address-line1','ba.line2 as b-address-line2','ba.city as b-address-city','ba.state as b-address-state', 'ba.postal as b-address-postal','ba.country as b-address-country',*/
+                          'ba.line1 as b-address-line1','ba.line2 as b-address-line2','ba.city as b-address-city','ba.state as b-address-state', 'ba.postal as b-address-postal','ba.country as b-address-country',
 
                           //Attorney 
                           'a.company_name as a-firm_name',
@@ -720,16 +720,28 @@ class Property extends Model
                           //Payment Foriegn Currency
                           'fc.name as m-fc-name','fc.symbol as m-fc-symbol','fc.exchange_rate as m-fc-rate'
                         )
-                        ->join('tbl_address as pa', 'p.address_id', '=', 'pa.id')
-                        //->join('tbl_developer_detail as v', 'p.developer_id', '=', 'v.id')
-                        //->join('tbl_address as va', 'v.address_id', '=', 'va.id')
-                        //->join('tbl_purchaser_detail as b', 'p.purchaser_id', '=', 'b.id')
-                        //->join('tbl_address as ba', 'b.address_id', '=', 'ba.id')
-                        ->join('tbl_attorney_detail as a', 'p.attorney_id', '=', 'a.id')
-                        ->join('tbl_person_info as ao', 'a.officer_id', '=', 'ao.id')
-                        ->join('tbl_address as aa', 'a.address_id', '=', 'aa.id')
-                        ->join('tbl_monetary_detail as m', 'p.payment_id', '=', 'm.id')
-                        ->join('tbl_foriegn_currency as fc', 'm.fc_id', '=', 'fc.id')
+                        ->leftJoin('tbl_address as pa', 'p.address_id', '=', 'pa.id')
+                        ->leftJoin('tbl_property_vendor_assoc as pva', 'pva.property_id', '=', 'p.id')
+                        ->leftJoin('tbl_developer_detail as v', 'pva.developer_id', '=', 'v.id')
+                        ->leftJoin('tbl_address as va', 'v.address_id', '=', 'va.id')
+                        ->leftJoin('tbl_property_buyer_assoc as pba', 'pba.property_id', '=', 'p.id')
+                        ->leftJoin('tbl_purchaser_detail as b', 'pba.purchaser_id', '=', 'b.id')
+                        ->leftJoin('tbl_address as ba', 'b.address_id', '=', 'ba.id')
+                        ->leftJoin('tbl_attorney_detail as a', 'p.attorney_id', '=', 'a.id')
+                        ->leftJoin('tbl_person_info as ao', 'a.officer_id', '=', 'ao.id')
+                        ->leftJoin('tbl_address as aa', 'a.address_id', '=', 'aa.id')
+                        ->leftJoin('tbl_monetary_detail as m', 'p.payment_id', '=', 'm.id')
+                        ->leftJoin('tbl_foriegn_currency as fc', 'm.fc_id', '=', 'fc.id')
+
+                        ->leftJoin('tbl_developement_detail as dt', function($join){
+                          $join->on('p.volume_no', '=', 'dt.volume_no');
+                          $join->on('p.folio_no','=','dt.folio_no');
+                        })
+
+                        ->leftJoin('tbl_contractor_detail as c', 'dt.contractor_id', '=', 'c.id')
+                        ->leftJoin('tbl_address as ca', 'c.address_id', '=', 'ca.id')
+                        ->leftJoin('tbl_person_info as co', 'c.officer_id', '=', 'co.id')
+
                         ->where('p.volume_no', '=', $volume_no)
                         ->where('p.folio_no', '=', $folio_no)
                         ->where('p.lot_no', '=', $lot_no)
@@ -743,6 +755,7 @@ class Property extends Model
           'm'   => 'monetary',
           'a'   => 'attorney',
           'cp'  => 'payment',
+          'c'  => 'contractor',
         );                
 
         try{
@@ -801,7 +814,8 @@ class Property extends Model
         //pre($folio);
         /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
         $property_info = DB::table('tbl_property_detail as p')
-                        ->select('p.plan_no as p-plan_no','p.lot_no as p-lot_no', 'p.folio_no as p-folio_no', 
+                        ->select('p.plan_no as p-plan_no','p.lot_no as p-lot_no','p.volume_no as p-volume_no',
+                         'p.folio_no as p-folio_no', 
                           //Property Address
                           'pa.line1 as p-address-line1','pa.line2 as p-address-line2','pa.city as p-address-city',
                           'pa.state as p-address-state', 'pa.postal as p-address-postal',
@@ -812,12 +826,12 @@ class Property extends Model
                           'dt.common_lots_s as p-common_lots','dt.common_lots_i as p-common_lots_i',
                           'dt.lot_ids as p-lot_ids', 'dt.rsrv_road_no as p-rsrv_road_no',
                           //Development Contractor
-                          //'c.company_name as c-company_name',
+                          'c.company_name as c-company_name',
                           //Contractor Address
-                          //'ca.line1 as c-address-line1','ca.line2 as c-address-line2','ca.city as c-address-city','ca.state as c-address-state', 'ca.country as c-address-country', 
+                          'ca.line1 as c-address-line1','ca.line2 as c-address-line2','ca.city as c-address-city','ca.state as c-address-state', 'ca.country as c-address-country', 
                           //Contractor Officer
-                          //'co.title as c-co-title','co.first_name as c-co-first','co.last_name as c-co-last','co.suffix as c-co-suffix',
-                          //'co.capacity as c-co-capacity','co.landline as c-co-landline',
+                          'co.title as c-co-title','co.first_name as c-co-first','co.last_name as c-co-last','co.suffix as c-co-suffix',
+                          'co.capacity as c-co-capacity','co.landline as c-co-landline',
                           
                           //Vendor                       
                           'v.company_name as v-company_name','v.fname as v-first','v.mname as v-middle',
@@ -841,7 +855,7 @@ class Property extends Model
                           //Attorney Address
                           'aa.line1 as a-address-line1','aa.line2 as a-address-line2','aa.city as a-address-city','aa.state as a-address-state', 'aa.postal as a-address-postal','aa.country as a-address-country',
 
-                          //Payment
+                          //Monetary
                           'm.price_i as m-price_i','m.price_w as m-price_w','m.j_price_i as m-jprice_i', 
                           'm.j_price_w as m-jprice_w','m.deposit as m-deposit', 
                           'm.second_payment as m-second_pay','m.final_payment as m-final_pay',
@@ -850,21 +864,42 @@ class Property extends Model
                           'm.inc_cost as m-inc_cost','m.maintenance_expense as m-maintenance_expense',
                           'm.identification_fee as m-identification_fee',
                           //Payment Foriegn Currency
-                          'fc.name as m-fc-name','fc.symbol as m-fc-symbol','fc.exchange_rate as m-fc-rate'
+                          'fc.name as m-fc-name','fc.symbol as m-fc-symbol','fc.exchange_rate as m-fc-rate',
+
+                          //Dev Contract Payment
+                          'dcp.price_i as dcp-price_i','dcp.price_w as dcp-price_w','dcp.j_price_i as dcp-jprice_i', 
+                          'dcp.j_price_w as dcp-jprice_w','dcp.deposit as dcp-deposit', 
+                          'dcp.second_payment as dcp-second_payment', 'dcp.third_payment as dcp-third_payment',
+                          'dcp.fourth_payment as dcp-fourth_payment', 'dcp.final_payment as dcp-final_payment',
+                          //Payment Foriegn Currency
+                          'dfc.name as dcp-fc-name','dfc.symbol as dcp-fc-symbol','dfc.exchange_rate as dcp-fc-rate'
                         )
-                        ->join('tbl_developement_detail as dt', 'p.folio_no', '=', 'dt.folio_no')
-                        ->join('tbl_address as pa', 'p.address_id', '=', 'pa.id')
-                        ->join('tbl_property_vendor_assoc as pva', 'pva.property_id', '=', 'p.id')
-                        ->join('tbl_developer_detail as v', 'pva.developer_id', '=', 'v.id')
-                        ->join('tbl_address as va', 'v.address_id', '=', 'va.id')
-                        ->join('tbl_property_buyer_assoc as pba', 'pba.property_id', '=', 'p.id')
-                        ->join('tbl_purchaser_detail as b', 'pba.purchaser_id', '=', 'b.id')
-                        ->join('tbl_address as ba', 'b.address_id', '=', 'ba.id')
-                        ->join('tbl_attorney_detail as a', 'p.attorney_id', '=', 'a.id')
-                        ->join('tbl_person_info as ao', 'a.officer_id', '=', 'ao.id')
-                        ->join('tbl_address as aa', 'a.address_id', '=', 'aa.id')
-                        ->join('tbl_monetary_detail as m', 'p.payment_id', '=', 'm.id')
-                        ->join('tbl_foriegn_currency as fc', 'm.fc_id', '=', 'fc.id')
+                        ->leftJoin('tbl_address as pa', 'p.address_id', '=', 'pa.id')
+                        ->leftJoin('tbl_property_vendor_assoc as pva', 'pva.property_id', '=', 'p.id')
+                        ->leftJoin('tbl_developer_detail as v', 'pva.developer_id', '=', 'v.id')
+                        ->leftJoin('tbl_address as va', 'v.address_id', '=', 'va.id')
+                        ->leftJoin('tbl_property_buyer_assoc as pba', 'pba.property_id', '=', 'p.id')
+                        ->leftJoin('tbl_purchaser_detail as b', 'pba.purchaser_id', '=', 'b.id')
+                        ->leftJoin('tbl_address as ba', 'b.address_id', '=', 'ba.id')
+                        ->leftJoin('tbl_attorney_detail as a', 'p.attorney_id', '=', 'a.id')
+                        ->leftJoin('tbl_person_info as ao', 'a.officer_id', '=', 'ao.id')
+                        ->leftJoin('tbl_address as aa', 'a.address_id', '=', 'aa.id')
+
+                        ->leftJoin('tbl_monetary_detail as m', 'p.payment_id', '=', 'm.id')
+                        ->leftJoin('tbl_foriegn_currency as fc', 'm.fc_id', '=', 'fc.id')
+
+                        ->leftJoin('tbl_developement_detail as dt', function($join){
+                          $join->on('p.volume_no', '=', 'dt.volume_no');
+                          $join->on('p.folio_no','=','dt.folio_no');
+                        })
+
+                        ->leftJoin('tbl_contractor_detail as c', 'dt.contractor_id', '=', 'c.id')
+                        ->leftJoin('tbl_address as ca', 'c.address_id', '=', 'ca.id')
+                        ->leftJoin('tbl_person_info as co', 'c.officer_id', '=', 'co.id')
+
+                        ->leftJoin('tbl_dev_contract_payment as dcp', 'dt.payment_id', '=', 'dcp.id')
+                        ->leftJoin('tbl_foriegn_currency as dfc', 'dcp.fc_id', '=', 'dfc.id')
+
                         ->where('p.volume_no', '=', $volume)
                         ->where('p.folio_no', '=', $folio)
                         ->where('p.lot_no', '=', $lot)
@@ -877,7 +912,8 @@ class Property extends Model
           'b'   => 'buyer',
           'm'   => 'monetary',
           'a'   => 'attorney',
-          'cp'  => 'payment',
+          'c'   => 'contractor',
+          'dcp' => 'payment',
         );                
 
         try{
