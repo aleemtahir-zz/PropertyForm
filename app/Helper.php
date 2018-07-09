@@ -284,6 +284,8 @@ function saveDoc($templates='', $file, $data='')
             $TBS->MergeField('b', $data['b']);
             $TBS->MergeField('dcp', $data['dcp']);
             $TBS->MergeField('c', $data['c']);
+            $TBS->MergeField('da1', $data['da1']);
+            $TBS->MergeField('da2', $data['da2']);
         }
         catch(\Exception $e)
         {

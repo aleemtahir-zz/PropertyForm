@@ -842,6 +842,13 @@ class Property extends Model
                           //Vendor Address
                           'va.line1 as v-address-line1','va.line2 as v-address-line2','va.city as v-address-city','va.state as v-address-state', 'va.postal as v-address-postal','va.country as v-address-country',
 
+                          //Developer Authorised 1
+                          'da1.title as da1-title', 'da1.first_name as da1-first_name', 'da1.last_name as da1-last_name', 
+                          'da1.suffix as da1-suffix', 'da1.capacity as da1-capacity', 'da1.landline as da1-landline',
+                          //Developer Authorised 2
+                          'da2.title as da2-title', 'da2.first_name as da2-first_name', 'da2.last_name as da2-last_name', 
+                          'da2.suffix as da2-suffix', 'da2.capacity as da2-capacity', 'da2.landline as da2-landline',
+
                           //Buyer                       
                           //'b.company_name as b-company_name',
                           'b.fname as b-first','b.mname as b-middle','b.lname as b-last','b.suffix as b-suffix','b.trn_no as b-trn_no','b.dob as b-dob','b.occupation as b-occupation','b.bussiness_place as b-bussiness_place','b.phone as b-phone','b.mobile as b-mobile','b.email as b-email',
@@ -877,6 +884,8 @@ class Property extends Model
                         ->leftJoin('tbl_address as pa', 'p.address_id', '=', 'pa.id')
                         ->leftJoin('tbl_property_vendor_assoc as pva', 'pva.property_id', '=', 'p.id')
                         ->leftJoin('tbl_developer_detail as v', 'pva.developer_id', '=', 'v.id')
+                        ->leftJoin('tbl_person_info as da1', 'v.officer_id_1', '=', 'da1.id')
+                        ->leftJoin('tbl_person_info as da2', 'v.officer_id_2', '=', 'da2.id')
                         ->leftJoin('tbl_address as va', 'v.address_id', '=', 'va.id')
                         ->leftJoin('tbl_property_buyer_assoc as pba', 'pba.property_id', '=', 'p.id')
                         ->leftJoin('tbl_purchaser_detail as b', 'pba.purchaser_id', '=', 'b.id')

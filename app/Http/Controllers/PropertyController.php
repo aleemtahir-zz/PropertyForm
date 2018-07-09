@@ -84,7 +84,8 @@ class PropertyController extends Controller
           $templates = array(
             'application_for_membership',
             'building_agreement',
-            'developer_name_maintenance_agreement'
+            'developer_name_maintenance_agreement',
+            'insrtument_of_transfer'
           );
 
           return view('forms.response',compact('templates'));
@@ -105,7 +106,8 @@ class PropertyController extends Controller
         $templates = array(
             'application_for_membership',
             'building_agreement',
-            'developer_name_maintenance_agreement' 
+            'developer_name_maintenance_agreement',
+            'insrtument_of_transfer' 
         );
 
         return view('forms.response',compact('templates'));
@@ -194,7 +196,7 @@ class PropertyController extends Controller
           $array[$value['prefix']][$value['key']] = $value['value'];
         }
         
-  
+          
         //File Counter
         $var = file_get_contents('counter.txt');
         $var++;
@@ -216,7 +218,8 @@ class PropertyController extends Controller
         $templates = array(
             'application_for_membership',
             'building_agreement',
-            'developer_name_maintenance_agreement'
+            'developer_name_maintenance_agreement',
+            'insrtument_of_transfer'
 
         );
 
