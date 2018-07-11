@@ -44,7 +44,7 @@ class UploadHandler
         $this->response = array();
         $this->options = array(
             'script_url' => 'http://localhost:8000/upload',
-            'upload_dir' => dirname($this->get_server_var('SCRIPT_FILENAME')).'/files/',
+            'upload_dir' => realpath(dirname(getcwd())).'\uploads\\',
             'upload_url' => $this->get_full_url().'/files/',
             'input_stream' => 'php://input',
             'user_dirs' => false,

@@ -675,10 +675,7 @@
     _trigger: function( type, event, data ) {
       var prop, orig;
       var callback = this.options[ type ];
-      console.log('event\n'+event);
-      console.log('type\n'+type);
-      console.log('data\n'+data);
-      console.log('callback\n'+callback);
+
       data = data || {};
       event = $.Event( event );
       event.type = ( type === this.widgetEventPrefix ?

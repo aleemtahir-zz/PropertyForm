@@ -61,8 +61,7 @@ class UploadController extends Controller
 
         error_reporting(E_ALL | E_STRICT);
         $upload_handler = new \UploadHandler();
-
-        die;
+die;
 
         //Upload Sheet Content
         $excelReader = \PHPExcel_IOFactory::createReaderForFile($file_path);
@@ -92,7 +91,6 @@ class UploadController extends Controller
      */
     public function show($id)
     {
-        return view('forms.upload_property');
     }
 
     /**
