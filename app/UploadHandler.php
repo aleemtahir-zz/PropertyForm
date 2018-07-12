@@ -180,6 +180,7 @@ class UploadHandler
     }
 
     protected function initialize() {
+
         switch ($this->get_server_var('REQUEST_METHOD')) {
             case 'OPTIONS':
             case 'HEAD':
@@ -1288,6 +1289,7 @@ class UploadHandler
                 }
             }
             $this->body($json);
+
         }
         return $content;
     }

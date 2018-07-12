@@ -332,12 +332,16 @@ class Development extends Model
         //******************
         $price_w  = null;
         $jprice_w = null;
+        $deposit_w = null;
 
         if(!empty($payment['price_i']))
           $price_w = convertNumberToWord($payment['price_i']);
 
         if(!empty($payment['jprice_i']))
           $jprice_w = convertNumberToWord($payment['jprice_i']);
+
+        if(!empty($payment['deposit']))
+          $deposit_w = convertNumberToWord($payment['deposit']);
 
         /*CHECK PAYMENT INFO IF EXIST ALREADY*/
         $payment_info = DB::table('tbl_dev_contract_payment')
@@ -366,8 +370,9 @@ class Development extends Model
                       'price_i'       => $payment['price_i'],
                       'price_w'       => $price_w,
                       'j_price_i'     => $payment['jprice_i'],
-                      'j_price_w'      => $jprice_w,
+                      'j_price_w'     => $jprice_w,
                       'deposit'       => $payment['deposit'],
+                      'deposit_w'     => $deposit_w,
                       'second_payment'=> $payment['second_pay'],
                       'third_payment' => $payment['third_pay'],
                       'fourth_payment'=> $payment['fourth_pay'],

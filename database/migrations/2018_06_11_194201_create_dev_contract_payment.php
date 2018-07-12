@@ -22,6 +22,7 @@ class CreateDevContractPayment extends Migration
             $table->integer('j_price_i')->nullable();
             $table->string('j_price_w')->nullable();
             $table->integer('deposit')->nullable();
+            $table->string('deposit_w')->nullable();
             $table->integer('second_payment')->nullable();
             $table->integer('third_payment')->nullable();
             $table->integer('fourth_payment')->nullable();

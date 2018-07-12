@@ -875,7 +875,7 @@ class Property extends Model
 
                           //Dev Contract Payment
                           'dcp.price_i as dcp-price_i','dcp.price_w as dcp-price_w','dcp.j_price_i as dcp-jprice_i', 
-                          'dcp.j_price_w as dcp-jprice_w','dcp.deposit as dcp-deposit', 
+                          'dcp.j_price_w as dcp-jprice_w','dcp.deposit as dcp-deposit','dcp.deposit_w as dcp-deposit_w' , 
                           'dcp.second_payment as dcp-second_payment', 'dcp.third_payment as dcp-third_payment',
                           'dcp.fourth_payment as dcp-fourth_payment', 'dcp.final_payment as dcp-final_payment',
                           //Payment Foriegn Currency
@@ -955,7 +955,7 @@ class Property extends Model
             );          
             
         }                
-                         
+    
         return $property_info;
       }
     }

@@ -1,16 +1,18 @@
 @extends('layouts.upload_temp')
 @section('upload-content')
-<div id="c-forms-container" class="cognito c-safari c-lrg">
+<script type="text/javascript">
+    var baseurl = "{{url('/')}}";
+</script>
+<div style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);"id="c-forms-container" class="cognito c-safari c-lrg">
 
     <div class="container" style="background-color: white; ">
-    <h1>Upload Property Data</h1>
+    <h3>Upload Property Data</h3>
     
 
     <br>
     <!-- The file upload form used as target for the file upload widget -->
     <form id="fileupload" action="{{url('upload')}}" method="POST" enctype="multipart/form-data">
-        <!-- Redirect browsers with JavaScript disabled to the origin page -->
-        <noscript><input type="hidden" name="redirect" value="https://blueimp.github.io/jQuery-File-Upload/"></noscript>
+
         <!-- The fileupload-buttonbar contains buttons to add/delete files and start/cancel the upload -->
         <div class="row fileupload-buttonbar">
             <div class="col-lg-7">
@@ -167,39 +169,7 @@
     <!-- The File Upload user interface plugin -->
     <script src="{{asset('js/jquery.fileupload-ui.js')}}"></script>
     <!-- The main application script -->
-    <script  type="text/javascript">
-        $(function () {
-            'use strict';
-
-            // Initialize the jQuery File Upload widget:
-            $('#fileupload').fileupload({
-                // Uncomment the following to send cross-domain cookies:
-                //xhrFields: {withCredentials: true},
-                url: '{{url('upload')}}'
-            });
-
-            // Load existing files:
-            $('#fileupload').addClass('fileupload-processing');
-            $.ajaxSetup({
-              headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-              }
-            });
-            $.ajax({
-                // Uncomment the following to send cross-domain cookies:
-                //xhrFields: {withCredentials: true},
-                //'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content'),
-                url: $('#fileupload').fileupload('option', 'url'),
-                dataType: 'json',
-                context: $('#fileupload')[0]
-            }).always(function () {
-                $(this).removeClass('fileupload-processing');
-            }).done(function (result) {
-                $(this).fileupload('option', 'done')
-                    .call(this, $.Event('done'), {result: result});
-            });
-        });
-    </script>
+    <script src="{{asset('js/uploader.js')}}"></script>
 
 </div>  
 

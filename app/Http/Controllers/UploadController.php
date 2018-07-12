@@ -14,7 +14,9 @@ class UploadController extends Controller
      */
     public function index()
     {
+        
         return view('forms.upload_property');
+
     }
 
     /**
@@ -35,29 +37,6 @@ class UploadController extends Controller
      */
     public function store(Request $request)
     {
-        //pre($_FILES);
-        //Upload Developer Logo
-        /*$file = upload_logo('sheet');
-        //pre($file);
-        $file_path = "";
-        if($file['status'] == 1)
-        {
-            $file_path = $file['path'];
-            Session::flash('message', 'Upload Complete!'); 
-            Session::flash('alert-class', 'alert-success'); 
-            return view('forms.upload_property');
-        }*/
-
-        /*
-         * jQuery File Upload Plugin PHP Example
-         * https://github.com/blueimp/jQuery-File-Upload
-         *
-         * Copyright 2010, Sebastian Tschan
-         * https://blueimp.net
-         *
-         * Licensed under the MIT license:
-         * https://opensource.org/licenses/MIT
-         */
 
         error_reporting(E_ALL | E_STRICT);
         $upload_handler = new \UploadHandler();
@@ -91,6 +70,8 @@ die;
      */
     public function show($id)
     {
+        error_reporting(E_ALL | E_STRICT);
+        $upload_handler = new \UploadHandler();
     }
 
     /**
@@ -124,6 +105,7 @@ die;
      */
     public function destroy($id)
     {
+        $_GET['file'] = $id;
         error_reporting(E_ALL | E_STRICT);
         $upload_handler = new \UploadHandler();
     }
