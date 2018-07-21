@@ -160,23 +160,37 @@ $('#fc_symbol').val('');
 $('#fc_symbol').val(mapper[fc]);	
 /*Foriegn Currency
 =====================================*/
-	$('#fc_name').change(function(){
-		var fc = $('#fc_name').val();
-		var mapper = {'United States Dollar': 'USD', 'Canadian Dollar': 'CAD', 'Pound Sterling': 'UKP'};
+$('#fc_name').change(function(){
+	var fc = $('#fc_name').val();
+	var mapper = {'United States Dollar': 'USD', 'Canadian Dollar': 'CAD', 'Pound Sterling': 'UKP'};
 
-		$('#fc_symbol').val('');		        
-		$('#fc_symbol').val(mapper[fc]);		        
-	})
+	$('#fc_symbol').val('');		        
+	$('#fc_symbol').val(mapper[fc]);		        
+})
 
 /*Calculate Price
 =====================================*/
-	$('#c_price').change(function(){
-		var price = $('#c_price').val();
-		var pricej = $('#c_pricej').val();		        
-		var rate = $('#fc_rate').val();		        
+$('#c_price').change(function(){
+	var price = $('#c_price').val();
+	var pricej = $('#c_pricej').val();		        
+	var rate = $('#fc_rate').val();		        
 
-		$('#c_pricej').val(price*rate);		        
-	})	
+	$('#c_pricej').val(price*rate);		        
+})
+$('#fc_rate').change(function(){
+	var price = $('#c_price').val();
+	var pricej = $('#c_pricej').val();		        
+	var rate = $('#fc_rate').val();		        
+
+	$('#c_pricej').val(price*rate);		        
+})		
+
+
+$('input[type=file]').change(function () {
+	var filePath=$('#fileUpload').val();
+	$('.c-fileupload-dropzone-message').html(filePath.replace('C:\\fakepath\\','')); 
+});
+
 
 
 /*END Document Ready

@@ -96,6 +96,9 @@ class Development extends Model
               'address_id'    => $address_id,
               'logo'          => $logo_path
           ];
+          if(empty($logo_path))
+            unset($developer_data['logo']);
+
         } catch (Exception $e) {
             $error = $e;
             return;

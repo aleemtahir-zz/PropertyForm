@@ -36,3 +36,18 @@ button i{
 	float: right;
 	margin-left: 5px;
 }
+
+/*Input Validation
+========================================*/
+input#c-25-1627:valid {
+  color: green;
+}
+input#c-25-1628:valid {
+  color: green;
+}
+input#c-25-1627:invalid {
+  color: red;
+}
+input#c-25-1628:invalid {
+  color: red;
+}

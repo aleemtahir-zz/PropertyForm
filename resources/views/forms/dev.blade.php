@@ -48,22 +48,22 @@
                                           <h3>DEVELOPMENT DETAILS</h3>
                                       </div>
                                       <div class="">
-                                        <div class="container row">
+                                        <div style="height: 70px;" class="container row">
                                             <div style="margin: 10px 0 0 3px; position: absolute; " class="c-label  ">
-                                              <label for="c-25-1628">Volume / Folio</label>
+                                              <label for="c-25-1627">Volume / Folio</label>
                                             </div>
-                                            <div style="margin-top: 22px;" class="c-field c-col-1 c-sml-col-1 c-span-2 c-sml-span-2">
-                                              <div style=" " class="c-editor"><input value="{!!old('developement.volume_no')!!}" name="developement[volume_no]" type="text" id="c-25-1627" placeholder="1234"></div>
+                                            <div style="margin-top: 22px; width: 65px;" class="c-field c-col-1 c-sml-col-1 c-span-2 c-sml-span-2">
+                                              <div style=" " class="c-editor"><input value="{!!old('developement.volume_no')!!}" name="developement[volume_no]" type="text" id="c-25-1627" maxlength="4" pattern="\d{4}" required placeholder="1234"></div>
 
                                             </div>
                                             <span style="font-weight: bold; position: relative; margin-top: 30px">/</span>
 
                                             <div style="margin-top: 22px; padding-left: 0; width: 65px;" class="c-field c-text-singleline c-col-17 c-sml-col-1 c-span-3 c-sml-span-2">
-                                              <div class="c-editor"><input value="{!!old('developement.folio_no')!!}" name="developement[folio_no]" type="text" id="c-25-1628" placeholder="1234"></div>
+                                              <div class="c-editor"><input value="{!!old('developement.folio_no')!!}" name="developement[folio_no]" type="text" id="c-25-1628" placeholder="1234" maxlength="4" pattern="\d{4}" required></div>
                                               <div class="c-validation"></div>
 
                                             </div>
-                                            <div style="margin-top: 13px;" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-5 c-sml-span-6">
+                                            <div style="margin-top: 13px; width: 200px;" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-5 c-sml-span-6">
                                               <button type="button" class="c-button" onclick="fetchRecordDev()">Fetch Record
                                                 <i id="gear1" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i></button></div>
 
@@ -481,7 +481,7 @@
                                                                 <option value="Israel">Israel</option>
                                                                 <option value="Italy">Italy</option>
                                                                 <option value="Ivory Coast">Ivory Coast</option>
-                                                                <option value="Jamaica">Jamaica</option>
+                                                                <option selected="selected" value="Jamaica">Jamaica</option>
                                                                 <option value="Japan">Japan</option>
                                                                 <option value="Jordan">Jordan</option>
                                                                 <option value="Kazakhstan">Kazakhstan</option>
@@ -624,8 +624,8 @@
                                                 <div class="c-label  "><label for="c-23-1359">Company Logo</label></div>
                                                 <div class="c-editor c-fileupload" data-allowed-types="jpg,jpeg,gif,png" data-max-file-count="1" data-max-file-size="100">
                                                     <div class="c-fileupload-dropzone c-background-highlight">
-                                                        <div class="c-upload-button" tabindex="0">Upload<input type="file" value="{!!old('developer_logo')!!}" name="developer_logo" multiple="" tabindex="-1"></div>
-                                                        <span class="c-fileupload-dropzone-message">or drag files here.</span>
+                                                        <div class="c-upload-button" tabindex="0">Upload<input type="file" value="{!!old('developer_logo')!!}" name="developer_logo" id="fileUpload" tabindex="-1" accept=".jpg, .jpeg, .png"></div>
+                                                        <span class="c-fileupload-dropzone-message"></span>
                                                     </div>
                                                     <div class="c-validation c-warning"></div>
                                                     <div class="c-fileupload-filelist"></div>
@@ -809,7 +809,7 @@
                                                               <option value="Israel">Israel</option>
                                                               <option value="Italy">Italy</option>
                                                               <option value="Ivory Coast">Ivory Coast</option>
-                                                              <option value="Jamaica">Jamaica</option>
+                                                              <option selected="selected" value="Jamaica">Jamaica</option>
                                                               <option value="Japan">Japan</option>
                                                               <option value="Jordan">Jordan</option>
                                                               <option value="Kazakhstan">Kazakhstan</option>
