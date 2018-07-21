@@ -18,7 +18,12 @@ class DevController extends Controller
     public function index()
     {
         //return view('forms.thank_you');
-        return view('forms.dev');
+        if(strpos($_SERVER['PHP_SELF'], 'DeveloperDataFormA') !== false)
+            $template = 'DeveloperDataFormA';
+        else
+            $template = 'DeveloperDataFormB';
+
+        return view('forms.dev', compact('template'));
     }
 
     /**
@@ -73,7 +78,12 @@ class DevController extends Controller
             // Store result
             $request->session()->put('devRequest', $request->input('developement'));
 
-            return view('forms.thank_you');
+            if(strpos($_SERVER['PHP_SELF'], 'DeveloperDataFormA') !== false)
+                $template = 'FormA';
+            else
+                $template = 'FormB';
+
+            return view('forms.thank_you',compact('template'));
         }
         else
             return back()->withErrors($error->getMessage())->withInput();

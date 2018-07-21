@@ -2,7 +2,7 @@
 @section('content')
 
 <div id="c-forms-container" class="cognito c-safari c-lrg">
-    <form id="form" method="post" action="{{url('development')}}" enctype="multipart/form-data">
+    <form id="form" method="post" action="{{url($template)}}" enctype="multipart/form-data">
         {{ csrf_field() }}
         <div class="c-forms-form" tabindex="0">
             <div class="c-editor" style="display:none;">
@@ -53,13 +53,13 @@
                                               <label for="c-25-1627">Volume / Folio</label>
                                             </div>
                                             <div style="margin-top: 22px; width: 65px;" class="c-field c-col-1 c-sml-col-1 c-span-2 c-sml-span-2">
-                                              <div style=" " class="c-editor"><input value="{!!old('developement.volume_no')!!}" name="developement[volume_no]" type="text" id="c-25-1627" maxlength="4" pattern="\d{4}" required placeholder="1234"></div>
+                                              <div style=" " class="c-editor"><input value="{!!old('developement.volume_no')!!}" name="developement[volume_no]" type="text" id="c-25-1627" maxlength="4" pattern="\d{4}" placeholder="1234"></div>
 
                                             </div>
                                             <span style="font-weight: bold; position: relative; margin-top: 30px">/</span>
 
                                             <div style="margin-top: 22px; padding-left: 0; width: 65px;" class="c-field c-text-singleline c-col-17 c-sml-col-1 c-span-3 c-sml-span-2">
-                                              <div class="c-editor"><input value="{!!old('developement.folio_no')!!}" name="developement[folio_no]" type="text" id="c-25-1628" placeholder="1234" maxlength="4" pattern="\d{4}" required></div>
+                                              <div class="c-editor"><input value="{!!old('developement.folio_no')!!}" name="developement[folio_no]" type="text" id="c-25-1628" placeholder="1234" maxlength="4" pattern="\d{4}"></div>
                                               <div class="c-validation"></div>
 
                                             </div>

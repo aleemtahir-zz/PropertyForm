@@ -51,19 +51,19 @@
                                         <div class="c-validation"></div>
                                     </div> -->
                                     <div style="margin: 10px 0 0 3px; position: absolute; left: 0;" class="c-label  ">
-                                      <label for="c-25-1628">Volume / Folio</label>
+                                      <label for="c-25-1627">Volume / Folio</label>
                                     </div>
-                                    <div style="margin-top: 22px;" class="c-field c-col-1 c-sml-col-1 c-span-2 c-sml-span-2">
+                                    <div style="margin-top: 22px; width: 65px;" class="c-field c-col-1 c-sml-col-1 c-span-2 c-sml-span-2">
                                       <div class="c-editor">
-                                        <input {{-- placeholder="1234" --}} name="property[volume_no]" type="text" id="c-25-1627"  value="{!! old('property.volume_no')!!} ">
+                                        <input name="property[volume_no]" type="text" id="c-25-1627"  value="{!! old('property.volume_no')!!}" placeholder="1234" maxlength="4" pattern="\d{4}"">
                                       </div>
 
                                     </div>
                                     <span style="font-weight: bold; position: absolute; margin-top: 30px">/</span>
 
-                                    <div style="margin-top: 22px; padding-left: 0; width: 65px;" class="c-field c-text-singleline c-col-17 c-sml-col-1 c-span-3 c-sml-span-2">
+                                    <div style="margin-top: 22px; padding-left: 4px; width: 65px;" class="c-field c-text-singleline c-col-17 c-sml-col-1 c-span-3 c-sml-span-2">
                                       <div class="c-editor">
-                                        <input name="property[folio_no]" value="{!!old('property.folio_no')!!}" type="text" id="c-2-768" {{-- placeholder="1234" --}}>
+                                        <input name="property[folio_no]" value="{!!old('property.folio_no')!!}" type="text" id="c-2-768" placeholder="1234" maxlength="4" pattern="\d{4}">
                                       </div>
 
                                     </div>
@@ -252,7 +252,7 @@
                                                         <option value="Israel">Israel</option>
                                                         <option value="Italy">Italy</option>
                                                         <option value="Ivory Coast">Ivory Coast</option>
-                                                        <option value="Jamaica">Jamaica</option>
+                                                        <option selected="selected" value="Jamaica">Jamaica</option>
                                                         <option value="Japan">Japan</option>
                                                         <option value="Jordan">Jordan</option>
                                                         <option value="Kazakhstan">Kazakhstan</option>
@@ -618,7 +618,7 @@
                                                                       <option value="Israel">Israel</option>
                                                                       <option value="Italy">Italy</option>
                                                                       <option value="Ivory Coast">Ivory Coast</option>
-                                                                      <option value="Jamaica">Jamaica</option>
+                                                                      <option selected="selected" value="Jamaica">Jamaica</option>
                                                                       <option value="Japan">Japan</option>
                                                                       <option value="Jordan">Jordan</option>
                                                                       <option value="Kazakhstan">Kazakhstan</option>
@@ -1097,7 +1097,7 @@
                                                               <option value="Israel">Israel</option>
                                                               <option value="Italy">Italy</option>
                                                               <option value="Ivory Coast">Ivory Coast</option>
-                                                              <option value="Jamaica">Jamaica</option>
+                                                              <option selected="selected" value="Jamaica">Jamaica</option>
                                                               <option value="Japan">Japan</option>
                                                               <option value="Jordan">Jordan</option>
                                                               <option value="Kazakhstan">Kazakhstan</option>
@@ -1418,7 +1418,7 @@
                                                       <option value="Israel">Israel</option>
                                                       <option value="Italy">Italy</option>
                                                       <option value="Ivory Coast">Ivory Coast</option>
-                                                      <option value="Jamaica">Jamaica</option>
+                                                      <option selected="selected" value="Jamaica">Jamaica</option>
                                                       <option value="Japan">Japan</option>
                                                       <option value="Jordan">Jordan</option>
                                                       <option value="Kazakhstan">Kazakhstan</option>

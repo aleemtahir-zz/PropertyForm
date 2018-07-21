@@ -7,28 +7,37 @@
 			<div class="c-forms-confirmation" style="display: block;">
 				<div class="c-forms-heading">
 					<div class="c-forms-form-title">
-						<h2>Property Form</h2>
+						<h2>HMF Developer Data Form</h2>
 					</div>
 				</div>
-				<div class="c-forms-confirmation-message c-html"><span>Thank you for filling out the form. Your response has been recorded.</span></div>
-				<div class="c-forms-confirmation-message">
-					<div class="c-button-section">
-						<div class="c-field c-col-1 c-sml-col-1 c-span-4 c-sml-span-2">
-                          <div class="c-editor">
-                          	{!! Form::label('email', 'E-Mail Address'); !!}
-                          	{!! Form::text('email', 'aleemtahir@gmail.com', ['style' => 'width:180px']); !!}
-                          </div>
-                        </div>
-	                    <div class="c-action">
-	                    	{!! Form::button('Send', array('class' => 'c-button', 'type' => 'submit')); !!}
-	                    </div>
-	                </div>
-					<div class="c-button-section at-btn">
-	                    <div class="c-action">
-	                    	<a href='{!! url('property'); !!}' target="_blank">Go To Property Form</a>
-	                    </div>
-	                </div>	
-	            </div>
+				@if($template == 'FormA')
+					<div class="c-forms-confirmation-message c-html"><span>Thank you for completing the Developer Data Form.</span></div>
+					<div class="c-forms-confirmation-message">
+						<div class="c-button-section">
+							<div class="c-field c-col-1 c-sml-col-1 c-span-4 c-sml-span-2">
+	                          <div class="c-editor">
+	                          	<h4 style="float: left; font-size: 13px; margin: 8px 15px 0 0;">Send to HMF</h4>
+	                          	{!! Form::text('email', '', ['style' => 'width:180px', 'placeholder' => 'Email Address']); !!}
+	                          </div>
+	                        </div>
+		                    <div class="c-action">
+		                    	{!! Form::button('Send', array('class' => 'c-button', 'type' => 'submit')); !!}
+		                    	<div class="c-helptext">Send Volume/Folio No. to your Email id.</div>
+		                    </div>
+		                </div>
+		            </div>
+		        @endif
+		        @if($template == 'FormB')
+					<div class="c-forms-confirmation-message c-html"><span>Thank you for completing the Developer Data Form.</span></div>
+					<div class="c-forms-confirmation-message">
+						<div class="c-button-section at-btn">
+		                    <div class="c-action">
+		                    	<p style="float: left; font-size: 13px; margin: 0 8px 0 0;">Please proceed to the</p>
+		                    	<a href='{!! url('property'); !!}' target="_blank">Property Transfer Form</a>
+		                    </div>
+		                </div>	
+		            </div>
+		        @endif
 			</div>
 			
 			<div class="c-footer-terms" >

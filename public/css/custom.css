@@ -42,6 +42,9 @@ button i{
 input#c-25-1627:valid {
   color: green;
 }
+input#c-2-768:valid {
+  color: green;
+}
 input#c-25-1628:valid {
   color: green;
 }
@@ -49,5 +52,8 @@ input#c-25-1627:invalid {
   color: red;
 }
 input#c-25-1628:invalid {
+  color: red;
+}
+input#c-2-768:invalid {
   color: red;
 }
