@@ -38,6 +38,7 @@ class Property extends Model
         //UNSET KEYS WHICH ARE EMPTY
         //scanArray($developer);
         $developer = arrangeMultiArray($developer);
+
         $i = 0;
         foreach ($developer as $key => $developer) {
 
@@ -69,9 +70,6 @@ class Property extends Model
     			if( !empty($developer['dob']) ){
     				$developer['dob'] = date('Y-m-d',strtotime($developer['dob']));
     			}
-
-          //Transaction
-          DB::beginTransaction();
 
           $developer_data = array(
               'company_name'  => $company_name, 
@@ -549,7 +547,6 @@ class Property extends Model
             }
         }
 
-        DB::commit();
         //return $property_id;
     }
 
@@ -814,7 +811,7 @@ class Property extends Model
         //pre($folio);
         /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
         $property_info = DB::table('tbl_property_detail as p')
-                        ->select('p.plan_no as p-plan_no','p.lot_no as p-lot_no','p.volume_no as p-volume_no',
+                        ->select('p.id as p-id','p.plan_no as p-plan_no','p.lot_no as p-lot_no','p.volume_no as p-volume_no',
                          'p.folio_no as p-folio_no', 
                           //Property Address
                           'pa.line1 as p-address-line1','pa.line2 as p-address-line2','pa.city as p-address-city',
@@ -913,17 +910,7 @@ class Property extends Model
                         ->where('p.folio_no', '=', $folio)
                         ->where('p.lot_no', '=', $lot)
                         ->get(); 
-        /*dd(DB::getQueryLog());*/
-        
-        $mapper = array(
-          'p'   => 'property',
-          'v'   => 'vendor',
-          'b'   => 'buyer',
-          'm'   => 'monetary',
-          'a'   => 'attorney',
-          'c'   => 'contractor',
-          'dcp' => 'payment',
-        );                
+        /*dd(DB::getQueryLog());*/               
 
         try{
           $property_info = (array) $property_info[0];
@@ -933,31 +920,91 @@ class Property extends Model
           //pre($e->getMessage());
           $property_info = '';  
           return $property_info;
-        }
+        }             
+        
+        $property_info = $this->custom_mapper($property_info);
 
-        foreach ($property_info as $key => $value) 
-        {
-            $pieces = explode('-', $key);
-            $i = $pieces[0];
-            $pieces = array_reverse($pieces);
-            
-            if(count($pieces) == 3){
-              $input = $pieces[1]."_".$pieces[0];
-            }
-            else if(count($pieces) == 2){
-              $input = $pieces[0];
-            }
-
-            $property_info[$key]    = array(
-              'prefix'=> $i, 
-              'key'   => $input,
-              'value' => $value
-            );          
-            
-        }                
-    
         return $property_info;
       }
+    }
+
+    public function getAllVendors($id)
+    {
+      $vendorData = DB::table('tbl_property_vendor_assoc as pva')
+          ->select(
+            'v.company_name as v-company_name','v.fname as v-first','v.mname as v-middle',
+            'v.lname as v-last','v.suffix as v-suffix','v.trn_no as v-trn_no',
+            'v.dob as v-dob','v.occupation as v-occupation','v.phone as v-phone',
+            'v.mobile as v-mobile','v.email as v-email','v.logo as v-logo',
+
+            //Vendor Address
+            'va.line1 as v-address-line1','va.line2 as v-address-line2','va.city as v-address-city','va.state as v-address-state', 'va.postal as v-address-postal','va.country as v-address-country')
+          ->leftJoin('tbl_developer_detail as v', 'v.id', '=', 'pva.developer_id')
+          ->leftJoin('tbl_address as va', 'va.id', '=', 'v.address_id')
+          ->where('property_id','=',$id)
+          ->get();
+
+      foreach ($vendorData as $key => $value) {
+        $data[] = $this->custom_mapper($value);    
+      }    
+      return $data;
+    }
+
+    public function getAllBuyers($id)
+    {
+      $buyerData = DB::table('tbl_property_buyer_assoc as pba')
+          ->select(
+            'b.fname as b-first','b.mname as b-middle','b.lname as b-last','b.suffix as b-suffix','b.trn_no as b-trn_no','b.dob as b-dob','b.occupation as b-occupation','b.bussiness_place as b-bussiness_place','b.phone as b-phone','b.mobile as b-mobile','b.email as b-email',
+            //Buyer Address
+            'ba.line1 as b-address-line1','ba.line2 as b-address-line2','ba.city as b-address-city','ba.state as b-address-state', 'ba.postal as b-address-postal','ba.country as b-address-country')
+          ->leftJoin('tbl_purchaser_detail as b', 'b.id', '=', 'pba.purchaser_id')
+          ->leftJoin('tbl_address as ba', 'ba.id', '=', 'b.address_id')
+          ->where('property_id','=',$id)
+          ->get();
+
+      foreach ($buyerData as $key => $value) {
+        $data[] = $this->custom_mapper($value);    
+      }    
+      return $data;
+    }
+
+    public function custom_mapper($data){
+
+      $mapper = array(
+        'p'   => 'property',
+        'v'   => 'vendor',
+        'b'   => 'buyer',
+        'm'   => 'monetary',
+        'a'   => 'attorney',
+        'c'   => 'contractor',
+        'dcp' => 'payment',
+      ); 
+
+      $input = '';
+      $data = (array) $data;
+      foreach ($data as $key => $value) 
+      {
+          $pieces = explode('-', $key);
+          $i = $pieces[0];
+          $pieces = array_reverse($pieces);
+          
+          if(count($pieces) == 3){
+            $input = $pieces[1]."_".$pieces[0];
+          }
+          else if(count($pieces) == 2){
+            $input = $pieces[0];
+          }
+
+          $data[$key]    = array(
+            'prefix'=> $i, 
+            'key'   => $input,
+            'value' => $value
+          );          
+          
+      }
+
+      return $data; 
+
     }
 
 }

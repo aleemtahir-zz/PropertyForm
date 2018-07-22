@@ -57,3 +57,10 @@ input#c-25-1628:invalid {
 input#c-2-768:invalid {
   color: red;
 }
+
+.float-left{
+  float: left;
+}
+.float-right{
+  float: right;
+}

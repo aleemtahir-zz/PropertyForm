@@ -252,7 +252,7 @@
                                                         <option value="Israel">Israel</option>
                                                         <option value="Italy">Italy</option>
                                                         <option value="Ivory Coast">Ivory Coast</option>
-                                                        <option selected="selected" value="Jamaica">Jamaica</option>
+                                                        <option selected="selected"     >Jamaica</option>
                                                         <option value="Japan">Japan</option>
                                                         <option value="Jordan">Jordan</option>
                                                         <option value="Kazakhstan">Kazakhstan</option>
@@ -466,7 +466,7 @@
                                                   </div>
                                                   <div class="c-phone c-phone-international c-field c-col-7 c-sml-col-7 c-span-6 c-sml-span-6">
                                                       <div class="c-label  "><label for="c-21-1021">Mobile Phone</label></div>
-                                                      <div class="c-editor"><input value="{!!old('vednor.mobile.0')!!}" name="vendor[mobile][]" type="text" id="c-21-1021" placeholder=""></div>
+                                                      <div class="c-editor"><input value="{!!old('vednor.mobile.0')!!}" name="vendor[mobile][]" maxlength="10" type="text" id="c-21-1021" placeholder=""></div>
                                                       <div class="c-validation"></div>
                                                   </div>
                                                   <div class="c-phone c-phone-international c-field c-col-13 c-sml-col-1 c-span-12 c-sml-span-12">
@@ -781,9 +781,9 @@
                                   <h3>Monetary Details</h3>
                               </div>
                               <div class="">
-                                  <div class="c-choice-dropdown c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12">
-                                      <div class="c-label  "><label for="c-30-1052">Foreign Currency</label></div>
-                                      <div class="c-editor">
+                                  <div class="c-choice-dropdown c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
+                                      <div class="c-label"><label for="c-30-1052">Foreign Currency</label></div>
+                                      <div class="c-editor float-right">
                                           <div class="c-dropdown ">
                                               <select value="{!!old('monetary.fc.name')!!}" name="monetary[fc][name]" id="fc_name">
                                                   <option></option>
@@ -795,19 +795,18 @@
                                       </div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  <div class="c-text-singleline c-field c-col-13 c-sml-col-1 c-span-4 c-sml-span-4">
-                                      <div class="c-label  "><label for="c-31-1051">Symbol</label></div>
-                                      <div class="c-editor"><input value="{!!old('monetary.fc.symbol')!!}" name="monetary[fc][symbol]" type="text" id="fc_symbol" placeholder=""></div>
-                                      <div class="c-validation"></div>
-                                  </div>
-                                  <div class="c-text-singleline c-field c-col-17 c-sml-col-5 c-span-8 c-sml-span-8">
+                                  <div class="c-text-singleline c-field c-col-17 c-sml-col-5 c-span-10 c-sml-span-8">
                                       <div class="c-label  "><label for="c-32-1050">Exchange Rate</label></div>
-                                      <div class="c-editor"><input value="{!!old('monetary.fc.rate')!!} "name="monetary[fc][rate]" type="text" id="fc_rate" placeholder="$119.45"></div>
+                                      <div class="c-editor float-right"><input value="{!!old('monetary.fc.rate')!!} "name="monetary[fc][rate]" type="text" id="fc_rate" placeholder="$119.45"></div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-8 c-sml-span-12">
-                                      <div class="c-label  "><label for="c-33-1049">Sale Price</label></div>
-                                      <div class="c-editor"><input value="{!!old('monetary.price_i')!!}" name="monetary[price_i]" type="text" id="c_price" placeholder=""></div>
+                                  <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
+                                      <div class="c-label float-left"><label for="c-33-1049">Sale Price</label></div>
+                                      
+                                      <div class="c-editor float-left" style="width: 60px"><input value="{!!old('monetary.fc.symbol')!!}" name="monetary[fc][symbol]" type="text" id="fc_symbol" placeholder="symbol"></div>
+                                      <div class="c-validation"></div>
+
+                                      <div class="c-editor float-right" style="width: 165px"><input value="{!!old('monetary.price_i')!!}" name="monetary[price_i]" type="text" id="c_price" placeholder=""></div>
                                       <div class="c-validation"></div>
                                   </div>
                                   {{-- <div class="c-text-singleline c-field c-col-7 c-sml-col-1 c-span-18 c-sml-span-12">
@@ -815,9 +814,14 @@
                                       <div class="c-editor"><input name="monetary[price_w]" type="text" id="c-34-1048" placeholder=""></div>
                                       <div class="c-validation"></div>
                                   </div> --}}
-                                  <div class="c-currency c-field c-col-9 c-sml-col-1 c-span-8 c-sml-span-12">
+                                  <div class="c-currency c-field c-col-17 c-sml-col-1 c-span-10 c-sml-span-12">
+                                      <div class="c-label  "><label for="c-37-1045">Deposit</label></div>
+                                      <div class="c-editor float-right" ><input value="{!!old('monetary.deposit')!!}" name="monetary[deposit]" type="text" id="c-37-1045" placeholder=""></div>
+                                      <div class="c-validation"></div>
+                                  </div>
+                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
                                       <div class="c-label  "><label for="c-35-1047">Sale Price JAMAICAN</label></div>
-                                      <div class="c-editor"><input value="{!!old('monetary.jprice_i')!!}" name="monetary[jprice_i]" type="text" id="c_pricej" placeholder="j$"></div>
+                                      <div class="c-editor float-right" style="width: 165px"><input value="{!!old('monetary.jprice_i')!!}" name="monetary[jprice_i]" type="text" id="c_pricej" placeholder="j$"></div>
                                       <div class="c-validation"></div>
                                   </div>
                                   {{-- <div class="c-text-singleline c-field c-col-7 c-sml-col-1 c-span-18 c-sml-span-12">
@@ -825,54 +829,51 @@
                                       <div class="c-editor"><input name="monetary[jprice_w]" type="text" id="c-36-1046" placeholder=""></div>
                                       <div class="c-validation"></div>
                                   </div> --}}
-                                  <div class="c-currency c-field c-col-17 c-sml-col-1 c-span-8 c-sml-span-12">
-                                      <div class="c-label  "><label for="c-37-1045">Deposit</label></div>
-                                      <div class="c-editor"><input value="{!!old('monetary.deposit')!!}" name="monetary[deposit]" type="text" id="c-37-1045" placeholder=""></div>
-                                      <div class="c-validation"></div>
-                                  </div>
-                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-8 c-sml-span-12">
+                                  
+                                  <div class="c-currency c-field c-col-13 c-sml-col-1 c-span-10 c-sml-span-12">
                                       <div class="c-label  "><label for="c-38-1044">Second Payment</label></div>
-                                      <div class="c-editor"><input value="{!!old('monetary.second_pay')!!}" name="monetary[second_pay]" type="text" id="c-38-1044" placeholder=""></div>
+                                      <div class="c-editor float-right"><input value="{!!old('monetary.second_pay')!!}" name="monetary[second_pay]" type="text" id="c-38-1044" placeholder=""></div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  <div class="c-currency c-field c-col-9 c-sml-col-1 c-span-8 c-sml-span-12">
-                                      <div class="c-label  "><label for="c-39-1043">Final Payment</label></div>
-                                      <div class="c-editor"><input value="{!!old('monetary.final_pay')!!}" name="monetary[final_pay]" type="text" id="c-39-1043" placeholder=""></div>
-                                      <div class="c-validation"></div>
-                                  </div>
-                                  <div class="c-currency c-field c-col-17 c-sml-col-1 c-span-8 c-sml-span-12">
+                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
                                       <div class="c-label  "><label for="c-40-1042">Half Title Cost</label></div>
-                                      <div class="c-editor"><input value="{!!old('monetary.half_title')!!}" name="monetary[half_title]" type="text" id="c-40-1042" placeholder=""></div>
+                                      <div class="c-editor float-right" style="width: 165px"><input value="{!!old('monetary.half_title')!!}" name="monetary[half_title]" type="text" id="c-40-1042" placeholder=""></div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-8 c-sml-span-12">
+                                  <div class="c-currency c-field c-col-13 c-sml-col-1 c-span-10 c-sml-span-12">
+                                      <div class="c-label  "><label for="c-39-1043">Final Payment</label></div>
+                                      <div class="c-editor float-right"><input value="{!!old('monetary.final_pay')!!}" name="monetary[final_pay]" type="text" id="c-39-1043" placeholder=""></div>
+                                      <div class="c-validation"></div>
+                                  </div>
+
+                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
                                       <div class="c-label  "><label for="c-41-1041">Half Agreement Cost</label></div>
-                                      <div class="c-editor"><input value="{!!old('monetary.half_agreement')!!}" name="monetary[half_agreement]" type="text" id="c-41-1041" placeholder=""></div>
+                                      <div class="c-editor float-right" style="width: 165px"><input value="{!!old('monetary.half_agreement')!!}" name="monetary[half_agreement]" type="text" id="c-41-1041" placeholder=""></div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  <div class="c-currency c-field c-col-9 c-sml-col-1 c-span-8 c-sml-span-12">
+                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
                                       <div class="c-label  "><label for="c-42-1040">Half Stamp Duty</label></div>
-                                      <div class="c-editor"><input value="{!!old('monetary.half_stamp_duty')!!}" name="monetary[half_stamp_duty]" type="text" id="c-42-1040" placeholder=""></div>
+                                      <div class="c-editor float-right" style="width: 165px"><input value="{!!old('monetary.half_stamp_duty')!!}" name="monetary[half_stamp_duty]" type="text" id="c-42-1040" placeholder=""></div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  <div class="c-currency c-field c-col-17 c-sml-col-1 c-span-8 c-sml-span-12">
+                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
                                       <div class="c-label  "><label for="c-43-1039">Half Registration Fee</label></div>
-                                      <div class="c-editor"><input value="{!!old('monetary.half_reg_fee')!!}" name="monetary[half_reg_fee]" type="text" id="c-43-1039" placeholder=""></div>
+                                      <div class="c-editor float-right" style="width: 165px"><input value="{!!old('monetary.half_reg_fee')!!}" name="monetary[half_reg_fee]" type="text" id="c-43-1039" placeholder=""></div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-8 c-sml-span-12">
+                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
                                       <div class="c-label  "><label for="c-44-1038">Incorporation Costs</label></div>
-                                      <div class="c-editor"><input value="{!!old('monetary.inc_cost')!!}" name="monetary[inc_cost]" type="text" id="inc_cost" placeholder=""></div>
+                                      <div class="c-editor float-right" style="width: 165px"><input value="{!!old('monetary.inc_cost')!!}" name="monetary[inc_cost]" type="text" id="inc_cost" placeholder=""></div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  <div class="c-currency c-field c-col-9 c-sml-col-1 c-span-8 c-sml-span-12">
+                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
                                       <div class="c-label  "><label for="c-45-1037">Maintenance Expenses</label></div>
-                                      <div class="c-editor"><input value="{!!old('monetary.maintenance_expense')!!}" name="monetary[maintenance_expense]" type="text" id="c-45-1037" placeholder=""></div>
+                                      <div class="c-editor float-right" style="width: 163px"><input value="{!!old('monetary.maintenance_expense')!!}" name="monetary[maintenance_expense]" type="text" id="c-45-1037" placeholder=""></div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  <div class="c-currency c-field c-col-17 c-sml-col-1 c-span-8 c-sml-span-12">
+                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
                                       <div class="c-label  "><label for="c-46-1036">Identification Fee</label></div>
-                                      <div class="c-editor"><input value="{!!old('monetary.identification_fee')!!}" name="monetary[identification_fee]" type="text" id="c-46-1036" placeholder=""></div>
+                                      <div class="c-editor float-right" style="width: 165px"><input value="{!!old('monetary.identification_fee')!!}" name="monetary[identification_fee]" type="text" id="c-46-1036" placeholder=""></div>
                                       <div class="c-validation"></div>
                                   </div>
                               </div>
@@ -945,7 +946,7 @@
                                           </div>
                                           <div class="c-phone c-phone-international c-field c-col-8 c-sml-col-1 c-span-6 c-sml-span-12">
                                               <div class="c-label  "><label for="c-57-1301">Mobile Phone</label></div>
-                                              <div class="c-editor"><input name="buyer[mobile][]" type="text" id="c-57-1301" placeholder=""></div>
+                                              <div class="c-editor"><input name="buyer[mobile][]" maxlength="10" type="text" id="c-57-1301" placeholder=""></div>
                                               <div class="c-validation"></div>
                                           </div>
                                           <div class="c-email c-field c-col-14 c-sml-col-1 c-span-11 c-sml-span-12">

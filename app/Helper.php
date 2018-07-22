@@ -279,9 +279,9 @@ function saveDoc($templates='', $file, $data='')
         try{
             // replace variables
             $TBS->MergeField('date', $date);
-            $TBS->MergeField('v', $data['v']);
+            $TBS->MergeBlock('v', 'array',$data['v']);
             $TBS->MergeField('p', $data['p']);
-            $TBS->MergeField('b', $data['b']);
+            $TBS->MergeBlock('b', $data['b']);
             $TBS->MergeField('dcp', $data['dcp']);
             $TBS->MergeField('c', $data['c']);
             $TBS->MergeField('da1', $data['da1']);

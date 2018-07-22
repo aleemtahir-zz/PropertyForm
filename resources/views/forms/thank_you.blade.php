@@ -10,7 +10,7 @@
 						<h2>HMF Developer Data Form</h2>
 					</div>
 				</div>
-				@if($template == 'FormA')
+				@if(isset($template) && $template == 'FormA')
 					<div class="c-forms-confirmation-message c-html"><span>Thank you for completing the Developer Data Form.</span></div>
 					<div class="c-forms-confirmation-message">
 						<div class="c-button-section">
@@ -27,7 +27,7 @@
 		                </div>
 		            </div>
 		        @endif
-		        @if($template == 'FormB')
+		        @if(isset($template) && $template == 'FormB')
 					<div class="c-forms-confirmation-message c-html"><span>Thank you for completing the Developer Data Form.</span></div>
 					<div class="c-forms-confirmation-message">
 						<div class="c-button-section at-btn">

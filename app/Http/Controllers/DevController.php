@@ -18,7 +18,7 @@ class DevController extends Controller
     public function index()
     {
         //return view('forms.thank_you');
-        if(strpos($_SERVER['PHP_SELF'], 'DeveloperDataFormA') !== false)
+        if(strpos($_SERVER['REQUEST_URI'], 'DeveloperDataFormA') !== false)
             $template = 'DeveloperDataFormA';
         else
             $template = 'DeveloperDataFormB';
@@ -78,11 +78,11 @@ class DevController extends Controller
             // Store result
             $request->session()->put('devRequest', $request->input('developement'));
 
-            if(strpos($_SERVER['PHP_SELF'], 'DeveloperDataFormA') !== false)
+            if(strpos($_SERVER['REQUEST_URI'], 'DeveloperDataFormA') !== false)
                 $template = 'FormA';
             else
                 $template = 'FormB';
-
+   
             return view('forms.thank_you',compact('template'));
         }
         else
@@ -151,10 +151,12 @@ class DevController extends Controller
         $data = $request->session()->get('devRequest');
 
         Mail::send('layouts.email',$data, function ($message) use ($to_address) /*variable innheriting*/{
-            $message->from('hmf@williamswebs.com','Company Name');
+            $message->from('hmf@williamswebs.com','HMF Property');
             $message->to($to_address);
             $message->subject('HMF Property Code');
         });
-        return view('forms.thank_you');
+
+        $template = 'FormA';
+        return view('forms.thank_you',compact('template'));
     }
 }

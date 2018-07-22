@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PropFromRequest;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Exception;
 use App\Property;
@@ -43,6 +44,9 @@ class PropertyController extends Controller
         $error = false;
         $PropertyObj = new Property();
 
+        //Transaction
+        DB::beginTransaction();
+
         $data     = $request->input('property');
         $devId  = $PropertyObj->check_developer($data);
 
@@ -72,6 +76,7 @@ class PropertyController extends Controller
 
         $property           = $request->input('property');
         $PropertyObj->add_property($property, $ids, $error);
+        DB::commit();
 
         if($error)
             return back()->withErrors($error->getMessage())->withInput();
@@ -190,13 +195,29 @@ class PropertyController extends Controller
 
         $PropertyObj = new Property(); 
         $data = $PropertyObj->get_all($values);
-
+        $id = $data['p-id']['value']; 
+        $allVendors = $PropertyObj->getAllVendors($id);
+        $allBuyers = $PropertyObj->getAllBuyers($id);
+        
         //Organize Data
         foreach ($data as $key => $value) {
           $array[$value['prefix']][$value['key']] = $value['value'];
         }
+        unset($array['v']);
+        unset($array['b']);
+        foreach ($allVendors as $k => $vendor) {
+          foreach ($vendor as $key => $value) {
+            $array[$value['prefix']][$k][$value['key']] = $value['value'];
+          }
+        }
+
+        foreach ($allBuyers as $k => $buyer) {
+          foreach ($buyer as $key => $value ) {
+            $array[$value['prefix']][$k][$value['key']] = $value['value'];
+          }
+        }
         
-          
+        
         //File Counter
         $var = file_get_contents('counter.txt');
         $var++;
@@ -206,7 +227,7 @@ class PropertyController extends Controller
         if(!empty($request->filename))
           $file = $request->filename;
         else
-          $file = $array['b']['middle'].'_'.$array['v']['middle'].'_'.$array['p']['volume_no'].'/'.$array['p']['folio_no'].'_'.$var;
+          $file = $array['b'][0]['middle'].'_'.$array['v'][0]['middle'].'_'.$array['p']['volume_no'].'/'.$array['p']['folio_no'].'_'.$var;
 
         $file = str_replace('__', '_', $file);
 
