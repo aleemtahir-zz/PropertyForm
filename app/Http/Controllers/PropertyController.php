@@ -166,6 +166,16 @@ class PropertyController extends Controller
             $values['lot'] = $lot;
             $PropObj    = new Property();
             $response   = $PropObj->get_property($values);
+
+            $vcount = 0;
+            $bcount = 0;
+            $id = $response['p-id']['value']; 
+            $vendors = $PropObj->getAllVendors($id, $vcount);
+            $buyers = $PropObj->getAllBuyers($id, $bcount);
+            $response['vcount'] = $vcount;
+            $response['bcount'] = $bcount;
+            $response = array_merge($response,$vendors, $buyers);
+            //pre($response);die;
         }
         else if(!empty($folio))
         {

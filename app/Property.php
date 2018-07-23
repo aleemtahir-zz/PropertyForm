@@ -674,7 +674,7 @@ class Property extends Model
         //pre($folio);
         /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
         $property_info = DB::table('tbl_property_detail as p')
-                        ->select('p.plan_no as p-plan_no', 
+                        ->select('p.id as p-id','p.plan_no as p-plan_no', 
                           //Property Address
                           'pa.line1 as p-address-line1','pa.line2 as p-address-line2','pa.city as p-address-city','pa.state as p-address-state', 'pa.postal as p-address-postal',
                           'pa.country as p-address-country',    
@@ -689,15 +689,15 @@ class Property extends Model
                           'co.capacity as c-co-capacity','co.landline as c-co-landline',
                           
                           //Vendor                       
-                          'v.company_name as v-company_name','v.fname as v-first','v.mname as v-middle','v.lname as v-last','v.suffix as v-suffix','v.trn_no as v-trn_no','v.dob as v-dob','v.occupation as v-occupation','v.phone as v-phone','v.mobile as v-mobile','v.email as v-email',
-                          //Vendor Address
-                          'va.line1 as v-address-line1','va.line2 as v-address-line2','va.city as v-address-city','va.state as v-address-state', 'va.postal as v-address-postal','va.country as v-address-country',
+                          // 'v.company_name as v-company_name','v.fname as v-first','v.mname as v-middle','v.lname as v-last','v.suffix as v-suffix','v.trn_no as v-trn_no','v.dob as v-dob','v.occupation as v-occupation','v.phone as v-phone','v.mobile as v-mobile','v.email as v-email',
+                          // //Vendor Address
+                          // 'va.line1 as v-address-line1','va.line2 as v-address-line2','va.city as v-address-city','va.state as v-address-state', 'va.postal as v-address-postal','va.country as v-address-country',
 
-                          //Buyer                       
-                          //'b.company_name as b-company_name',
-                          'b.fname as b-first','b.mname as b-middle','b.lname as b-last','b.suffix as b-suffix','b.trn_no as b-trn_no','b.dob as b-dob','b.occupation as b-occupation','b.bussiness_place as b-bussiness_place','b.phone as b-phone','b.mobile as b-mobile','b.email as b-email',
-                          //Buyer Address
-                          'ba.line1 as b-address-line1','ba.line2 as b-address-line2','ba.city as b-address-city','ba.state as b-address-state', 'ba.postal as b-address-postal','ba.country as b-address-country',
+                          // //Buyer                       
+                          // //'b.company_name as b-company_name',
+                          // 'b.fname as b-first','b.mname as b-middle','b.lname as b-last','b.suffix as b-suffix','b.trn_no as b-trn_no','b.dob as b-dob','b.occupation as b-occupation','b.bussiness_place as b-bussiness_place','b.phone as b-phone','b.mobile as b-mobile','b.email as b-email',
+                          // //Buyer Address
+                          // 'ba.line1 as b-address-line1','ba.line2 as b-address-line2','ba.city as b-address-city','ba.state as b-address-state', 'ba.postal as b-address-postal','ba.country as b-address-country',
 
                           //Attorney 
                           'a.company_name as a-firm_name',
@@ -928,7 +928,7 @@ class Property extends Model
       }
     }
 
-    public function getAllVendors($id)
+    public function getAllVendors($id, &$count=0)
     {
       $vendorData = DB::table('tbl_property_vendor_assoc as pva')
           ->select(
@@ -947,10 +947,21 @@ class Property extends Model
       foreach ($vendorData as $key => $value) {
         $data[] = $this->custom_mapper($value);    
       }    
-      return $data;
+      
+      $count = count($data);
+
+      foreach ($data as $key => &$value) {
+        foreach ($value as $k => $v) {
+          $v['index'] = $key;
+          $new_data[$k."-".$key] = $v;
+        }
+      }
+
+      //pre($new_data); die;
+      return $new_data;
     }
 
-    public function getAllBuyers($id)
+    public function getAllBuyers($id, &$count=0)
     {
       $buyerData = DB::table('tbl_property_buyer_assoc as pba')
           ->select(
@@ -965,7 +976,15 @@ class Property extends Model
       foreach ($buyerData as $key => $value) {
         $data[] = $this->custom_mapper($value);    
       }    
-      return $data;
+      $count = count($data);
+      foreach ($data as $key => &$value) {
+        foreach ($value as $k => $v) {
+          $v['index'] = $key;
+          $new_data[$k."-".$key] = $v;
+        }
+      }
+
+      return $new_data;
     }
 
     public function custom_mapper($data){

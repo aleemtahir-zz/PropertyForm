@@ -193,6 +193,8 @@ $('input[type=file]').change(function () {
 
 
 
+
+
 /*END Document Ready
 ====================================*/
 });
@@ -403,18 +405,40 @@ function onClickLot()
 	            	}
 	            	else
 	            	{
+	            		//Multiple Vendor Handling
+	            		vcount = form_data.vcount - 1;
+	            		bcount = form_data.bcount - 1;
+
+	            		delete form_data.vcount;
+	            		delete form_data.bcount;
+
+	            		add_section('#vendor',vcount);
+	            		add_section('#buyer',bcount);
+
 	            		$('#c-message-lot').empty(); 
+	            		//console.log(form_data);
 	            		$.each(form_data, function(key, value){
-		            		console.log(value.key+'  :'+value.value);
-		            		console.log(value.key);
-		            		console.log(value.value);
-		            		console.log($("input[name*='"+value.key+"']"));
+		            		// console.log(value.key+'  :'+value.value);
+		            		// console.log(value.key);
+		            		// console.log(value.value);
+		            		// console.log($("input[name*='"+value.key+"']"));
 	            			var i = $("input[name*='"+value.key+"']");
 	            			var t = $("textarea[name*='"+value.key+"']");
 	            			var s = $("select[name*='"+value.key+"']");
-
-	            			if(i.length)
-	            				$("input[name*='"+value.key+"']").val(value.value);
+	            			$("input[name*='vendor[first][0]'").val("Aleem");
+	            			$("input[name*='vendor[first][1]'").val("Aizaz");
+	            			
+	            			if(i.length){
+	            				if(typeof value.index != "undefined"){
+		            				console.log(value.index);
+		            				console.log(value);
+	            					//$("vendor[first][0]").val("Aleem");
+	            					//$("vendor[first][1]").val("Aizaz");
+	            					//$("input[name*='"+value.key+"']["+value.index+"]").val(value.value);
+		            			}
+	            				else	
+	            					$("input[name*='"+value.key+"']").val(value.value);
+	            			}
 	            			if(t.length)
 	            				$("textarea[name*='"+value.key+"']").val(value.value);
 	            			if(s.length){
@@ -455,3 +479,47 @@ function onClickLot()
 
 /*Merge & Download
 =================================*/
+
+
+/*Add Section Dynamically
+====================================*/
+//Add Section
+function add_section(id, count) {
+	var section_group 	= $(id);
+	
+	for (var i = 0; i < count; i++) {
+		var add_section 	= section_group.children().last().clone();
+
+		add_section.css('display', '');
+		add_section.find('.c-editor input').val('');
+		
+		add_section.find('.c-editor input').each(function() {
+			//console.log($(this));
+			var arr			= $(this).attr('id').split('-');
+			var new_value 	= parseInt(arr[2]) + 1;
+			
+			arr[2]			= new_value;
+
+			var new_arr		= arr.join('-');	
+			$(this).attr('id', new_arr);
+
+			if($(this).hasClass('datepicker')){
+				//$('.datepicker');
+				//console.log(new_arr);
+				$(this).datepicker();
+			}
+		});
+		//add_section.find('.c-datepicker').attr('id');
+		add_section.appendTo(section_group);
+
+		//numbering
+		var num = 1;
+		section_group.children().each(function () {
+
+			if($(this).css('display') === "block"){
+				$(this).find('.c-repeating-section-item-title span').text(num);
+				num++;
+			}
+		});
+	}
+}

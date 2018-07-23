@@ -418,7 +418,7 @@
                                       <div class="c-title c-repeating-section-title">
                                           <h4>Individual Vendor Details</h4>
                                       </div>
-                                      <div class="c-repeating-section-group">
+                                      <div id="vendor" class="c-repeating-section-group">
                                           <div class="c-repeating-section-container">
                                               <div class="c-repeating-section-item-title">
                                                   <div class="c-action-col"><a class="c-remove-item" title="Remove Vendor"><i class="icon-remove-sign"></i></a></div>
@@ -429,7 +429,7 @@
                                                       <div class="c-label "><label>Name</label></div>
                                                       <div>
                                                           <div class="c-offscreen"><label for="c-12-1026">First</label></div>
-                                                          <div class="c-editor c-span-1" style="width: 28.5714%; float: left;"><input value="{!!old('vendor.first.0')!!}" name="vendor[first][]" na type="text" id="c-12-1026" placeholder="First"></div>
+                                                          <div class="c-editor c-span-1" style="width: 28.5714%; float: left;"><input value="{!!old('vendor.first.0')!!}" name="vendor[first][]" type="text" id="c-12-1026" placeholder="First"></div>
                                                           <div class="c-offscreen"><label for="c-13-1026">Middle</label></div>
                                                           <div class="c-editor c-span-1" style="width: 28.5714%; float: left;"><input value="{!!old('vednor.middle.0')!!}" name="vendor[middle][]" type="text" id="c-13-1026" placeholder="Middle"></div>
                                                           <div class="c-offscreen"><label for="c-14-1026">Last</label></div>
@@ -893,7 +893,7 @@
                               <div class="c-title c-repeating-section-title">
                                   <h3>Purchasers Details</h3>
                               </div>
-                              <div class="c-repeating-section-group">
+                              <div id='buyer' class="c-repeating-section-group">
                                   <div class="c-repeating-section-container">
                                       <div class="c-repeating-section-item-title">
                                           <div class="c-action-col"><a class="c-remove-item" title="Remove Item"><i class="icon-remove-sign"></i></a></div>
