@@ -7,7 +7,7 @@
 
 function arrangeMultiArray($array){
 
-	foreach ($array as $key => $value) {
+  foreach ($array as $key => $value) {
     $i=0;
     foreach ($value as $sub_key => $sub_value) {
 
@@ -29,7 +29,7 @@ function arrangeMultiArray($array){
 
       $i++;
     }
-	}
+  }
 
   return $array;
 }
@@ -251,9 +251,9 @@ function get_officer($officer, &$error=false, $source='', $postfix='')
 }
 
 function saveDoc($templates='', $file, $data='')
-{	
+{ 
 
-	$date['day']    = date('l');
+  $date['day']    = date('l');
   $date['month']  = date('F');
   $date['year']   = date('Y');
 
@@ -271,6 +271,11 @@ function saveDoc($templates='', $file, $data='')
     $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN); // load the OpenTBS plugin
     // load your template
     $TBS->LoadTemplate('templates/'.$template.'.docx');
+    
+    if(isset($data['v'][0]['logo']) && !empty($data['v'][0]['logo'])){
+      $prms = array('unique' => true);
+      $TBS->Plugin(OPENTBS_CHANGE_PICTURE, 'dev_logo',$data['v'][0]['logo'] , $prms);        
+    }
 
     //pre($data); die;
     if(!empty($data)){
@@ -281,7 +286,7 @@ function saveDoc($templates='', $file, $data='')
             $TBS->MergeField('date', $date);
             $TBS->MergeBlock('v', 'array',$data['v']);
             $TBS->MergeField('p', $data['p']);
-            $TBS->MergeBlock('b', $data['b']);
+            $TBS->MergeBlock('b','array', $data['b']);
             $TBS->MergeField('dcp', $data['dcp']);
             $TBS->MergeField('c', $data['c']);
             $TBS->MergeField('da1', $data['da1']);
@@ -293,7 +298,7 @@ function saveDoc($templates='', $file, $data='')
           //$property_info = '';  
           //return $property_info;
         }
-
+    
         // Download the file
         $TBS->Show(OPENTBS_DOWNLOAD, $file.'.docx');    
     }

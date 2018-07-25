@@ -49,6 +49,7 @@ class PropertyController extends Controller
 
         $data     = $request->input('property');
         $devId  = $PropertyObj->check_developer($data);
+        $purchasserId  = $PropertyObj->check_purchaser($data);
 
         $vendor             = $request->input('vendor');
         $ids['vendor']      = $PropertyObj->add_developer($vendor, $devId, $error);
@@ -63,7 +64,7 @@ class PropertyController extends Controller
             return back()->withErrors($error->getMessage())->withInput();
 
         $buyer              = $request->input('buyer');
-        $ids['buyer']       = $PropertyObj->add_purchaser($buyer, $error);
+        $ids['buyer']       = $PropertyObj->add_purchaser($buyer,$purchasserId,$error);
 
         if($error)
             return back()->withErrors($error->getMessage())->withInput();
@@ -170,11 +171,11 @@ class PropertyController extends Controller
             $vcount = 0;
             $bcount = 0;
             $id = $response['p-id']['value']; 
-            $vendors = $PropObj->getAllVendors($id, $vcount);
-            $buyers = $PropObj->getAllBuyers($id, $bcount);
-            $response['vcount'] = $vcount;
-            $response['bcount'] = $bcount;
-            $response = array_merge($response,$vendors, $buyers);
+            //$vendors = $PropObj->getAllVendors($id, $vcount);
+            //$buyers = $PropObj->getAllBuyers($id, $bcount);
+            //$response['vcount'] = $vcount;
+            //$response['bcount'] = $bcount;
+            //$response = array_merge($response,$vendors, $buyers);
             //pre($response);die;
         }
         else if(!empty($folio))
@@ -215,29 +216,44 @@ class PropertyController extends Controller
         }
         unset($array['v']);
         unset($array['b']);
+        //pre($allVendors); die;
         foreach ($allVendors as $k => $vendor) {
+
           foreach ($vendor as $key => $value) {
-            $array[$value['prefix']][$k][$value['key']] = $value['value'];
+            $array[$vendor['prefix']][$vendor['index']][$vendor['key']] = $vendor['value'];
           }
         }
 
         foreach ($allBuyers as $k => $buyer) {
           foreach ($buyer as $key => $value ) {
-            $array[$value['prefix']][$k][$value['key']] = $value['value'];
+            $array[$buyer['prefix']][$buyer['index']][$buyer['key']] = $buyer['value'];
           }
         }
-        
         
         //File Counter
         $var = file_get_contents('counter.txt');
         $var++;
         file_put_contents('counter.txt', $var);
+        
+        if(strlen($var) == 1)
+          $var = '000'.$var;
+        elseif(strlen($var) == 2)
+          $var = '00'.$var;
+        elseif(strlen($var) == 3)
+          $var = '0'.$var;
+
+        //pre(strlen($var)); die;
 
         //File Save As Name
+        $buyer = (isset($array['b'][0]['middle'])) ? $array['b'][0]['middle'] : $array['b'][0]['last'];
+        $vendor = (isset($array['v'][0]['middle'])) ? $array['v'][0]['middle'] : $array['v'][0]['last'];
+
+
+
         if(!empty($request->filename))
           $file = $request->filename;
         else
-          $file = $array['b'][0]['middle'].'_'.$array['v'][0]['middle'].'_'.$array['p']['volume_no'].'/'.$array['p']['folio_no'].'_'.$var;
+          $file = $buyer.'_'.$vendor.'_'.$array['p']['volume_no'].'/'.$array['p']['folio_no'].'_'.$var;
 
         $file = str_replace('__', '_', $file);
 
