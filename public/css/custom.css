@@ -2,10 +2,12 @@ a.c-add-item{
 	text-decoration: none;
 }
 
-select{
+/*select{
 	color: '' !important;
+}*/
+.my-select {
+    color: #ccc !important;
 }
-
 .at-btn{
 	padding : 0 !important;
 }

@@ -746,15 +746,15 @@ class Property extends Model
                           'co.capacity as c-co-capacity','co.landline as c-co-landline',
                           
                           //Vendor                       
-                          'v.company_name as v-company_name','v.fname as v-first','v.mname as v-middle','v.lname as v-last','v.suffix as v-suffix','v.trn_no as v-trn_no','v.dob as v-dob','v.occupation as v-occupation','v.phone as v-phone','v.mobile as v-mobile','v.email as v-email',
+                          'v.company_name as v-company_name',/*'v.fname as v-first','v.mname as v-middle','v.lname as v-last','v.suffix as v-suffix','v.trn_no as v-trn_no','v.dob as v-dob','v.occupation as v-occupation','v.phone as v-phone','v.mobile as v-mobile','v.email as v-email',
                           //Vendor Address
-                          'va.line1 as v-address-line1','va.line2 as v-address-line2','va.city as v-address-city','va.state as v-address-state', 'va.postal as v-address-postal','va.country as v-address-country',
+                          'va.line1 as v-address-line1','va.line2 as v-address-line2','va.city as v-address-city','va.state as v-address-state', 'va.postal as v-address-postal','va.country as v-address-country',*/
 
                           // //Buyer                       
                           // //'b.company_name as b-company_name',
-                          'b.fname as b-first','b.mname as b-middle','b.lname as b-last','b.suffix as b-suffix','b.trn_no as b-trn_no','b.dob as b-dob','b.occupation as b-occupation','b.bussiness_place as b-bussiness_place','b.phone as b-phone','b.mobile as b-mobile','b.email as b-email',
+                          /*'b.fname as b-first','b.mname as b-middle','b.lname as b-last','b.suffix as b-suffix','b.trn_no as b-trn_no','b.dob as b-dob','b.occupation as b-occupation','b.bussiness_place as b-bussiness_place','b.phone as b-phone','b.mobile as b-mobile','b.email as b-email',
                           //Buyer Address
-                          'ba.line1 as b-address-line1','ba.line2 as b-address-line2','ba.city as b-address-city','ba.state as b-address-state', 'ba.postal as b-address-postal','ba.country as b-address-country',
+                          'ba.line1 as b-address-line1','ba.line2 as b-address-line2','ba.city as b-address-city','ba.state as b-address-state', 'ba.postal as b-address-postal','ba.country as b-address-country',*/
 
                           //Attorney 
                           'a.company_name as a-firm_name',
@@ -802,16 +802,6 @@ class Property extends Model
                         ->get(); 
         /*dd(DB::getQueryLog());*/
 
-        $mapper = array(
-          'p'   => 'property',
-          'v'   => 'vendor',
-          'b'   => 'buyer',
-          'm'   => 'monetary',
-          'a'   => 'attorney',
-          'cp'  => 'payment',
-          'c'  => 'contractor',
-        );                
-
         try{
           $property_info = (array) $property_info[0];
         }
@@ -822,26 +812,8 @@ class Property extends Model
           return $property_info;
         }
 
-        foreach ($property_info as $key => $value) 
-        {
-            $pieces = explode('-', $key);
-            $i = $pieces[0];
-            $pieces = array_reverse($pieces);
-            
-            if(count($pieces) == 3){
-              $input = $mapper[$i]."[".$pieces[1]."]"."[".$pieces[0]."]";
-            }
-            else if(count($pieces) == 2){
-              $input = $mapper[$i]."[".$pieces[0]."]";
-            }
+        $property_info = $this->custom_mapper($property_info);        
 
-            $property_info[$key]    = array(
-              'key'   => $input,
-              'value' => $value
-            );          
-            
-        }                
-                         
         return $property_info;
       }
     }
@@ -979,7 +951,7 @@ class Property extends Model
           return $property_info;
         }             
         
-        $property_info = $this->custom_mapper($property_info);
+        $property_info = $this->custom_mapper_t($property_info);      
 
         return $property_info;
       }
@@ -989,7 +961,7 @@ class Property extends Model
     {
       $vendorData = DB::table('tbl_property_vendor_assoc as pva')
           ->select(
-            'v.company_name as v-company_name','v.fname as v-first','v.mname as v-middle',
+            /*'v.company_name as v-company_name',*/'v.fname as v-first','v.mname as v-middle',
             'v.lname as v-last','v.suffix as v-suffix','v.trn_no as v-trn_no',
             'v.dob as v-dob','v.occupation as v-occupation','v.phone as v-phone',
             'v.mobile as v-mobile','v.email as v-email','v.logo as v-logo',
@@ -1004,17 +976,16 @@ class Property extends Model
       foreach ($vendorData as $key => $value) {
         $data[] = $this->custom_mapper($value);    
       }    
-      
+      //pre($data); die;
       $count = count($data);
 
       foreach ($data as $key => &$value) {
         foreach ($value as $k => $v) {
-          $v['index'] = $key;
-          $new_data[$k."-".$key] = $v;
+          //$new_data[$k]['index'] = $key;
+          $new_data[$k][] = $v;
         }
       }
 
-      //pre($new_data); die;
       return $new_data;
     }
 
@@ -1034,10 +1005,11 @@ class Property extends Model
         $data[] = $this->custom_mapper($value);    
       }    
       $count = count($data);
+
       foreach ($data as $key => &$value) {
         foreach ($value as $k => $v) {
-          $v['index'] = $key;
-          $new_data[$k."-".$key] = $v;
+          //$new_data[$k]['index'] = $key;
+          $new_data[$k][] = $v;
         }
       }
 
@@ -1046,38 +1018,138 @@ class Property extends Model
 
     public function custom_mapper($data){
 
+      $input = '';
+      $data = (array) $data;
       $mapper = array(
-        'p'   => 'property',
-        'v'   => 'vendor',
-        'b'   => 'buyer',
-        'm'   => 'monetary',
-        'a'   => 'attorney',
-        'c'   => 'contractor',
-        'dcp' => 'payment',
-      ); 
+          'p'   => 'property',
+          'v'   => 'vendor',
+          'b'   => 'buyer',
+          'm'   => 'monetary',
+          'a'   => 'attorney',
+          'cp'  => 'payment',
+          'c'   => 'contractor',
+        );     
+
+        foreach ($data as $key => $value) 
+        {
+            $pieces = explode('-', $key);
+            $i = $pieces[0];
+            $pieces = array_reverse($pieces);
+            
+            if(count($pieces) == 3){
+              $input = $mapper[$i]."[".$pieces[1]."]"."[".$pieces[0]."]";
+            }
+            else if(count($pieces) == 2){
+              $input = $mapper[$i]."[".$pieces[0]."]";
+            }
+
+            $data[$key]    = array(
+              'key'   => $input,
+              'value' => $value
+            );          
+            
+        }     
+
+      return $data; 
+
+    }
+
+
+    /*DATA FOR TEMPLATES
+    ========================================*/
+    public function getVendors($id, &$count=0)
+    {
+      $vendorData = DB::table('tbl_property_vendor_assoc as pva')
+          ->select(
+            /*'v.company_name as v-company_name',*/'v.fname as v-first','v.mname as v-middle',
+            'v.lname as v-last','v.suffix as v-suffix','v.trn_no as v-trn_no',
+            'v.dob as v-dob','v.occupation as v-occupation','v.phone as v-phone',
+            'v.mobile as v-mobile','v.email as v-email','v.logo as v-logo',
+
+            //Vendor Address
+            'va.line1 as v-address-line1','va.line2 as v-address-line2','va.city as v-address-city','va.state as v-address-state', 'va.postal as v-address-postal','va.country as v-address-country')
+          ->leftJoin('tbl_developer_detail as v', 'v.id', '=', 'pva.developer_id')
+          ->leftJoin('tbl_address as va', 'va.id', '=', 'v.address_id')
+          ->where('property_id','=',$id)
+          ->get();
+
+      foreach ($vendorData as $key => $value) {
+        $data[] = $this->custom_mapper_t($value);    
+      }    
+      //pre($data); die;
+      $count = count($data);
+
+      foreach ($data as $key => &$value) {
+        foreach ($value as $k => $v) {
+          $v['index'] = $key; 
+          $new_data[$k."-".$key] = $v; 
+        }
+      }
+
+      return $new_data;
+    }
+
+    public function getBuyers($id, &$count=0)
+    {
+      $buyerData = DB::table('tbl_property_buyer_assoc as pba')
+          ->select(
+            'b.fname as b-first','b.mname as b-middle','b.lname as b-last','b.suffix as b-suffix','b.trn_no as b-trn_no','b.dob as b-dob','b.occupation as b-occupation','b.bussiness_place as b-bussiness_place','b.phone as b-phone','b.mobile as b-mobile','b.email as b-email',
+            //Buyer Address
+            'ba.line1 as b-address-line1','ba.line2 as b-address-line2','ba.city as b-address-city','ba.state as b-address-state', 'ba.postal as b-address-postal','ba.country as b-address-country')
+          ->leftJoin('tbl_purchaser_detail as b', 'b.id', '=', 'pba.purchaser_id')
+          ->leftJoin('tbl_address as ba', 'ba.id', '=', 'b.address_id')
+          ->where('property_id','=',$id)
+          ->get();
+
+      foreach ($buyerData as $key => $value) {
+        $data[] = $this->custom_mapper_t($value);    
+      }    
+      $count = count($data);
+
+      foreach ($data as $key => &$value) {
+        foreach ($value as $k => $v) {
+          $v['index'] = $key; 
+          $new_data[$k."-".$key] = $v; 
+        }
+      }
+
+      return $new_data;
+    }
+
+    public function custom_mapper_t($data){
 
       $input = '';
       $data = (array) $data;
-      foreach ($data as $key => $value) 
-      {
-          $pieces = explode('-', $key);
-          $i = $pieces[0];
-          $pieces = array_reverse($pieces);
-          
-          if(count($pieces) == 3){
-            $input = $pieces[1]."_".$pieces[0];
-          }
-          else if(count($pieces) == 2){
-            $input = $pieces[0];
-          }
+      $mapper = array(
+          'p'   => 'property',
+          'v'   => 'vendor',
+          'b'   => 'buyer',
+          'm'   => 'monetary',
+          'a'   => 'attorney',
+          'c'   => 'contractor',
+          'dcp' => 'payment',
+        ); 
 
-          $data[$key]    = array(
-            'prefix'=> $i, 
-            'key'   => $input,
-            'value' => $value
-          );          
-          
-      }
+        foreach ($data as $key => $value) 
+        {
+            $pieces = explode('-', $key);
+            $i = $pieces[0];
+            $pieces = array_reverse($pieces);
+            
+            if(count($pieces) == 3){
+              $input = $pieces[1]."_".$pieces[0];
+            }
+            else if(count($pieces) == 2){
+              $input = $pieces[0];
+            }
+
+            $data[$key]    = array(
+              'prefix'=> $i, 
+              'key'   => $input,
+              'value' => $value
+            );          
+            
+        }
 
       return $data; 
 

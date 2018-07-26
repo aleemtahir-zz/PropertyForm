@@ -171,11 +171,11 @@ class PropertyController extends Controller
             $vcount = 0;
             $bcount = 0;
             $id = $response['p-id']['value']; 
-            //$vendors = $PropObj->getAllVendors($id, $vcount);
-            //$buyers = $PropObj->getAllBuyers($id, $bcount);
-            //$response['vcount'] = $vcount;
-            //$response['bcount'] = $bcount;
-            //$response = array_merge($response,$vendors, $buyers);
+            $vendors = $PropObj->getAllVendors($id, $vcount);
+            $buyers = $PropObj->getAllBuyers($id, $bcount);
+            $response['vcount'] = $vcount;
+            $response['bcount'] = $bcount;
+            $response = array_merge($response,$vendors, $buyers);
             //pre($response);die;
         }
         else if(!empty($folio))
@@ -207,8 +207,8 @@ class PropertyController extends Controller
         $PropertyObj = new Property(); 
         $data = $PropertyObj->get_all($values);
         $id = $data['p-id']['value']; 
-        $allVendors = $PropertyObj->getAllVendors($id);
-        $allBuyers = $PropertyObj->getAllBuyers($id);
+        $allVendors = $PropertyObj->getVendors($id);
+        $allBuyers = $PropertyObj->getBuyers($id);
         
         //Organize Data
         foreach ($data as $key => $value) {

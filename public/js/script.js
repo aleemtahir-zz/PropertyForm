@@ -191,14 +191,27 @@ $('input[type=file]').change(function () {
 	$('.c-fileupload-dropzone-message').html(filePath.replace('C:\\fakepath\\','')); 
 });
 
-
-
-
+checkDropDownStatus();
 
 /*END Document Ready
 ====================================*/
 });
 
+
+function checkDropDownStatus()
+{
+	$('select.c-placeholder-text-styled option:selected').map(function(){
+		
+		//console.log(this);
+		if($(this).val() === '')
+		{
+			$(this).parent().addClass("my-select");
+		}
+		else
+			$(this).parent().removeClass("my-select");	
+		
+	});
+}
 
 
 /*Fetch Development Form Record
@@ -260,9 +273,10 @@ function fetchRecordDev()
 	            			}
 
 		            	});
-
+	            		checkDropDownStatus();	
 	            	}
-            	}, 300);         	
+            	}, 300);         
+
             }
         }); 
 	}
@@ -342,9 +356,10 @@ function onClickFolio()
 	            			}
 
 		            	});
-
+	            		checkDropDownStatus();
 	            	}
             	}, 300);         	
+
             }
         }); 
 	}
@@ -408,6 +423,7 @@ function onClickLot()
 	            		//Multiple Vendor Handling
 	            		vcount = form_data.vcount - 1;
 	            		bcount = form_data.bcount - 1;
+	            		console.log(vcount);
 
 	            		delete form_data.vcount;
 	            		delete form_data.bcount;
@@ -428,24 +444,29 @@ function onClickLot()
 	            			$("input[name*='vendor[first][0]'").val("Aleem");
 	            			$("input[name*='vendor[first][1]'").val("Aizaz");
 	            			
-	            			if(i.length){
-	            				if(typeof value.index != "undefined"){
-		            				console.log(value.index);
-		            				console.log(value);
-	            					//$("vendor[first][0]").val("Aleem");
-	            					//$("vendor[first][1]").val("Aizaz");
-	            					//$("input[name*='"+value.key+"']["+value.index+"]").val(value.value);
-		            			}
-	            				else	
-	            					$("input[name*='"+value.key+"']").val(value.value);
-	            			}
-	            			if(t.length)
-	            				$("textarea[name*='"+value.key+"']").val(value.value);
-	            			if(s.length){
-	            				$("select[name*='"+value.key+"']").val(value.value);
-	            				$("select[name*='"+value.key+"']").css('color','black')
-	            			}
 
+	            			if(Array.isArray(value)){
+
+            					var i = 0;
+            					$("form [name='"+value[0].key+"[]']").map(function(){
+				            		$(this).val(value[i++].value);
+			            			
+			            		});
+	            			}
+	            			else{
+
+	            				if(i.length){
+
+		            				$("input[name*='"+value.key+"']").val(value.value);
+		            			}
+		            			if(t.length)
+		            				$("textarea[name*='"+value.key+"']").val(value.value);
+		            			if(s.length){
+		            				$("select[name*='"+value.key+"']").val(value.value);
+		            				$("select[name*='"+value.key+"']").css('color','black')
+		            			}	
+	            			}	
+	            			checkDropDownStatus();
 		            	});
 
 	            	}
