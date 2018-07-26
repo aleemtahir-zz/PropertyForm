@@ -440,13 +440,10 @@ function onClickLot()
 		            		// console.log($("input[name*='"+value.key+"']"));
 	            			var i = $("input[name*='"+value.key+"']");
 	            			var t = $("textarea[name*='"+value.key+"']");
-	            			var s = $("select[name*='"+value.key+"']");
-	            			$("input[name*='vendor[first][0]'").val("Aleem");
-	            			$("input[name*='vendor[first][1]'").val("Aizaz");
-	            			
+	            			var s = $("select[name*='"+value.key+"']");	            			
 
 	            			if(Array.isArray(value)){
-
+	            				//console.log(value);
             					var i = 0;
             					$("form [name='"+value[0].key+"[]']").map(function(){
 				            		$(this).val(value[i++].value);
