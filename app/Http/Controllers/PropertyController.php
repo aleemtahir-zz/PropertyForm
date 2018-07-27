@@ -91,7 +91,10 @@ class PropertyController extends Controller
             'application_for_membership',
             'building_agreement',
             'developer_name_maintenance_agreement',
-            'insrtument_of_transfer'
+            'insrtument_of_transfer',
+            'letter_of_title_issuance',
+            'memorandum_of_sale',
+            'statement_of_account'
           );
 
           return view('forms.response',compact('templates'));
@@ -113,7 +116,10 @@ class PropertyController extends Controller
             'application_for_membership',
             'building_agreement',
             'developer_name_maintenance_agreement',
-            'insrtument_of_transfer' 
+            'insrtument_of_transfer',
+            'letter_of_title_issuance',
+            'memorandum_of_sale',
+            'statement_of_account'             
         );
 
         return view('forms.response',compact('templates'));
@@ -266,7 +272,11 @@ class PropertyController extends Controller
             'application_for_membership',
             'building_agreement',
             'developer_name_maintenance_agreement',
-            'insrtument_of_transfer'
+            'insrtument_of_transfer',
+            'letter_of_title_issuance',
+            'memorandum_of_sale',
+            'statement_of_account'
+
 
         );
 

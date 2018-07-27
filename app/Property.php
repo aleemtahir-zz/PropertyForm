@@ -905,7 +905,10 @@ class Property extends Model
                           'dcp.second_payment as dcp-second_payment', 'dcp.third_payment as dcp-third_payment',
                           'dcp.fourth_payment as dcp-fourth_payment', 'dcp.final_payment as dcp-final_payment',
                           //Payment Foriegn Currency
-                          'dfc.name as dcp-fc-name','dfc.symbol as dcp-fc-symbol','dfc.exchange_rate as dcp-fc-rate'
+                          'dfc.name as dcp-fc-name','dfc.symbol as dcp-fc-symbol','dfc.exchange_rate as dcp-fc-rate',
+
+                          //Development Surveyor
+                          'ds.title as ds-title','ds.first_name as ds-first','ds.last_name as ds-last'
                         )
                         ->leftJoin('tbl_address as pa', 'p.address_id', '=', 'pa.id')
                         ->leftJoin('tbl_property_vendor_assoc as pva', 'pva.property_id', '=', 'p.id')
@@ -927,6 +930,7 @@ class Property extends Model
                           $join->on('p.volume_no', '=', 'dt.volume_no');
                           $join->on('p.folio_no','=','dt.folio_no');
                         })
+                        ->leftJoin('tbl_person_info as ds', 'dt.surveyor_id', '=', 'ds.id')
 
                         ->leftJoin('tbl_contractor_detail as c', 'dt.contractor_id', '=', 'c.id')
                         ->leftJoin('tbl_address as ca', 'c.address_id', '=', 'ca.id')
@@ -1128,6 +1132,7 @@ class Property extends Model
           'a'   => 'attorney',
           'c'   => 'contractor',
           'dcp' => 'payment',
+          'ds'  => 'surveyor',
         ); 
 
         foreach ($data as $key => $value) 
