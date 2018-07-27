@@ -21,12 +21,17 @@
 					<div class="c-choice-radiobuttons c-field c-col-13 c-sml-col-1 c-span-12 c-sml-span-12">
                         <legend class="c-label  ">Merge Data into Documents</legend>
                         <div class="c-helptext">Choose documents</div>
-
+                        <br>
                         @foreach ($templates as $name)
                         <div class="row">
 							<div class="col-md-6">
-								{!! Form::checkbox('templates[]', $name); !!}  
-					        	{!! Form::label('service' . $name, $name) !!} 
+								<div class="c-forms-document-links">
+								<a class="c-forms-document-link" href="#">
+								<span class="ms-word-file-icon-32x32"></span>
+								<span>{!! Form::label('service' . $name, $name) !!} </span>
+								</a>
+							</div>
+					        	
 							</div>
 							<div class="col-md-6">
 								{!! Form::button('Merge', 
@@ -47,9 +52,9 @@
 	                    <div class="c-helptext">Write Filename in which you want to save it.</div>
 	                </div>
 					<div class="c-button-section" style="padding-left: 0 !important">
-	                    <div class="c-action">
+	                    {{-- <div class="c-action">
 	                    	{!! Form::button('Merge All <i id="gear-sub" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>', array('class' => 'c-button','name' => 'mergeAll', 'type' => 'submit')); !!}
-	                    </div>
+	                    </div> --}}
 	                </div>
 				</div>
 			</div>
