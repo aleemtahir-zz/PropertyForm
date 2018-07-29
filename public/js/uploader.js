@@ -23,12 +23,14 @@ $(function () {
 
     // Load existing files:
     $('#fileupload').addClass('fileupload-processing'); 
-    $.ajaxSetup({ 
+    
+    //CSRF Disabled
+    /*$.ajaxSetup({ 
       headers: { 
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') 
       } 
 
-    }); 
+    }); */
     $.ajax({
         // Uncomment the following to send cross-domain cookies:
         //xhrFields: {withCredentials: true},

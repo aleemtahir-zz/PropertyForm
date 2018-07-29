@@ -3,10 +3,11 @@
 <script type="text/javascript">
     var baseurl = "{{url('/')}}";
 </script>
-<div style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);"id="c-forms-container" class="cognito c-safari c-lrg">
+<!-- style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" -->
+<div  id="c-forms-container" class="cognito c-safari c-lrg">
 
-    <div class="container" style="background-color: white; ">
-    <h3>Upload Property Data</h3>
+    <div class="container upload-container" style="">
+    <h2>Upload Property Data</h2>
     
 
     <br>
@@ -41,11 +42,11 @@
             <!-- The global progress state -->
             <div class="col-lg-5 fileupload-progress fade">
                 <!-- The global progress bar -->
-                <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
+                <!-- <div class="progress progress-striped active" role="progressbar" aria-valuemin="0" aria-valuemax="100">
                     <div class="progress-bar progress-bar-success" style="width:0%;"></div>
-                </div>
+                </div> -->
                 <!-- The extended global progress state -->
-                <div class="progress-extended">&nbsp;</div>
+                <!-- <div class="progress-extended">&nbsp;</div> -->
             </div>
         </div>
         <!-- The table listing the files available for upload/download -->
@@ -128,7 +129,7 @@
                         <i class="glyphicon glyphicon-trash"></i>
                         <span>Delete</span>
                     </button>
-                    <input type="checkbox" name="delete" value="1" class="toggle">
+                    <!-- <input type="checkbox" name="delete" value="1" class="toggle"> -->
                 {% } else { %}
                     <button class="btn btn-warning cancel">
                         <i class="glyphicon glyphicon-ban-circle"></i>

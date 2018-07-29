@@ -74,6 +74,12 @@ die;
         $upload_handler = new \UploadHandler();
     }
 
+    public function postShow()
+    {
+        error_reporting(E_ALL | E_STRICT);
+        $upload_handler = new \UploadHandler();
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

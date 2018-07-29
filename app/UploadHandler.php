@@ -44,8 +44,9 @@ class UploadHandler
         $this->response = array();
         $this->options = array(
             'script_url' => 'http://localhost:8000/upload',
-            'upload_dir' => realpath(dirname(getcwd())).'\uploads\\',
-            'upload_url' => $this->get_full_url().'/files/',
+            'upload_dir' => realpath(dirname(getcwd())).'\uploads\sheets\\',
+            'upload_url' => realpath(dirname(getcwd())).'\uploads\sheets\\',
+            /*'upload_url' => $this->get_full_url().'/files/',*/
             'input_stream' => 'php://input',
             'user_dirs' => false,
             'mkdir_mode' => 0755,

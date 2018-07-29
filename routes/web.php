@@ -30,3 +30,7 @@ Route::resource('DeveloperDataFormA','DevController');
 Route::resource('DeveloperDataFormB','DevController');
 Route::resource('payment','PaymentController');
 Route::resource('upload','UploadController');
+Route::post('upload/show',[
+    'as' => 'upload/show',
+    'uses' => 'UploadController@postShow'
+]);

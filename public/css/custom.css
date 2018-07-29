@@ -66,3 +66,18 @@ input#c-2-768:invalid {
 .float-right{
   float: right;
 }
+
+
+/*Upload File
+=================================================*/
+.upload-container{
+  max-width: 840px;
+  width: 100%;
+  background-color: white; 
+  font-size: inherit!important;
+  margin: 0 auto 40px auto!important;
+  max-width: 840px;
+  -webkit-box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.25);
+  -moz-box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 0 6px 1px rgba(0, 0, 0, 0.25);
+}
