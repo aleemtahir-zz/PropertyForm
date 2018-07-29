@@ -186,7 +186,7 @@ $('#fc_rate').change(function(){
 })		
 
 
-$('input[type=file]').change(function () {
+$('#fileUpload').change(function () {
 	var filePath=$('#fileUpload').val();
 	$('.c-fileupload-dropzone-message').html(filePath.replace('C:\\fakepath\\','')); 
 });
