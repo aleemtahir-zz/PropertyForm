@@ -29,7 +29,7 @@ class PropertyController extends Controller
      */
     public function create()
     {
-        return view('welcome');
+        //return view('welcome');
     }
 
     /**
@@ -111,6 +111,8 @@ class PropertyController extends Controller
      */
     public function show($id)
     {
+      // pre($id); 
+      // pre($_POST); die;
         //Show Word Templates
         $templates = array(
             'application_for_membership',
