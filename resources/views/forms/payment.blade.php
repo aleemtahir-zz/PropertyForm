@@ -17,16 +17,26 @@
         </div>
         <div class="c-forms-template">
             <div class="c-forms-form-main c-span-24 c-sml-span-12">
-                <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-4 c-sml-span-6">
+                <div style="margin: 10px 0 0 3px; position: absolute; left: 18px;" class="c-label  ">
+                  <label for="c-25-1627">Volume / Folio</label>
+                </div>
+                <div style="margin-top: 22px; width: 65px;" class="c-field c-col-1 c-sml-col-1 c-span-2 c-sml-span-2">
+                  <div style=" " class="c-editor"><input value="{!!old('developement.volume_no')!!}" name="developement[volume_no]" type="text" id="c-25-1627" maxlength="4" pattern="\d{4}" placeholder="1234"></div>
+
+                </div>
+                <span style="font-weight: bold; position: absolute; margin-top: 30px; left: 82px;">/</span>
+
+                <div style="margin-top: 22px; padding-left: 0; width: 65px;" class="c-field c-text-singleline c-col-17 c-sml-col-1 c-span-3 c-sml-span-2">
+                  <div class="c-editor"><input value="{!!old('developement.folio_no')!!}" name="developement[folio_no]" type="text" id="c-25-1628" placeholder="1234" maxlength="4" pattern="\d{4}"></div>
+                  <div class="c-validation"></div>
+
+                </div>
+                <div class="c-text-singleline c-field c-col-5 c-sml-col-1 c-span-4 c-sml-span-6">
                     <div class="c-label  "><label for="c-0-28">Lot No</label></div>
                     <div class="c-editor"><input name="lot_no" type="text" id="c-0-28" placeholder=""></div>
                     <div class="c-validation"></div>
                 </div>
-                <div class="c-text-singleline c-field c-col-5 c-sml-col-5 c-span-4 c-sml-span-6">
-                    <div class="c-label  "><label for="c-1-27">Volume / Folio No</label></div>
-                    <div class="c-editor"><input name="folio_no" type="text" id="c-1-27" placeholder=""></div>
-                    <div class="c-validation"></div>
-                </div>
+                
                 <div class="c-section c-col-1 c-sml-col-1 c-span-12 c-sml-span-12">
                     <div class="c-title">
                         <h3>DEBITS</h3>
@@ -135,23 +145,35 @@
                                         </div>
                                         <div class="c-choice-dropdown c-field c-col-1 c-sml-col-1 c-span-6 c-sml-span-6">
                                             <div class="c-label  "><label for="c-15-9">Foreign Currency</label></div>
-                                            <div class="c-editor"><input type="text" id="c-15-9" placeholder="" class="c-autocomplete" autocomplete="off" height=""></div>
-                                            <div class="c-validation"></div>
-                                        </div>
-                                        <div class="c-currency c-field c-col-7 c-sml-col-7 c-span-6 c-sml-span-6">
-                                            <div class="c-label  "><label for="c-16-8">Amount Foreign Currency</label></div>
-                                            <div class="c-editor"><input type="text" id="c-16-8" placeholder=""></div>
-                                            <div class="c-validation"></div>
-                                        </div>
-                                        <div class="c-date-date c-field c-col-1 c-sml-col-1 c-span-4 c-sml-span-4">
-                                            <div class="c-label  "><label for="c-17-7">Date Received</label></div>
                                             <div class="c-editor">
-                                                <div class="c-editor-date"><input type="text" id="c-17-7" placeholder="" class="c-datepicker"></div>
-                                                <div class="c-editor-date-icon"><i class="icon-calendar"></i></div>
+                                              <div class="c-dropdown ">
+                                                  <select value="{!!old('monetary.fc.name')!!}" name="monetary[fc][name]" id="fc_name">
+                                                      <option></option>
+                                                      <option selected="selected" value="United States Dollar">United States Dollar</option>
+                                                      <option value="Canadian Dollar">Canadian Dollar</option>
+                                                      <option value="Pound Sterling">Pound Sterling</option>
+                                                  </select>
+                                              </div>
                                             </div>
                                             <div class="c-validation"></div>
                                         </div>
-                                        <div class="c-currency c-field c-col-5 c-sml-col-5 c-span-8 c-sml-span-8">
+                                        <div class="c-currency c-field c-col-7 c-sml-col-7 c-span-6 c-sml-span-6">
+                                            <div class="c-label  "><label for="c-16-8">Amount </label></div>
+                                            <div class="c-editor"><input type="text" id="c-16-8" placeholder=""></div>
+                                            <div class="c-validation"></div>
+                                        </div>
+
+                                        <div class="c-date-date c-field c-col-1 c-sml-col-1 c-span-6 c-sml-span-6">
+                                            <div class="c-label  "><label for="c-17-7">Date Received</label></div>
+                                            <div class="c-editor">
+                                                <div class="input-group date c-editor-date c-datepicker" >
+                                                  <input class="datepicker" name="vendor[dob][]" type="text" id="c-6-252"placeholder="" >
+                                                </div>
+                                                <div class="c-editor-date-icon input-group-addon"><i class="icon-calendar"></i></div>
+                                            </div>
+                                            <div class="c-validation"></div>
+                                        </div>
+                                        <div class="c-currency c-field c-col-5 c-sml-col-5 c-span-6 c-sml-span-6">
                                             <div class="c-label  "><label for="c-18-6">Amount J$</label></div>
                                             <div class="c-editor"><input type="text" id="c-18-6" placeholder=""></div>
                                             <div class="c-validation"></div>

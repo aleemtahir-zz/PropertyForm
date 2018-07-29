@@ -13,7 +13,7 @@ class PaymentController extends Controller
      */
     public function index()
     {
-        //
+        return view('forms.payment');
     }
 
     /**
@@ -23,7 +23,7 @@ class PaymentController extends Controller
      */
     public function create()
     {
-        return view('welcome');
+        
     }
 
     /**
@@ -47,7 +47,7 @@ class PaymentController extends Controller
     public function show($id)
     {
 
-        return view('forms.payment');
+        
 
     }
 
