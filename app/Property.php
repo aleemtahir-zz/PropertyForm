@@ -13,6 +13,42 @@ class Property extends Model
     //User Trait
     use InsertOnDuplicateKey;
 
+    public function initialize($req)
+    {
+        $data     = $req['property'];
+        $devId    = $this->check_developer($data);
+        $purchasserId  = $this->check_purchaser($data);
+
+        $vendor             = $req['vendor'];
+        $ids['vendor']      = $this->add_developer($vendor, $devId, $error);
+
+        if($error)
+            return back()->withErrors($error->getMessage())->withInput();
+
+        $payment            = $req['monetary'];
+        $ids['payment']     = $this->add_payment($payment, $error);
+
+        if($error)
+            return back()->withErrors($error->getMessage())->withInput();
+
+        $buyer              = $req['buyer'];
+        $ids['buyer']       = $this->add_purchaser($buyer,$purchasserId,$error);
+
+        if($error)
+            return back()->withErrors($error->getMessage())->withInput();
+
+        $attorney           = $req['attorney'];
+        $ids['attorney']    = $this->add_attorney($attorney, $error);
+
+        if($error)
+            return back()->withErrors($error->getMessage())->withInput();
+
+        $property           = $req['property'];
+        $this->add_property($property, $ids, $error);
+
+        return $error;
+    }
+
     public function check_developer($data)
     {
       $folio_key = $data['volume_no'].'_'.$data['folio_no'];
@@ -568,6 +604,9 @@ class Property extends Model
           return;
         }
 
+        //DELETE PREVIOUS VENDOR ASSOCIATION
+        DB::table('tbl_property_vendor_assoc')->where('property_id',$key_id)->delete();
+
         //INSERT VENDOR ASSOCIATION
         foreach ($vendor_id as $key => $value) {
             $vendorUpdate = array();
@@ -585,6 +624,9 @@ class Property extends Model
               return;
             }
         }
+
+        //DELETE PREVIOUS BUYER ASSOCIATION
+        DB::table('tbl_property_buyer_assoc')->where('property_id',$key_id)->delete();
 
         //INSERT BUYER ASSOCIATION
         foreach ($buyer_id as $key => $value) {

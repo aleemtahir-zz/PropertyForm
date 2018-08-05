@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\PropFromRequest;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use NestedJsonFlattener\Flattener\Flattener;
 use Exception;
 use App\Property;
 use Carbon\Carbon;
@@ -40,43 +42,27 @@ class PropertyController extends Controller
      */
     public function store(PropFromRequest $request)
     {
+        
+        //print_r($req['property']); die;
         //echo "<pre>"; print_r($request->all()); echo "</pre>";
+        //$flattener = new Flattener();
+        //$flattener->setArrayData($request->all());
+        //$flattener->writeCsv();
+        //$flat = $flattener->getFlatData();
+        //$csv = array_map('str_getcsv', file('file_88426349.csv'));
+        //$a = csvToArray('file_88426349');
+        //pre($a); 
+        //die;
+
         $error = false;
+        $req = $request->all();
         $PropertyObj = new Property();
 
         //Transaction
         DB::beginTransaction();
 
-        $data     = $request->input('property');
-        $devId  = $PropertyObj->check_developer($data);
-        $purchasserId  = $PropertyObj->check_purchaser($data);
-
-        $vendor             = $request->input('vendor');
-        $ids['vendor']      = $PropertyObj->add_developer($vendor, $devId, $error);
-
-        if($error)
-            return back()->withErrors($error->getMessage())->withInput();
-
-        $payment            = $request->input('monetary');
-        $ids['payment']     = $PropertyObj->add_payment($payment, $error);
-
-        if($error)
-            return back()->withErrors($error->getMessage())->withInput();
-
-        $buyer              = $request->input('buyer');
-        $ids['buyer']       = $PropertyObj->add_purchaser($buyer,$purchasserId,$error);
-
-        if($error)
-            return back()->withErrors($error->getMessage())->withInput();
-
-        $attorney           = $request->input('attorney');
-        $ids['attorney']    = $PropertyObj->add_attorney($attorney, $error);
-
-        if($error)
-            return back()->withErrors($error->getMessage())->withInput();
-
-        $property           = $request->input('property');
-        $PropertyObj->add_property($property, $ids, $error);
+        $erro = $PropertyObj->initialize($req);
+        
         DB::commit();
 
         if($error)

@@ -407,3 +407,55 @@ function upload_logo( $filename='')
 
   return $result;
 }
+
+
+/*CSV TO PHP ARRAYS
+================================================*/
+function csvToArray($filename = '')
+{
+  try{
+    $file = fopen($filename.'.csv', 'r');
+  }
+  catch(\Exception $e)
+  {
+    pre($e->getMessage());
+  }
+
+  $header = fgetcsv($file);
+  //array_shift($header);
+
+  $i=0;
+  $data = array();
+  $new_data = array();
+  while ($row = fgetcsv($file))
+  {
+    //$key = array_shift($row);
+
+    $data[$i++] = array_combine($header, $row);
+  }
+
+  foreach ($data as $index => $array) {
+    foreach ($array as $key => $value) {
+      
+      $indices = explode('.', $key);
+      $values  = explode(',', $value);
+
+      if(count($values) > 1)
+        $value = $values;             
+
+      $ind_count = count($indices);
+
+      if($ind_count == 1)
+        $new_data[$index][$indices[0]] = $value;  
+      if($ind_count == 2)
+        $new_data[$index][$indices[0]][$indices[1]] = $value;  
+      if($ind_count == 3)
+        $new_data[$index][$indices[0]][$indices[1]][$indices[2]] = $value;
+
+    }
+  }
+
+  fclose($file);
+
+  return $new_data;
+}
