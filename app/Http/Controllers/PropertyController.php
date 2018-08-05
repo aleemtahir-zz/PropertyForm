@@ -61,7 +61,7 @@ class PropertyController extends Controller
         //Transaction
         DB::beginTransaction();
 
-        $erro = $PropertyObj->initialize($req);
+        $error = $PropertyObj->initialize($req);
         
         DB::commit();
 
@@ -97,21 +97,36 @@ class PropertyController extends Controller
      */
     public function show($id)
     {
-      // pre($id); 
-      // pre($_POST); die;
-        //Show Word Templates
-        $templates = array(
-            'application_for_membership',
-            'building_agreement',
-            'developer_name_maintenance_agreement',
-            'insrtument_of_transfer',
-            'letter_of_title_issuance',
-            'memorandum_of_sale',
-            'statement_of_account'             
-        );
+      /*$url = Storage::url('tara.jpg'); 
+      pre($url); die;*/
 
-        return view('forms.response',compact('templates'));
-        //return view('forms.property');
+      $data = csvToArray($id);
+      
+      for ($i=0; $i < count($data) ; $i++) { 
+        $PropertyObj = new Property();
+        //Transaction
+        DB::beginTransaction();
+
+        $error = $PropertyObj->initialize($data[$i]);
+        
+        DB::commit();
+        if(!empty($error))
+          return $error->getMessage();
+      }
+
+      //Show Word Templates
+      $templates = array(
+          'application_for_membership',
+          'building_agreement',
+          'developer_name_maintenance_agreement',
+          'insrtument_of_transfer',
+          'letter_of_title_issuance',
+          'memorandum_of_sale',
+          'statement_of_account'             
+      );
+
+      return view('forms.response',compact('templates'));
+      //return view('forms.property');
     }
 
     /**

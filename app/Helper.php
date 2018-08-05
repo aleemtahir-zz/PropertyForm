@@ -364,7 +364,7 @@ function get_foriegn_currency($currency)
 
 function upload_logo( $filename='')
 {
-  $target_dir = realpath(dirname(getcwd())).'\uploads\\';
+  $target_dir = __DIR__.'/../uploads/';
   $target_file = $target_dir . basename($_FILES[$filename]["name"]);
   $uploadOk = 1;
   $msg = array();
@@ -413,8 +413,9 @@ function upload_logo( $filename='')
 ================================================*/
 function csvToArray($filename = '')
 {
+
   try{
-    $file = fopen($filename.'.csv', 'r');
+    $file = fopen($filename, 'r');
   }
   catch(\Exception $e)
   {

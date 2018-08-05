@@ -113,9 +113,12 @@ die;
      */
     public function destroy($id)
     {
-        $_GET['file'] = $id;
+        pre($id);
+        Storage::delete($id);
+
+        /*$_GET['file'] = $id;
         error_reporting(E_ALL | E_STRICT);
-        $upload_handler = new \UploadHandler();
+        $upload_handler = new \UploadHandler();*/
     }
 
 }

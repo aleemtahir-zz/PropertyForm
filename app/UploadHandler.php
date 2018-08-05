@@ -44,7 +44,7 @@ class UploadHandler
         $this->response = array();
         $this->options = array(
             'script_url' => 'http://localhost:8000/upload',
-            'upload_dir' => realpath(dirname(getcwd())).'\uploads\sheets\\',
+            'upload_dir' => __DIR__.'/../uploads/sheets/',
             'upload_url' => url('property\\'),
             /*'upload_url' => realpath(dirname(getcwd())).'\uploads\sheets\\',*/
             /*'upload_url' => $this->get_full_url().'/files/',*/
@@ -148,7 +148,7 @@ class UploadHandler
                     'max_width' => 800,
                     'max_height' => 600
                 ),
-		*/
+        */
                 'thumbnail' => array(
                     // Uncomment the following to use a defined directory for the thumbnails
                     // instead of a subdirectory based on the version identifier.
@@ -182,9 +182,11 @@ class UploadHandler
     }
 
     protected function initialize() {
-
+        //pre(__DIR__.'/../uploads/sheets/'); die;
         switch ($this->get_server_var('REQUEST_METHOD')) {
             case 'OPTIONS':
+                $this->delete($this->options['print_response']);
+                break;
             case 'HEAD':
                 $this->head();
                 break;
@@ -875,11 +877,11 @@ class UploadHandler
         if (!empty($options['auto_orient'])) {
             $image_oriented = $this->imagick_orient_image($image);
         } 
-	    
+        
         $image_resize = false; 
         $new_width = $max_width = $img_width = $image->getImageWidth();
         $new_height = $max_height = $img_height = $image->getImageHeight(); 
-		  
+          
         // use isset(). User might be setting max_width = 0 (auto in regular resizing). Value 0 would be considered empty when you use empty()
         if (isset($options['max_width'])) {
             $image_resize = true; 

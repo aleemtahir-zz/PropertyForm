@@ -14,7 +14,8 @@ class Property extends Model
     use InsertOnDuplicateKey;
 
     public function initialize($req)
-    {
+    {   
+        
         $data     = $req['property'];
         $devId    = $this->check_developer($data);
         $purchasserId  = $this->check_purchaser($data);
@@ -23,25 +24,25 @@ class Property extends Model
         $ids['vendor']      = $this->add_developer($vendor, $devId, $error);
 
         if($error)
-            return back()->withErrors($error->getMessage())->withInput();
+            return $error;
 
         $payment            = $req['monetary'];
         $ids['payment']     = $this->add_payment($payment, $error);
 
         if($error)
-            return back()->withErrors($error->getMessage())->withInput();
+            return $error;
 
         $buyer              = $req['buyer'];
         $ids['buyer']       = $this->add_purchaser($buyer,$purchasserId,$error);
 
         if($error)
-            return back()->withErrors($error->getMessage())->withInput();
+            return $error;
 
         $attorney           = $req['attorney'];
         $ids['attorney']    = $this->add_attorney($attorney, $error);
 
         if($error)
-            return back()->withErrors($error->getMessage())->withInput();
+            return $error;  
 
         $property           = $req['property'];
         $this->add_property($property, $ids, $error);
@@ -90,10 +91,10 @@ class Property extends Model
 
         //UNSET KEYS WHICH ARE EMPTY
         //scanArray($developer);
-        $developer = arrangeMultiArray($developer);
+        $developers = arrangeMultiArray($developer);
 
         $i = 0;
-        foreach ($developer as $key => $developer) {
+        foreach ($developers as $key => $developer) {
 
         	//GET ADDRESS ID
 	        if(!empty($developer['address'])){
@@ -102,6 +103,7 @@ class Property extends Model
 	          nullToString($address_obj);
 
 	          $address_id = get_address($address_obj, $error);
+            $developer['address_id'] = $address_id;
 
 	        }
 	          
@@ -109,8 +111,8 @@ class Property extends Model
 	        //ADD DEVELOPER INFO
 	        //******************
 
-	        $mapper = array(
-  			    'name','last','middle','suffix','trn_no','dob','occupation',
+	        /*$mapper = array(
+  			    'first','last','middle','suffix','trn_no','dob','occupation',
   			    'phone','mobile','email'
     			);
 
@@ -118,36 +120,40 @@ class Property extends Model
 
     				if( !array_key_exists($key, $developer) )
     				  $developer[$key] = null;
-    			}
+    			}*/
 
     			if( !empty($developer['dob']) ){
     				$developer['dob'] = date('Y-m-d',strtotime($developer['dob']));
     			}
 
-          $developer_data = array(
-              'company_name'  => $company_name, 
-              'fname'         => $developer['first'], 
-              'mname'         => $developer['middle'], 
-              'lname'         => $developer['last'], 
-              'suffix'        => $developer['suffix'], 
-              'trn_no'        => $developer['trn_no'], 
-              'dob'           => $developer['dob'], 
-              'occupation'    => $developer['occupation'], 
-              'phone'         => $developer['phone'], 
-              'mobile'        => $developer['mobile'],
-              'email'         => $developer['email'],
-              'address_id'    => $address_id
+          $dbMapper = array(
+            'fname'     => 'first', 
+            'mname'     => 'middle', 
+            'lname'     => 'last', 
+            'suffix'    => 'suffix', 
+            'trn_no'    => 'trn_no', 
+            'dob'       => 'dob', 
+            'occupation'=> 'occupation', 
+            'phone'     => 'phone', 
+            'mobile'    => 'mobile',
+            'email'     => 'email',
+            'address_id'=> 'address_id'
           );
 
-          if( !empty($devId) && $i == 0 )
+          foreach ($dbMapper as $key => $value) {
+            $data[$key] = $developer[$value];
+          }
+
+          //pre($data); die;
+          if( !empty($id) && $i == 0 )
           { 
             $table_name = 'tbl_developer_detail';
             
             try {
               //Update Developer
               DB::table($table_name)
-                ->where('id', $devId)
-                ->update($developer_data);
+                ->where('id', $id)
+                ->update($data);
  
             } catch (Exception $e) {
               DB::rollback();
@@ -156,41 +162,37 @@ class Property extends Model
             }
 
             $i++;
-            $dev_id[] = $devId;
+            $dev_id[] = $id;
           }
           else
           {
-            /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
-            $dev_info = DB::table('tbl_developer_detail')
-                           ->select('id')
-                           ->where('company_name', $company_name)
-                           ->where('fname', $developer['first'])
-                           ->where('mname', $developer['middle'])
-                           ->where('lname', $developer['last'])
-                           ->where('suffix', $developer['suffix'])
-                           ->where('trn_no', $developer['trn_no'])
-                           ->where('dob', $developer['dob'])
-                           ->where('occupation', $developer['occupation'])
-                           ->where('phone', $developer['phone'])
-                           ->where('mobile', $developer['mobile'])
-                           ->where('email', $developer['email'])
-                           ->where('address_id', $address_id)
-                           ->orderBy('id', 'desc')
-                           ->first();
 
+            /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
+            $dev_info = DB::table('tbl_developer_detail')->select('id');
+
+            //WHERE CLAUSE
+            foreach ($dbMapper as $key => $value) {
+              
+              if($developer[$value] == null)
+                $dev_info->whereRaw($key.' is null');
+              else
+                $dev_info->where($key, $developer[$value]);
+            } 
+
+            $dev_info = $dev_info->orderBy('id', 'desc')->first();
 
             if( empty($dev_info) ){
 
               try {
-                  /*INSERT DEV INFO */
-                  DB::table('tbl_developer_detail')->insert($developer_data);
+                /*INSERT DEV INFO */
+                DB::table('tbl_developer_detail')->insert($data);    
               } catch (Exception $e) {
                 DB::rollback();
                 $error = $e;
-                return;
+                //return;
+                pre($e->getMessage());
               }
-
-
+              
               /*GET DEV ID */
               $dev_id[] = DB::getPdo()->lastInsertId();
             } 
@@ -198,11 +200,11 @@ class Property extends Model
             {
               $dev_id[] = $dev_info->id;
 
-            }  
-          }
-	        
-        }
+            }
 
+          }
+        }pre($dev_id);
+die;
         return $dev_id;
     }
 
@@ -320,10 +322,10 @@ class Property extends Model
 
         //UNSET KEYS WHICH ARE EMPTY
         //scanArray($purchaser);
-        $purchaser = arrangeMultiArray($purchaser);
+        $purchasers = arrangeMultiArray($purchaser);
         
         $i=0;
-        foreach ($purchaser as $key => $purchaser) {
+        foreach ($purchasers as $key => $purchaser) {
 
         	//GET ADDRESS ID
 	        if(!empty($purchaser['address'])){
@@ -332,42 +334,46 @@ class Property extends Model
 	          nullToString($address_obj);
 
 	          $address_id = get_address($address_obj, $error);
-
+            $purchaser['address_id'] = $address_id;
 	        }
 	          
 	        //******************
 	        //ADD purchaser INFO
 	        //******************
 
-	        $mapper = array(
-			    'first','last','middle','suffix','trn_no','dob','occupation','bussiness_place',
-			    'phone','mobile','email'
-			);
+	        /*$mapper = array(
+    			    'first','last','middle','suffix','trn_no','dob','occupation','bussiness_place',
+    			    'phone','mobile','email','address_id'
+    			);
  
-			foreach ($mapper as $key) {
+    			foreach ($mapper as $key) {
 
-				if( !array_key_exists($key, $purchaser) )
-				  $purchaser[$key] = null;
-			}
+    				if( !array_key_exists($key, $purchaser) )
+    				  $purchaser[$key] = null;
+    			}*/
 
-			if( !empty($purchaser['dob']) )
-				$purchaser['dob'] = date('Y-m-d',strtotime($purchaser['dob']));
+    			if( !empty($purchaser['dob']) )
+    				$purchaser['dob'] = date('Y-m-d',strtotime($purchaser['dob']));
 
-	        /*CHECK purchaser INFO IF EXIST ALREADY*/
-	        $data = [
-              'fname'     => $purchaser['first'], 
-              'mname'     => $purchaser['middle'], 
-              'lname'     => $purchaser['last'], 
-              'suffix'      => $purchaser['suffix'], 
-              'trn_no'      => $purchaser['trn_no'], 
-              'dob'       => $purchaser['dob'], 
-              'occupation'    => $purchaser['occupation'], 
-              'bussiness_place'=> $purchaser['bussiness_place'], 
-              'phone'     => $purchaser['phone'], 
-              'mobile'        => $purchaser['mobile'],
-              'email'         => $purchaser['email'],
-              'address_id'    => $address_id
-          ];
+          $dbMapper = array(
+            'fname'     => 'first', 
+            'mname'     => 'middle', 
+            'lname'     => 'last', 
+            'suffix'    => 'suffix', 
+            'trn_no'    => 'trn_no', 
+            'dob'       => 'dob', 
+            'occupation'=> 'occupation', 
+            'bussiness_place'=> 'bussiness_place', 
+            'phone'     => 'phone', 
+            'mobile'    => 'mobile',
+            'email'     => 'email',
+            'address_id'=> 'address_id'
+          );
+
+          foreach ($dbMapper as $key => $value) {
+            $data[$key] = $purchaser[$value];
+          }
+
 
           if( !empty($id) && $i == 0 )
           { 
@@ -390,44 +396,26 @@ class Property extends Model
           }
           else
           {
+
             /*CHECK purchaser INFO IF EXIST ALREADY*/
-            $dev_info = DB::table('tbl_purchaser_detail')
-                           ->select('id')
-                           ->where('fname', $purchaser['first'])
-                           ->where('mname', $purchaser['middle'])
-                           ->where('lname', $purchaser['last'])
-                           ->where('suffix', $purchaser['suffix'])
-                           ->where('trn_no', $purchaser['trn_no'])
-                           ->where('dob', $purchaser['dob'])
-                           ->where('occupation', $purchaser['occupation'])
-                           ->where('phone', $purchaser['phone'])
-                           ->where('mobile', $purchaser['mobile'])
-                           ->where('email', $purchaser['email'])
-                           ->where('address_id', $address_id)
-                           ->orderBy('id', 'desc')
-                           ->first();
-                           
+            $dev_info = DB::table('tbl_purchaser_detail')->select('id');
+
+            //WHERE CLAUSE
+            foreach ($dbMapper as $key => $value) {
+              
+              if($purchaser[$value] == null)
+                $dev_info->whereRaw($key.' is null');
+              else
+                $dev_info->where($key, $purchaser[$value]);
+            } 
+
+            $dev_info->orderBy('id', 'desc');
 
             if( empty($dev_info) ){
 
               try {
                 /*INSERT DEV INFO */
-                DB::table('tbl_purchaser_detail')->insert(
-                    [
-                        'fname'     => $purchaser['first'], 
-                        'mname'     => $purchaser['middle'], 
-                        'lname'     => $purchaser['last'], 
-                        'suffix'      => $purchaser['suffix'], 
-                        'trn_no'      => $purchaser['trn_no'], 
-                        'dob'       => $purchaser['dob'], 
-                        'occupation'    => $purchaser['occupation'], 
-                        'bussiness_place'=> $purchaser['bussiness_place'], 
-                        'phone'     => $purchaser['phone'], 
-                        'mobile'        => $purchaser['mobile'],
-                        'email'         => $purchaser['email'],
-                        'address_id'    => $address_id
-                    ]
-                );    
+                DB::table('tbl_purchaser_detail')->insert($data);    
               } catch (Exception $e) {
                 DB::rollback();
                 $error = $e;
@@ -439,7 +427,8 @@ class Property extends Model
             } 
             else
             {
-              $dev_id[] = $dev_info->id;
+              $dev_info = (array) $dev_info->first();
+              $dev_id[] = $dev_info['id'];
 
             }
 
