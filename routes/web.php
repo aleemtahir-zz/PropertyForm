@@ -14,7 +14,10 @@
 Route::get('/', function () {
     return view('welcome');
 });
-
+Route::get('property/autocomplete',[
+    'as' => 'autocomplete',
+    'uses' => 'PropertyController@autocomplete'
+]);
 Route::resource('property','PropertyController');
 Route::post('updateDevelopmentView', 'DevController@updateView');
 Route::post('updatePropertyView', 'PropertyController@updateProperty');

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Requests\PropFromRequest;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use NestedJsonFlattener\Flattener\Flattener;
@@ -99,7 +100,7 @@ class PropertyController extends Controller
     {
       /*$url = Storage::url('tara.jpg'); 
       pre($url); die;*/
-
+/*
       $data = csvToArray($id);
       
       for ($i=0; $i < count($data) ; $i++) { 
@@ -112,7 +113,7 @@ class PropertyController extends Controller
         DB::commit();
         if(!empty($error))
           return $error->getMessage();
-      }
+      }*/
 
       //Show Word Templates
       $templates = array(
@@ -179,12 +180,16 @@ class PropertyController extends Controller
 
             $vcount = 0;
             $bcount = 0;
-            $id = $response['p-id']['value']; 
-            $vendors = $PropObj->getAllVendors($id, $vcount);
-            $buyers = $PropObj->getAllBuyers($id, $bcount);
-            $response['vcount'] = $vcount;
-            $response['bcount'] = $bcount;
-            $response = array_merge($response,$vendors, $buyers);
+
+            if(isset($response['p-id']['value']))
+            {
+              $id = $response['p-id']['value']; 
+              $vendors = $PropObj->getAllVendors($id, $vcount);
+              $buyers = $PropObj->getAllBuyers($id, $bcount);
+              $response['vcount'] = $vcount;
+              $response['bcount'] = $bcount;
+              $response = array_merge($response,$vendors, $buyers);
+            }
             //pre($response);die;
         }
         else if(!empty($folio))
@@ -287,6 +292,26 @@ class PropertyController extends Controller
 
         //pre($file_name); die;
 
+    }
+
+    public function autocomplete(){
+      
+      //pre($_GET['term']); die;
+      $search = $_GET['term'];
+      $ids = explode('/', $search);
+      $results = array();
+      
+      $queries = DB::table('tbl_key_id')
+        ->where('volume_no', 'LIKE', '%'.$ids[0].'%')
+        ->where('folio_no', 'LIKE', '%'.$ids[1].'%')
+        ->where('lot_no', 'LIKE', '%'.$ids[2].'%')
+        ->take(5)->get();
+      
+      foreach ($queries as $query)
+      {
+          $results[] = [ 'id' => $query->id, 'value' => $query->volume_no.' '.$query->folio_no.' '.$query->lot_no ];
+      }
+      return Response::json($results);
     }
 
 }

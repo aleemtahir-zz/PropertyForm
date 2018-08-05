@@ -193,6 +193,30 @@ $('#fileUpload').change(function () {
 
 checkDropDownStatus();
 
+
+/*RECORD ID AUTOCOMPLETE
+===========================================*/
+/*$('#autocomplete').change(function()
+{
+	var search = $('#autocomplete').val();
+	var data = {'id' : search };
+	$.get('autocomplete', data, function (response) {
+	    // Response div goes here.
+	    console.log("action performed successfully");
+	});	
+});
+*/
+
+$( "#autocomplete" ).autocomplete({
+	source: "autocomplete",
+	minLength: 3,
+	select: function(event, ui) {
+		console.log(ui);
+		console.log(event);
+		$('#autocomplete').val(ui.item.value);
+	}
+});
+
 /*END Document Ready
 ====================================*/
 });
@@ -225,11 +249,11 @@ function fetchRecordDev()
 
 	if(volume_no && folio_no)
 	{
-		$.ajaxSetup({
+		/*$.ajaxSetup({
 		  headers: {
 		    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 		  }
-		});
+		});*/
 		
 		$.ajax({
             /* the route pointing to the post function */
@@ -541,3 +565,4 @@ function add_section(id, count) {
 		});
 	}
 }
+

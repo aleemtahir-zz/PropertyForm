@@ -106,27 +106,28 @@ class Property extends Model
             $developer['address_id'] = $address_id;
 
 	        }
-	          
+	        $developer['company_name'] = $company_name;
+            
 	        //******************
 	        //ADD DEVELOPER INFO
 	        //******************
 
-	        /*$mapper = array(
-  			    'first','last','middle','suffix','trn_no','dob','occupation',
+	        $mapper = array(
+  			    'company_name','first','last','middle','suffix','trn_no','dob','occupation',
   			    'phone','mobile','email'
     			);
 
     			foreach ($mapper as $key) {
 
-    				if( !array_key_exists($key, $developer) )
+    				if( !array_key_exists($key, $developer) || empty($developer[$key]))
     				  $developer[$key] = null;
-    			}*/
-
-    			if( !empty($developer['dob']) ){
-    				$developer['dob'] = date('Y-m-d',strtotime($developer['dob']));
     			}
 
+    			if( !empty($developer['dob']) )
+    				$developer['dob'] = date('Y-m-d',strtotime($developer['dob']));
+
           $dbMapper = array(
+            'company_name' => 'company_name',
             'fname'     => 'first', 
             'mname'     => 'middle', 
             'lname'     => 'last', 
@@ -182,7 +183,8 @@ class Property extends Model
             $dev_info = $dev_info->orderBy('id', 'desc')->first();
 
             if( empty($dev_info) ){
-
+// DB::enableQueryLog();
+//       dd(DB::getQueryLog());
               try {
                 /*INSERT DEV INFO */
                 DB::table('tbl_developer_detail')->insert($data);    
@@ -203,8 +205,9 @@ class Property extends Model
             }
 
           }
-        }pre($dev_id);
-die;
+        }
+        //pre($dev_id);
+//die;
         return $dev_id;
     }
 
@@ -238,7 +241,7 @@ die;
 
     		foreach ($mapper as $key) {
 
-    			if( !array_key_exists($key, $payment) )
+    			if( !array_key_exists($key, $payment) || empty($payment[$key]) )
     			  $payment[$key] = null;
     		}
 
@@ -341,19 +344,19 @@ die;
 	        //ADD purchaser INFO
 	        //******************
 
-	        /*$mapper = array(
+	        $mapper = array(
     			    'first','last','middle','suffix','trn_no','dob','occupation','bussiness_place',
     			    'phone','mobile','email','address_id'
     			);
  
     			foreach ($mapper as $key) {
 
-    				if( !array_key_exists($key, $purchaser) )
+    				if( !array_key_exists($key, $purchaser) || empty($purchaser[$key]))
     				  $purchaser[$key] = null;
-    			}*/
+    			}
 
     			if( !empty($purchaser['dob']) )
-    				$purchaser['dob'] = date('Y-m-d',strtotime($purchaser['dob']));
+            $purchaser['dob'] = date('Y-m-d',strtotime($purchaser['dob']));
 
           $dbMapper = array(
             'fname'     => 'first', 
@@ -409,7 +412,7 @@ die;
                 $dev_info->where($key, $purchaser[$value]);
             } 
 
-            $dev_info->orderBy('id', 'desc');
+            $dev_info = $dev_info->orderBy('id', 'desc')->first();
 
             if( empty($dev_info) ){
 
@@ -427,8 +430,7 @@ die;
             } 
             else
             {
-              $dev_info = (array) $dev_info->first();
-              $dev_id[] = $dev_info['id'];
+              $dev_id[] = $dev_info->id;
 
             }
 

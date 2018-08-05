@@ -286,7 +286,7 @@ function saveDoc($templates='', $file, $data='')
             $TBS->MergeField('date', $date);
             $TBS->MergeBlock('v', 'array',$data['v']);
             $TBS->MergeField('p', $data['p']);
-            $TBS->MergeBlock('b','array', $data['b']);
+            $TBS->MergeBlock('b,b1,b2,b3,b4,b5,b6,b7','array', $data['b']);
             $TBS->MergeField('dcp', $data['dcp']);
             $TBS->MergeField('c', $data['c']);
             $TBS->MergeField('da1', $data['da1']);
