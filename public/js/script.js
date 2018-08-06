@@ -211,14 +211,6 @@ $( "#autocomplete" ).autocomplete({
 });
 
 
-/*Merge Button Redirect
-====================================*/
-$("#uploadMerge").click( function() {
-	event.preventDefault();
-	console.log($(this));
-	window.location.replace(baseurl);
-});
-
 /*END Document Ready
 ====================================*/
 });
