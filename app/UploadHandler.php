@@ -44,7 +44,7 @@ class UploadHandler
         $this->response = array();
         $this->options = array(
             'script_url' => 'http://localhost:8000/upload',
-            'upload_dir' => __DIR__.'/../uploads/sheets/',
+            'upload_dir' => __DIR__.'/../storage/app/public/sheets/',
             'upload_url' => url('property\\'),
             /*'upload_url' => realpath(dirname(getcwd())).'\uploads\sheets\\',*/
             /*'upload_url' => $this->get_full_url().'/files/',*/
@@ -1093,15 +1093,19 @@ class UploadHandler
             $file_path = $this->get_upload_path($file->name);
             $append_file = $content_range && is_file($file_path) &&
                 $file->size > $this->get_file_size($file_path);
+
             if ($uploaded_file && is_uploaded_file($uploaded_file)) {
                 // multipart/formdata uploads (POST method uploads)
                 if ($append_file) {
+                    
                     file_put_contents(
                         $file_path,
                         fopen($uploaded_file, 'r'),
                         FILE_APPEND
                     );
                 } else {
+
+                    //Storage::put('sheets/', $uploaded_file, 'public');
                     move_uploaded_file($uploaded_file, $file_path);
                 }
             } else {

@@ -100,21 +100,24 @@ class PropertyController extends Controller
     {
       /*$url = Storage::url('tara.jpg'); 
       pre($url); die;*/
-/*
-      $data = csvToArray($id);
+
+      if(!empty($id) && $id != 'show')
+      {
+        $data = csvToArray($id);
       
-      for ($i=0; $i < count($data) ; $i++) { 
-        $PropertyObj = new Property();
-        //Transaction
-        DB::beginTransaction();
+        for ($i=0; $i < count($data) ; $i++) { 
+          $PropertyObj = new Property();
+          //Transaction
+          DB::beginTransaction();
 
-        $error = $PropertyObj->initialize($data[$i]);
-        
-        DB::commit();
-        if(!empty($error))
-          return $error->getMessage();
-      }*/
-
+          $error = $PropertyObj->initialize($data[$i]);
+          
+          DB::commit();
+          if(!empty($error))
+            return $error->getMessage();
+        }
+      }
+      
       //Show Word Templates
       $templates = array(
           'application_for_membership',
@@ -204,11 +207,11 @@ class PropertyController extends Controller
 
     public function mergeDownload(Request $request)
     {   
-        
-        if($request->templates)
-          $template_name = $request->templates;
-        elseif($request->mergeBtn)
+        dd($request);
+        if($request->mergeBtn)
           $template_name[] = $request->mergeBtn;
+        if(empty($request->autocomplete))
+          return Redirect::to('property/show')->with('message', 'Please Select Any Record ID.');
         else
           return Redirect::to('property/show')->with('message', 'Please Select Any Template.');
         
@@ -302,10 +305,17 @@ class PropertyController extends Controller
       $results = array();
       
       $queries = DB::table('tbl_key_id')
-        ->where('volume_no', 'LIKE', '%'.$ids[0].'%')
-        ->where('folio_no', 'LIKE', '%'.$ids[1].'%')
-        ->where('lot_no', 'LIKE', '%'.$ids[2].'%')
-        ->take(5)->get();
+        ->where('volume_no', 'LIKE', '%'.$ids[0].'%');
+
+      if(isset($ids[1])){
+        $queries->where('folio_no', 'LIKE', '%'.$ids[1].'%');
+      }  
+
+      if(isset($ids[2])){
+        $queries->where('lot_no', 'LIKE', '%'.$ids[2].'%');
+      }  
+        
+      $queries = $queries->take(5)->get();
       
       foreach ($queries as $query)
       {

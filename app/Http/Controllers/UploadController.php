@@ -40,26 +40,26 @@ class UploadController extends Controller
     public function store(Request $request)
     {
 
-        error_reporting(E_ALL | E_STRICT);
+        //error_reporting(E_ALL | E_STRICT);
         $upload_handler = new \UploadHandler();
 die;
 
-        //Upload Sheet Content
-        $excelReader = \PHPExcel_IOFactory::createReaderForFile($file_path);
-        $excelObj = $excelReader->load($file_path);
-        $worksheet = $excelObj->getSheet(0);
-        $lastRow = $worksheet->getHighestRow();
+        // //Upload Sheet Content
+        // $excelReader = \PHPExcel_IOFactory::createReaderForFile($file_path);
+        // $excelObj = $excelReader->load($file_path);
+        // $worksheet = $excelObj->getSheet(0);
+        // $lastRow = $worksheet->getHighestRow();
 
-        foreach ($worksheet->getRowIterator() AS $row) {
-            $cellIterator = $row->getCellIterator();
-            $cellIterator->setIterateOnlyExistingCells(FALSE); // This loops through all cells,
-            $cells = [];
-            foreach ($cellIterator as $cell) {
-                $cells[] = $cell->getValue();
-            }
-            $rows[] = $cells;
-        }
-        pre($rows);
+        // foreach ($worksheet->getRowIterator() AS $row) {
+        //     $cellIterator = $row->getCellIterator();
+        //     $cellIterator->setIterateOnlyExistingCells(FALSE); // This loops through all cells,
+        //     $cells = [];
+        //     foreach ($cellIterator as $cell) {
+        //         $cells[] = $cell->getValue();
+        //     }
+        //     $rows[] = $cells;
+        // }
+        // pre($rows);
 
         //return view('forms.upload_property');
     }
@@ -72,13 +72,13 @@ die;
      */
     public function show($id)
     {
-        error_reporting(E_ALL | E_STRICT);
+        //error_reporting(E_ALL | E_STRICT);
         $upload_handler = new \UploadHandler();
     }
 
     public function postShow()
     {
-        error_reporting(E_ALL | E_STRICT);
+        //error_reporting(E_ALL | E_STRICT);
         $upload_handler = new \UploadHandler();
     }
 
@@ -113,12 +113,12 @@ die;
      */
     public function destroy($id)
     {
-        pre($id);
-        Storage::delete($id);
+        //$url = Storage::exists('sheets/'.$id);
+        Storage::delete('sheets/'.$id);
 
-        /*$_GET['file'] = $id;
-        error_reporting(E_ALL | E_STRICT);
-        $upload_handler = new \UploadHandler();*/
+        //$_GET['file'] = $id;
+        //error_reporting(E_ALL | E_STRICT);
+        $upload_handler = new \UploadHandler();
     }
 
 }

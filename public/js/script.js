@@ -209,11 +209,10 @@ checkDropDownStatus();
 
 $( "#autocomplete" ).autocomplete({
 	source: "autocomplete",
-	minLength: 3,
+	minLength: 2,
 	select: function(event, ui) {
-		console.log(ui);
-		console.log(event);
-		$('#autocomplete').val(ui.item.value);
+		$('#autocomplete').val(ui.item.id);
+		$('#mergeBtn').removeAttr("disabled");
 	}
 });
 

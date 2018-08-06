@@ -413,9 +413,13 @@ function upload_logo( $filename='')
 ================================================*/
 function csvToArray($filename = '')
 {
-
+  //$target_dir = __DIR__.'/../uploads/sheets/';
+  //$url = Storage::url('/public/'.$filename); 
+  $url = asset('storage/sheets/'.$filename); 
+  pre($url); die; 
   try{
-    $file = fopen($filename, 'r');
+    //pre($url); die;
+    $file = fopen($url, 'r');
   }
   catch(\Exception $e)
   {
