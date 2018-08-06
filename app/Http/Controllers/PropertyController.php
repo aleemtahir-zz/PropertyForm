@@ -207,21 +207,32 @@ class PropertyController extends Controller
 
     public function mergeDownload(Request $request)
     {   
-        dd($request);
-        if($request->mergeBtn)
+       
+	if($request->mergeBtn)
           $template_name[] = $request->mergeBtn;
+        /*else
+          return Redirect::to('property/show')->with('message', 'Please Select Any Template.');*/
+        
+        if(!empty($request->session()->get('propRequest')))
+        {
+          $req = $request->session()->get('propRequest'); 
+          $values['volume']   = $req['property']['volume_no']; 
+          $values['folio']    = $req['property']['folio_no']; 
+          $values['lot']      = $req['property']['lot_no'];
+        }
+        
         if(empty($request->autocomplete))
           return Redirect::to('property/show')->with('message', 'Please Select Any Record ID.');
         else
-          return Redirect::to('property/show')->with('message', 'Please Select Any Template.');
-        
-        $req = $request->session()->get('propRequest');
-         
-        $values['volume']    = $req['property']['volume_no']; 
-        $values['folio']    = $req['property']['folio_no']; 
-        $values['lot']      = $req['property']['lot_no'];
+        {
+          $ids = explode(' ', $request->autocomplete);
 
-        $PropertyObj = new Property(); 
+          $values['volume']   = $ids[0]; 
+          $values['folio']    = $ids[1]; 
+          $values['lot']      = $ids[2];
+        } 
+
+	$PropertyObj = new Property(); 
         $data = $PropertyObj->get_all($values);
         $id = $data['p-id']['value']; 
         $allVendors = $PropertyObj->getVendors($id);

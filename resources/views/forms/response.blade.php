@@ -24,7 +24,7 @@
                     <div style=" width: 265px;" class="c-field c-text-singleline c-col-17 c-sml-col-1 c-span-8 c-sml-span-2">
                     	<div  style="padding-left: 8px;"><span>Record ID</span></div>
 	                    <div class="c-editor">
-	                    	<input name="autocomplete" type="text" id="autocomplete" placeholder="Volume/Folio/Lot">
+	                    	<input name="autocomplete" type="text" id="autocomplete" autocomplete="off" placeholder="Volume/Folio/Lot">
 	                    <div class="c-helptext">SEARCH RECORD ID.</div>
 	                    </div>
 	                </div>

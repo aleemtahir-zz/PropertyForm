@@ -212,7 +212,11 @@ $( "#autocomplete" ).autocomplete({
 	minLength: 2,
 	select: function(event, ui) {
 		$('#autocomplete').val(ui.item.id);
-		$('#mergeBtn').removeAttr("disabled");
+		$('button[name="mergeBtn"]').map(function(){
+			//console.log(this);		
+			$(this).removeAttr("disabled");
+		
+		});
 	}
 });
 
