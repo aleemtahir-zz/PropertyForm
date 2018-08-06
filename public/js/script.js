@@ -196,16 +196,6 @@ checkDropDownStatus();
 
 /*RECORD ID AUTOCOMPLETE
 ===========================================*/
-/*$('#autocomplete').change(function()
-{
-	var search = $('#autocomplete').val();
-	var data = {'id' : search };
-	$.get('autocomplete', data, function (response) {
-	    // Response div goes here.
-	    console.log("action performed successfully");
-	});	
-});
-*/
 
 $( "#autocomplete" ).autocomplete({
 	source: "autocomplete",
@@ -218,6 +208,15 @@ $( "#autocomplete" ).autocomplete({
 		
 		});
 	}
+});
+
+
+/*Merge Button Redirect
+====================================*/
+$("#uploadMerge").click( function() {
+	event.preventDefault();
+	console.log($(this));
+	window.location.replace(baseurl);
 });
 
 /*END Document Ready

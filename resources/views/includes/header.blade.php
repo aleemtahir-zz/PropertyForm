@@ -25,3 +25,6 @@
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.js"></script>
 <script type="text/javascript" src="{{asset('js/script.js')}}"></script>   
 <script src="{{asset('js/jquery.dm-uploader.min.js')}}"></script>   
+<script type="text/javascript">
+    var baseurl = "{{url('/')}}";
+</script>

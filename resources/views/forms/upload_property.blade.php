@@ -1,8 +1,6 @@
 @extends('layouts.upload_temp')
 @section('upload-content')
-<script type="text/javascript">
-    var baseurl = "{{url('/')}}";
-</script>
+
 <!-- style="box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);" -->
 <div  id="c-forms-container" class="cognito c-safari c-lrg">
 
@@ -125,6 +123,11 @@
             </td>
             <td>
                 {% if (file.deleteUrl) { %}
+                    <a id="uploadMerge" href="{%=file.url%}" >
+                        <i class="glyphicon glyphicon-send"></i>
+                        <span>Merge</span>
+                    </a>
+
                     <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
                         <i class="glyphicon glyphicon-trash"></i>
                         <span>Delete</span>
