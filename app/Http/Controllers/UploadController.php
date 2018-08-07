@@ -113,7 +113,8 @@ die;
      */
     public function destroy($id)
     {
-        //$url = Storage::exists('sheets/'.$id);
+        $url = Storage::exists('sheets/'.$id);
+        pre("test");
         Storage::delete('sheets/'.$id);
 
         //$_GET['file'] = $id;
