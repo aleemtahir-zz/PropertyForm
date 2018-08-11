@@ -208,7 +208,7 @@ class PropertyController extends Controller
     public function mergeDownload(Request $request)
     {   
        
-	if($request->mergeBtn)
+	      if($request->mergeBtn)
           $template_name[] = $request->mergeBtn;
         /*else
           return Redirect::to('property/show')->with('message', 'Please Select Any Template.');*/
@@ -232,11 +232,11 @@ class PropertyController extends Controller
           $values['lot']      = $ids[2];
         } 
 
-	$PropertyObj = new Property(); 
+	      $PropertyObj = new Property(); 
         $data = $PropertyObj->get_all($values);
         $id = $data['p-id']['value']; 
-        $allVendors = $PropertyObj->getVendors($id);
-        $allBuyers = $PropertyObj->getBuyers($id);
+        $allVendors = $PropertyObj->getVendors($id,$vCount);
+        $allBuyers = $PropertyObj->getBuyers($id,$bCount);
         
         //Organize Data
         foreach ($data as $key => $value) {
@@ -245,18 +245,37 @@ class PropertyController extends Controller
         unset($array['v']);
         unset($array['b']);
         //pre($allVendors); die;
+        
+        $i = 0;
         foreach ($allVendors as $k => $vendor) {
-
           foreach ($vendor as $key => $value) {
-            $array[$vendor['prefix']][$vendor['index']][$vendor['key']] = $vendor['value'];
+            $array[$vendor['prefix']][$vendor['index']][$vendor['key']] = $vendor['value'];    
           }
-        }
 
+          if($vendor['index'] < $vCount - 1)
+          {
+            $array[$vendor['prefix']][$vendor['index']]['and'] = 'AND';
+            $i++;
+          }
+          else
+            $array[$vendor['prefix']][$vendor['index']]['and'] = '';
+
+        }
+        
         foreach ($allBuyers as $k => $buyer) {
           foreach ($buyer as $key => $value ) {
             $array[$buyer['prefix']][$buyer['index']][$buyer['key']] = $buyer['value'];
           }
+
+          if($buyer['index'] < $bCount - 1)
+          {
+            $array[$buyer['prefix']][$buyer['index']]['and'] = 'AND';
+            $i++;
+          }
+          else
+            $array[$buyer['prefix']][$buyer['index']]['and'] = '';
         }
+        //pre($array); die;
         
         //File Counter
         $var = file_get_contents('counter.txt');
