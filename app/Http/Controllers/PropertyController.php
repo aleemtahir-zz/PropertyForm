@@ -254,11 +254,15 @@ class PropertyController extends Controller
 
           if($vendor['index'] < $vCount - 1)
           {
-            $array[$vendor['prefix']][$vendor['index']]['and'] = 'AND';
+            $array[$vendor['prefix']][$vendor['index']]['cand'] = 'AND';
+            $array[$vendor['prefix']][$vendor['index']]['and'] = 'and';
+            $array[$vendor['prefix']][$vendor['index']]['comma'] = ',';
             $i++;
           }
           else
+            $array[$vendor['prefix']][$vendor['index']]['cand'] = '';
             $array[$vendor['prefix']][$vendor['index']]['and'] = '';
+            $array[$vendor['prefix']][$vendor['index']]['comma'] = '';
 
         }
         
