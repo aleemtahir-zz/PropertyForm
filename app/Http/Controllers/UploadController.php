@@ -113,12 +113,11 @@ die;
      */
     public function destroy($id)
     {
-        $url = Storage::exists('sheets/'.$id);
-        pre("test");
-        Storage::delete('sheets/'.$id);
+        //$url = Storage::exists('sheets/'.$id);
+        //Storage::delete('sheets/'.$id);
 
-        //$_GET['file'] = $id;
-        //error_reporting(E_ALL | E_STRICT);
+        $_GET['file'] = $id;
+        error_reporting(E_ALL | E_STRICT);
         $upload_handler = new \UploadHandler();
     }
 

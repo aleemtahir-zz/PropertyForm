@@ -43,7 +43,7 @@ class UploadHandler
     public function __construct($options = null, $initialize = true, $error_messages = null) {
         $this->response = array();
         $this->options = array(
-            'script_url' => 'http://localhost:8000/upload',
+            'script_url' => asset('upload'),
             'upload_dir' => __DIR__.'/../storage/app/public/sheets/',
             'upload_url' => url('property\\'),
             /*'upload_url' => realpath(dirname(getcwd())).'\uploads\sheets\\',*/
