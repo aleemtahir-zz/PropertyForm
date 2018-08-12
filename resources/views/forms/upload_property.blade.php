@@ -128,7 +128,7 @@
                         <span>Merge</span>
                     </a>
 
-                    <button class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
+                    <button id="delete_btn" class="btn btn-danger delete" data-type="{%=file.deleteType%}" data-url="{%=file.deleteUrl%}"{% if (file.deleteWithCredentials) { %} data-xhr-fields='{"withCredentials":true}'{% } %}>
                         <i class="glyphicon glyphicon-trash"></i>
                         <span>Delete</span>
                     </button>

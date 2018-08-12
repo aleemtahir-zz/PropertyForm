@@ -127,17 +127,26 @@ $(document).ready(function(){
     });
 
 
-    //Save Button
-    /*$('.save_btn').click(function(){
-        var clickBtnValue = $(this).val();
-        var ajaxurl = 'ajax.php',
-        data =  {'action': clickBtnValue};
-        $.post(ajaxurl, data, function (response) {
-            // Response div goes here.
-            alert("action performed successfully");
-        });
+    //Delete Button
+    $('#delete_btn').click(function(){
+
+        var url = $(this).attr('data-url');
+        console.log(url);
+        console.log("bbe");
+        $.ajax({
+		    url: baseurl+'/upload/',
+		    method: 'DELETE',
+		    //contentType: 'application/json',
+		    success: function(result) {
+		        console.log("success");
+		    },
+		    error: function(request,msg,error) {
+		        // handle failure
+		        console.log("error");
+		    }
+		});
     });
-    */
+    
 
 	$('select').change(function(){
 		$('select').css('color','black');        
@@ -198,7 +207,7 @@ checkDropDownStatus();
 ===========================================*/
 
 $( "#autocomplete" ).autocomplete({
-	source: "property/autocomplete",
+	source: baseurl+"/property/autocomplete",
 	minLength: 2,
 	select: function(event, ui) {
 		$('#autocomplete').val(ui.item.id);
