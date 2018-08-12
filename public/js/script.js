@@ -207,7 +207,7 @@ checkDropDownStatus();
 ===========================================*/
 
 $( "#autocomplete" ).autocomplete({
-	source: "autocomplete",
+	source: baseurl+"/property/autocomplete",
 	minLength: 2,
 	select: function(event, ui) {
 		$('#autocomplete').val(ui.item.id);
