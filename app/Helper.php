@@ -271,6 +271,7 @@ function saveDoc($templates='', $file, $data='')
     $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN); // load the OpenTBS plugin
     // load your template
     $TBS->LoadTemplate('templates/'.$template.'.docx');
+    //$TBS->SetOption('noerr','true');
     
     if(isset($data['v'][0]['logo']) && !empty($data['v'][0]['logo'])){
       $prms = array('unique' => true);
