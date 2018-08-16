@@ -186,13 +186,13 @@ $('input[name*="payment"]').each(function (){
 	});
 });
 
-/*$('#c_price').change(function(){
-	updateBuilderContractPayment();       
-})
-$('#fc_rate').change(function(){
-	updateBuilderContractPayment();
-})		
-*/
+// $('#c_price').change(function(){
+// 	updateBuilderContractPayment();       
+// })
+// $('#fc_rate').change(function(){
+// 	updateBuilderContractPayment();
+// })		
+
 
 
 $('#fileUpload').change(function () {
@@ -226,42 +226,62 @@ $( "#autocomplete" ).autocomplete({
 
 function updateBuilderContractPayment(id)
 {	
-	console.log(id);
-	nextAll.each(function(){
-		console.log($(this));			
-	});
+	let price 		= $('#c_price').val();
+	let rate 		= $('#fc_rate').val();	
+/*	let cp_jamaican = $('#c_pricej').val();
+	let cp_deposit 	= $('#cp_deposit').val();
+	let cp_second 	= $('#cp_second').val();
+	let cp_third 	= $('#cp_third').val();
+	let cp_fourth 	= $('#cp_fourth').val();
+	let cp_final 	= $('#cp_final').val();
 
-	if(id == 'c_price' || id == 'fc_symbol' || id == 'fc_rate')
+	
+	
+	*/
+	
+
+	if(id == 'c_price' ||  id == 'fc_rate')
 	{
-		var price 		= $('#c_price').val();
-		var rate 		= $('#fc_rate').val();	
-		var cp_jamaican = price*rate;
- 
-		$('#c_pricej').val(cp_jamaican);	       
+		$('#c_pricej').val(price*rate);	       
+		$('#cp_deposit').val(price*rate);	       
 		      
 	}
 	else
 	{
+		console.log(id);
+		if(id == 'cp_deposit'){
+			let cp_jamaican = $('#c_pricej').val();
+			let cp_deposit 	= $('#cp_deposit').val();
+			let cp_second 	= cp_jamaican - cp_deposit;
+			$('#cp_second').val(cp_second);	
+		}
+		else if(id == 'cp_second'){
+			let cp_jamaican = $('#c_pricej').val();
+			let cp_deposit 	= $('#cp_deposit').val();
+			let cp_second 	= $('#cp_second').val();
+			let cp_third 	= cp_jamaican - (cp_deposit + cp_second);
+			$('#cp_third').val(cp_third);	
+		}
+		else if(id == 'cp_third'){
+			let cp_jamaican = $('#c_pricej').val();
+			let cp_deposit 	= $('#cp_deposit').val();
+			let cp_second 	= $('#cp_second').val();
+			let cp_third 	= $('#cp_third').val();
+			let cp_fourth 	= cp_jamaican - (cp_deposit + cp_second + cp_third);
+			$('#cp_fourth').val(cp_fourth);	
+		}
+		else if(id == 'cp_fourth'){
+			let cp_jamaican = $('#c_pricej').val();
+			let cp_deposit 	= $('#cp_deposit').val();
+			let cp_second 	= $('#cp_second').val();
+			let cp_third 	= $('#cp_third').val();
+			let cp_fourth 	= $('#cp_fourth').val();
+			let cp_final 	= cp_jamaican - (cp_deposit + cp_second + cp_third + cp_fourth);
+			$('#cp_final').val(cp_final);	
+		}
 
-		var cp_jamaican = $('#c_pricej').val();		  
-		
-		var cp_deposit 	= cp_jamaican;
-		var cp_second 	= cp_jamaican - cp_deposit;
-		var cp_third 	= cp_jamaican - (cp_deposit + cp_second);
-		var cp_fourth 	= cp_jamaican - (cp_deposit + cp_second + cp_third);
-		var cp_final 	= cp_jamaican - (cp_deposit + cp_second + cp_third + cp_fourth);
-
-
-
-		$('#cp_deposit').val(cp_deposit);		        
-		$('#cp_second').val(cp_second);		        
-		$('#cp_third').val(cp_third);		        
-		$('#cp_fourth').val(cp_fourth);		        
-		$('#cp_final').val(cp_final);
 	}
 
-		        
-	
 }
 
 function checkDropDownStatus()
