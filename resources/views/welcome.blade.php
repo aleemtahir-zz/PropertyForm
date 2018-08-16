@@ -7,7 +7,7 @@
         <div class="c-forms-form-body" ">
             <div class="c-forms-heading">
                 <div class="c-forms-form-title">
-                    <h2 style="font-size: 2.5em">Welcome to HMF Froms</h2>
+                    <h2 style="font-size: 2.5em">Welcome to HMF Forms</h2>
                 </div>
             </div>
         </div>
@@ -16,11 +16,12 @@
                 <div class="col-sm-4">
                     <!-- List -->
                     <div class="single category">
-                        <h3 class="side-title">Menu</h3>
+                        <h3 class="side-title">List of Pages</h3>
                         <ul class="list-unstyled">
                             <li><a href="{{url('DeveloperDataFormA')}}" title="">Developer Data A <!-- <span class="pull-right">13</span> --></a></li>
                             <li><a href="{{url('DeveloperDataFormB')}}" title="">Developer Data B</a></li>
                             <li><a href="{{url('property')}}" title="">Property Data</a></li>
+                            <li><a href="{{url('property/show')}}" title="">Merge Templates</a></li>
                             <li><a href="{{url('payment')}}" title="">Payment Form</a></li>
                             <li><a href="{{url('upload')}}" title="">Upload Data</a></li>
                         </ul>

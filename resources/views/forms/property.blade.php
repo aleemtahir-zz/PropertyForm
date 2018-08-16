@@ -808,11 +808,7 @@
                                       <div class="c-editor float-right" style="width: 165px"><input value="{!!old('monetary.price_i')!!}" name="monetary[price_i]" type="text" id="c_price" placeholder=""></div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  {{-- <div class="c-text-singleline c-field c-col-7 c-sml-col-1 c-span-18 c-sml-span-12">
-                                      <div class="c-label  "><label for="c-34-1048">Sale Price in words</label></div>
-                                      <div class="c-editor"><input name="monetary[price_w]" type="text" id="c-34-1048" placeholder=""></div>
-                                      <div class="c-validation"></div>
-                                  </div> --}}
+
                                   <div class="c-currency c-field c-col-17 c-sml-col-1 c-span-10 c-sml-span-12">
                                       <div class="c-label  "><label for="c-37-1045">Deposit</label></div>
                                       <div class="c-editor float-right" ><input value="{!!old('monetary.deposit')!!}" name="monetary[deposit]" type="text" id="c-37-1045" placeholder=""></div>
@@ -823,11 +819,7 @@
                                       <div class="c-editor float-right" style="width: 165px"><input value="{!!old('monetary.jprice_i')!!}" name="monetary[jprice_i]" type="text" id="c_pricej" placeholder="j$"></div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  {{-- <div class="c-text-singleline c-field c-col-7 c-sml-col-1 c-span-18 c-sml-span-12">
-                                      <div class="c-label  "><label for="c-36-1046">Sale Price jamaican in words</label></div>
-                                      <div class="c-editor"><input name="monetary[jprice_w]" type="text" id="c-36-1046" placeholder=""></div>
-                                      <div class="c-validation"></div>
-                                  </div> --}}
+
                                   
                                   <div class="c-currency c-field c-col-13 c-sml-col-1 c-span-10 c-sml-span-12">
                                       <div class="c-label  "><label for="c-38-1044">Second Payment</label></div>

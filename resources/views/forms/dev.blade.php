@@ -40,7 +40,7 @@
                          </div>
                       @endif
                     <div class="c-forms-pages">
-                      <div class="c-page-page1" style="display: block;">
+                      <div class="c-page-page1" style="display: none;">
                           <div class="c-forms-template">
                               <div class="c-page toggle-off" >
                                   <div class="c-section c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
@@ -958,15 +958,20 @@
                               </div>
                           </div>
                       </div>
-                      <div class="c-page-page4" style="display: none;">
+                      <div class="c-page-page4" style="display: block;">
                           <div class="c-forms-template" >
                               <div class="c-page toggle-off">
                                   <div class="c-section c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
                                       <div class="c-title">
-                                          <h3>Building Contract payments</h3>
+                                          <h3>Building Contract Payments</h3>
                                       </div>
                                       <div class="">
-                                          <div class="c-choice-dropdown c-field c-col-1 c-sml-col-1 c-span-8 c-sml-span-12 c-modified">
+                                        <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-6 c-sml-span-12">
+                                          <div class="c-label  "><label for="c-58-1893">Contract Price </label></div>
+                                          <div class="c-editor"><input value="{!!old('payment.price_i')!!}" name="payment[price_i]" type="text" id="c_price" placeholder=""></div>
+                                          <div class="c-validation"></div>
+                                      </div>
+                                       <div class="c-choice-dropdown c-field c-col-13 c-sml-col-1 c-span-6 c-sml-span-12 c-modified">
                                               <div class="c-label  "><label for="c-55-1896">Foreign Currency</label></div>
                                               <div class="c-editor ">
                                                 <div class="c-dropdown">
@@ -981,59 +986,48 @@
 
                                            <div class="c-validation"></div>
                                        </div>
-                                       <div class="c-text-singleline c-field c-col-13 c-sml-col-1 c-span-8 c-sml-span-6">
-                                          <div class="c-label  "><label for="c-56-1895">Foreign Currency Symbol</label></div>
+
+                                       <div class="c-text-singleline c-field c-col-13 c-sml-col-1 c-span-6 c-sml-span-6">
+                                          <div class="c-label  "><label for="c-56-1895">FX Symbol</label></div>
                                           <div class="c-editor"><input value="{!!old('payment.fc.symbol')!!}" name="payment[fc][symbol]" type="text" id="fc_symbol" placeholder=""></div>
                                           <div class="c-validation"></div>
                                       </div>
-                                      <div class="c-text-singleline c-field c-col-19 c-sml-col-7 c-span-7 c-sml-span-6">
-                                          <div class="c-label  "><label for="c-57-1894">Exchange Rate</label></div>
+                                      <div class="c-text-singleline c-field c-col-19 c-sml-col-7 c-span-6 c-sml-span-6">
+                                          <div class="c-label  "><label for="c-57-1894">FX Rate</label></div>
                                           <div class="c-editor"><input value="{!!old('payment.fc.rate')!!}" name="payment[fc][rate]" type="text" id="fc_rate" placeholder=""></div>
                                           <div class="c-validation"></div>
                                       </div>
-                                      <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-8 c-sml-span-12">
-                                          <div class="c-label  "><label for="c-58-1893">Contract Price </label></div>
-                                          <div class="c-editor"><input value="{!!old('payment.price_i')!!}" name="payment[price_i]" type="text" id="c_price" placeholder=""></div>
-                                          <div class="c-validation"></div>
-                                      </div>
-                                          {{-- <div class="c-text-singleline c-field c-col-7 c-sml-col-1 c-span-18 c-sml-span-12">
-                                              <div class="c-label  "><label for="c-59-1892">Contract Price in words</label></div>
-                                              <div class="c-editor"><input name="payment[price_w]" type="text" id="c-59-1892" placeholder=""></div>
-                                              <div class="c-validation"></div>
-                                          </div> --}}
-                                          <div class="c-text-singleline c-field c-col-7 c-sml-col-1 c-span-8 c-sml-span-12">
-                                              <div class="c-label  "><label for="c-60-1891">Contract Price ($J)</label></div>
-                                              <div class="c-editor"><input value="{!!old('payment.jprice_i')!!}" name="payment[jprice_i]" type="text" id="c_pricej" placeholder=""></div>
+                                      
+
+                                          <div class="c-text-singleline c-field c-col-7 c-sml-col-1 c-span-12 c-sml-span-12">
+                                              <div class="c-label"><label for="c-60-1891">Contract Price Jamaican</label></div>
+                                              <div class="c-editor float-right" style="width: 165px"><input value="{!!old('payment.jprice_i')!!}" name="payment[jprice_i]" type="text" id="c_pricej" placeholder=""></div>
                                               <div class="c-validation"></div>
                                           </div>
-                                          {{-- <div class="c-text-singleline c-field c-col-7 c-sml-col-1 c-span-18 c-sml-span-12">
-                                              <div class="c-label  "><label for="c-61-1890">Contact Price Jamaican Dollars in words</label></div>
-                                              <div class="c-editor"><input name="payment[jprice_w]" type="text" id="c-61-1890" placeholder=""></div>
-                                              <div class="c-validation"></div>
-                                          </div> --}}
-                                          <div class="c-text-singleline c-field c-col-7 c-sml-col-1 c-span-7 c-sml-span-12">
-                                              <div class="c-label  "><label for="c-62-1889">Contract Deposit</label></div>
-                                              <div class="c-editor"><input value="{!!old('payment.deposit')!!}" name="payment[deposit]" type="text" id="c-62-1889" placeholder=""></div>
+
+                                          <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12">
+                                              <div class="c-label  "><label for="c-62-1889">Contract Deposit Payment</label></div>
+                                              <div class="c-editor float-right" style="width: 165px"><input value="{!!old('payment.deposit')!!}" name="payment[deposit]" type="text" id="cp_deposit" placeholder=""></div>
                                               <div class="c-validation"></div>
                                           </div>
                                           <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12">
                                               <div class="c-label  "><label for="c-63-1888">Contract Second Payment</label></div>
-                                              <div class="c-editor"><input value="{!!old('payment.second_pay')!!}" name="payment[second_pay]" type="text" id="c-63-1888" placeholder=""></div>
+                                              <div class="c-editor float-right" style="width: 165px"><input value="{!!old('payment.second_pay')!!}" name="payment[second_pay]" type="text" id="cp_second" placeholder=""></div>
                                               <div class="c-validation"></div>
                                           </div>
                                           <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12">
                                               <div class="c-label  "><label for="c-64-1887">Contract Third Payment</label></div>
-                                              <div class="c-editor"><input value="{!!old('payment.third_pay')!!}" name="payment[third_pay]" type="text" id="c-64-1887" placeholder=""></div>
+                                              <div class="c-editor float-right" style="width: 165px"><input value="{!!old('payment.third_pay')!!}" name="payment[third_pay]" type="text" id="cp_third" placeholder=""></div>
                                               <div class="c-validation"></div>
                                           </div>
                                           <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12">
                                               <div class="c-label  "><label for="c-65-1886">Contract Fourth Payment</label></div>
-                                              <div class="c-editor"><input value="{!!old('payment.fourth_pay')!!}" name="payment[fourth_pay]" type="text" id="c-65-1886" placeholder=""></div>
+                                              <div class="c-editor float-right" style="width: 165px"><input value="{!!old('payment.fourth_pay')!!}" name="payment[fourth_pay]" type="text" id="cp_fourth" placeholder=""></div>
                                               <div class="c-validation"></div>
                                           </div>
                                           <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12">
                                               <div class="c-label  "><label for="c-66-1885">Contract Final Payment</label></div>
-                                              <div class="c-editor"><input value="{!!old('payment.final_pay')!!}" name="payment[final_pay]" type="text" id="c-66-1885" placeholder=""></div>
+                                              <div class="c-editor float-right" style="width: 165px"><input value="{!!old('payment.final_pay')!!}" name="payment[final_pay]" type="text" id="cp_final" placeholder=""></div>
                                               <div class="c-validation"></div>
                                           </div>
                                       </div>

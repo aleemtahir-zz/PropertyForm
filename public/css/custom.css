@@ -100,7 +100,7 @@ color: #333;
 text-transform: uppercase; }
 .single h3.side-title:after {
 content: '';
-width: 60px;
+width: 150px;
 height: 1px;
 background: #ff173c;
 display: block;

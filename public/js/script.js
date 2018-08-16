@@ -179,20 +179,20 @@ $('#fc_name').change(function(){
 
 /*Calculate Price
 =====================================*/
-$('#c_price').change(function(){
-	var price = $('#c_price').val();
-	var pricej = $('#c_pricej').val();		        
-	var rate = $('#fc_rate').val();		        
+$('input[name*="payment"]').each(function (){
+	var id = $(this).attr('id');
+	$(this).change(function(){
+		updateBuilderContractPayment(id);       
+	});
+});
 
-	$('#c_pricej').val(price*rate);		        
+/*$('#c_price').change(function(){
+	updateBuilderContractPayment();       
 })
 $('#fc_rate').change(function(){
-	var price = $('#c_price').val();
-	var pricej = $('#c_pricej').val();		        
-	var rate = $('#fc_rate').val();		        
-
-	$('#c_pricej').val(price*rate);		        
+	updateBuilderContractPayment();
 })		
+*/
 
 
 $('#fileUpload').change(function () {
@@ -224,6 +224,45 @@ $( "#autocomplete" ).autocomplete({
 ====================================*/
 });
 
+function updateBuilderContractPayment(id)
+{	
+	console.log(id);
+	nextAll.each(function(){
+		console.log($(this));			
+	});
+
+	if(id == 'c_price' || id == 'fc_symbol' || id == 'fc_rate')
+	{
+		var price 		= $('#c_price').val();
+		var rate 		= $('#fc_rate').val();	
+		var cp_jamaican = price*rate;
+ 
+		$('#c_pricej').val(cp_jamaican);	       
+		      
+	}
+	else
+	{
+
+		var cp_jamaican = $('#c_pricej').val();		  
+		
+		var cp_deposit 	= cp_jamaican;
+		var cp_second 	= cp_jamaican - cp_deposit;
+		var cp_third 	= cp_jamaican - (cp_deposit + cp_second);
+		var cp_fourth 	= cp_jamaican - (cp_deposit + cp_second + cp_third);
+		var cp_final 	= cp_jamaican - (cp_deposit + cp_second + cp_third + cp_fourth);
+
+
+
+		$('#cp_deposit').val(cp_deposit);		        
+		$('#cp_second').val(cp_second);		        
+		$('#cp_third').val(cp_third);		        
+		$('#cp_fourth').val(cp_fourth);		        
+		$('#cp_final').val(cp_final);
+	}
+
+		        
+	
+}
 
 function checkDropDownStatus()
 {
