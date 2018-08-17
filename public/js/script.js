@@ -228,17 +228,12 @@ function updateBuilderContractPayment(id)
 {	
 	let price 		= $('#c_price').val();
 	let rate 		= $('#fc_rate').val();	
-/*	let cp_jamaican = $('#c_pricej').val();
+	let cp_jamaican = $('#c_pricej').val();
 	let cp_deposit 	= $('#cp_deposit').val();
 	let cp_second 	= $('#cp_second').val();
 	let cp_third 	= $('#cp_third').val();
 	let cp_fourth 	= $('#cp_fourth').val();
 	let cp_final 	= $('#cp_final').val();
-
-	
-	
-	*/
-	
 
 	if(id == 'c_price' ||  id == 'fc_rate')
 	{
@@ -246,37 +241,31 @@ function updateBuilderContractPayment(id)
 		$('#cp_deposit').val(price*rate);	       
 		      
 	}
+	else if(id == 'c_pricej')
+	{
+		$('#cp_deposit').val(cp_jamaican);	       		      
+	}
 	else
 	{
-		console.log(id);
 		if(id == 'cp_deposit'){
-			let cp_jamaican = $('#c_pricej').val();
-			let cp_deposit 	= $('#cp_deposit').val();
+
 			let cp_second 	= cp_jamaican - cp_deposit;
 			$('#cp_second').val(cp_second);	
 		}
 		else if(id == 'cp_second'){
-			let cp_jamaican = $('#c_pricej').val();
-			let cp_deposit 	= $('#cp_deposit').val();
-			let cp_second 	= $('#cp_second').val();
-			let cp_third 	= cp_jamaican - (cp_deposit + cp_second);
+			let sum = parseInt(cp_deposit) + parseInt(cp_second);
+			let cp_third 	= parseInt(cp_jamaican) - parseInt(sum);
 			$('#cp_third').val(cp_third);	
-		}
+		}	
 		else if(id == 'cp_third'){
-			let cp_jamaican = $('#c_pricej').val();
-			let cp_deposit 	= $('#cp_deposit').val();
-			let cp_second 	= $('#cp_second').val();
-			let cp_third 	= $('#cp_third').val();
-			let cp_fourth 	= cp_jamaican - (cp_deposit + cp_second + cp_third);
+
+			let cp_fourth 	= parseInt(cp_jamaican) - (parseInt(cp_deposit) + parseInt(cp_second) + parseInt(cp_third));
 			$('#cp_fourth').val(cp_fourth);	
 		}
 		else if(id == 'cp_fourth'){
-			let cp_jamaican = $('#c_pricej').val();
-			let cp_deposit 	= $('#cp_deposit').val();
-			let cp_second 	= $('#cp_second').val();
-			let cp_third 	= $('#cp_third').val();
-			let cp_fourth 	= $('#cp_fourth').val();
-			let cp_final 	= cp_jamaican - (cp_deposit + cp_second + cp_third + cp_fourth);
+			
+			let cp_final 	= parseInt(cp_jamaican) - 
+			(parseInt(cp_deposit) + parseInt(cp_second) + parseInt(cp_third) + parseInt(cp_fourth));
 			$('#cp_final').val(cp_final);	
 		}
 
