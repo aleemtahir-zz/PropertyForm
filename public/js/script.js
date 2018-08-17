@@ -206,13 +206,12 @@ $('input[name*="payment"]').each(function (){
 	});
 });
 
-// $('#c_price').change(function(){
-// 	updateBuilderContractPayment();       
-// })
-// $('#fc_rate').change(function(){
-// 	updateBuilderContractPayment();
-// })		
-
+$('input[name*="monetary"]').each(function (){
+	var id = $(this).attr('id');
+	$(this).change(function(){
+		updateBuilderContractPayment(id);       
+	});
+});
 
 
 $('#fileUpload').change(function () {
@@ -272,18 +271,31 @@ function updateBuilderContractPayment(id)
 	let cp_deposit 	= $('#cp_deposit').val();
 	let cp_second 	= $('#cp_second').val();
 	let cp_third 	= $('#cp_third').val();
+	let final_pay 	= $('#final_pay').val();
 	let cp_fourth 	= $('#cp_fourth').val();
 	let cp_final 	= $('#cp_final').val();
+	let cp_stamp 	= $('#cp_stamp').val();
+	let cp_reg_fee 	= $('#cp_reg_fee').val();
 
 	if(id == 'c_price' ||  id == 'fc_rate')
 	{
 		$('#c_pricej').val(price*rate);	       
-		$('#cp_deposit').val(price*rate);	       
-		      
+		$('#cp_deposit').val(price*rate);	 
+
+		let cp_stamp 	= parseInt(price*rate) * 0.5 * (4 / 100);      
+		let cp_reg_fee 	= parseInt(price*rate) * 0.5 * (0.5 / 100);      
+		$('#cp_stamp').val(cp_stamp);	 
+		$('#cp_reg_fee').val(cp_reg_fee);	 
+
 	}
 	else if(id == 'c_pricej')
 	{
-		$('#cp_deposit').val(cp_jamaican);	       		      
+		$('#cp_deposit').val(cp_jamaican);	
+
+		let cp_stamp 	= parseInt(price*rate) * 0.5 * (4 / 100);      
+		let cp_reg_fee 	= parseInt(price*rate) * 0.5 * (0.5 / 100);      
+		$('#cp_stamp').val(cp_stamp);	 
+		$('#cp_reg_fee').val(cp_reg_fee);        		      
 	}
 	else
 	{
@@ -296,6 +308,7 @@ function updateBuilderContractPayment(id)
 			let sum = parseInt(cp_deposit) + parseInt(cp_second);
 			let cp_third 	= parseInt(cp_jamaican) - parseInt(sum);
 			$('#cp_third').val(cp_third);	
+			$('#final_pay').val(cp_third);	
 		}	
 		else if(id == 'cp_third'){
 
