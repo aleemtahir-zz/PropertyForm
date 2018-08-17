@@ -777,7 +777,7 @@
                       <div class="c-page toggle-off">
                           <div class="c-section c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
                               <div class="c-title">
-                                  <h3>Monetary Details</h3>
+                                  <h3>Transfer Fees & Payments Schedule</h3>
                               </div>
                               <div class="">
                                   <div class="c-choice-dropdown c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">

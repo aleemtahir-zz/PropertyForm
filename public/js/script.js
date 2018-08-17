@@ -68,6 +68,13 @@ $(document).ready(function(){
     //Add Section
     $(document).on('click', ".c-repeating-section-add", function() {
     	var section_group 	= $(this).parent().find('.c-repeating-section-group');
+    	
+    	//For Volume/Folio
+    	if(section_group.length == 0){
+    		var vf_flag = 1;
+    		var section_group 	= $(this).parent().parent();
+    	}
+
     	var add_section 	= section_group.children().last().clone();
 
     	add_section.css('display', '');
@@ -92,6 +99,12 @@ $(document).ready(function(){
     	//add_section.find('.c-datepicker').attr('id');
 		add_section.appendTo(section_group);
 
+		//For VF Repeat
+		if(vf_flag  == 1){
+			$(this).removeClass('c-repeating-section-add').addClass('c-repeating-section-remove');
+			$(this).children().find('i').removeClass('icon-plus').addClass('icon-remove');
+		}
+		
 		//numbering
 		var num = 1;
 		section_group.children().each(function () {
@@ -103,12 +116,19 @@ $(document).ready(function(){
 		});
 	});
 
+	//Remove VF Section 
+    $(document).on('click', ".c-repeating-section-remove", function() {
+    	var curr_vf_section 	= $(this).parent();
+    	curr_vf_section.detach();
+    });
+
     //Remove Section
     $(document).on('click', ".c-action-col a", function() {
 
     	var section_group 		= $(this).parents('.c-repeating-section-group');
     	var section_container 	= $(this).parents('.c-repeating-section-container');
     	section_container.css('display', 'none');
+    	section_container.detach();
     	
     	//numbering
 		var num = 1;
@@ -217,6 +237,26 @@ $( "#autocomplete" ).autocomplete({
 		
 		});
 	}
+});
+
+var states = [
+      "Clarendon",
+      "Hanover",
+      "Kingston",
+      "Manchester",
+      "Portland",
+      "Saint Andrew", 
+      "Saint Ann", 
+      "Saint Catherine", 
+      "Saint Elizabeth", 
+      "Saint James", 
+      "Saint Marry", 
+      "Saint Thomas", 
+      "Trelawny",
+      "Westmore Land" 
+    ];
+$( "#state" ).autocomplete({
+	source: states
 });
 
 

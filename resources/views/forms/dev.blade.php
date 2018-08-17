@@ -39,8 +39,13 @@
                             </ul>
                          </div>
                       @endif
+                      <div id="showerror" class = "alert alert-danger" style="display: none">
+                          <ul>
+                              <li></li>
+                          </ul>
+                       </div>
                     <div class="c-forms-pages">
-                      <div class="c-page-page1" style="display: none;">
+                      <div class="c-page-page1" style="display: block;">
                           <div class="c-forms-template">
                               <div class="c-page toggle-off" >
                                   <div class="c-section c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
@@ -48,41 +53,48 @@
                                           <h3>DEVELOPMENT DETAILS</h3>
                                       </div>
                                       <div class="">
-                                        <div style="height: 70px;" class="container row">
-                                            <div style="margin: 10px 0 0 3px; position: absolute; " class="c-label  ">
-                                              <label for="c-25-1627">Volume / Folio</label>
-                                            </div>
-                                            <div style="margin-top: 22px; width: 65px;" class="c-field c-col-1 c-sml-col-1 c-span-2 c-sml-span-2">
-                                              <div style=" " class="c-editor"><input value="{!!old('developement.volume_no')!!}" name="developement[volume_no]" type="text" id="c-25-1627" maxlength="4" pattern="\d{4}" placeholder="1234"></div>
-
-                                            </div>
-                                            <span style="font-weight: bold; position: relative; margin-top: 30px">/</span>
-
-                                            <div style="margin-top: 22px; padding-left: 0; width: 65px;" class="c-field c-text-singleline c-col-17 c-sml-col-1 c-span-3 c-sml-span-2">
-                                              <div class="c-editor"><input value="{!!old('developement.folio_no')!!}" name="developement[folio_no]" type="text" id="c-25-1628" placeholder="1234" maxlength="4" pattern="\d{4}"></div>
+                                           
+                                          
+                                          <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-14 c-sml-span-12">
+                                              <div class="c-label "><label for="c-24-1629">Name of Development</label></div>
+                                              <div class="c-editor "><input value="{!!old('developement.name')!!}" name="developement[name]" type="text" id="c-24-1629" placeholder="eg  City View Villas"></div>
                                               <div class="c-validation"></div>
+                                          </div>
+                                          <div class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-9 c-sml-span-12 ">
+                                              <div class="c-label">
+                                                <label for="c-25-1627">Volume / Folio</label>
+                                              </div>
 
-                                            </div>
-                                            <div style="margin-top: 13px; width: 200px;" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-5 c-sml-span-6">
-                                              <button type="button" class="c-button" onclick="fetchRecordDev()">Fetch Record
-                                                <i id="gear1" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i></button></div>
+                                              <div class="c-repeating-section-group">
+                                                <div class="row vf-repeat">
+                                                  <div>
+                                                    <div class="c-editor width-60 float-left">
+                                                      <input value="{!!old('developement.volume_no')!!}" name="developement[volume_no]" type="text" id="c-25-1627" maxlength="4" pattern="\d{4}" placeholder="1234">
+                                                    </div>
+                                                  </div>
+                                                  
+                                                  <span class="float-left" style="font-weight: bold; position: relative;">/</span>
 
-                                            <div  id="c-message" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-8 c-sml-span-6">
+                                                  <div>
+                                                    <div class="c-editor width-60 float-left">
+                                                      <input value="{!!old('developement.folio_no')!!}" name="developement[folio_no]" type="text" id="c-25-1628" placeholder="1234" maxlength="4" pattern="\d{4}">
+                                                    </div>
+                                                  </div>
+                                                  
+                                                  <div class="c-repeating-section-add float-left">
+                                                    <a class="at-add-item keyBtn" title="Add" tabindex="0"><i class="icon-plus"></i></a>
+                                                  </div>
 
-                                            </div>  
+                                                  <div class="float-left">
+                                                    <button type="button" class="c-button keyBtn" onclick="fetchRecordDev()">Search
+                                                      <i id="gear1" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>
+                                                    </button>
+                                                  </div>
+                                                </div> 
+                                              </div> 
                                           </div>  
                                           
-                                          <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-16 c-sml-span-12">
-                                              <div class="c-label  "><label for="c-24-1629">Name of Development</label></div>
-                                              <div class="c-editor"><input value="{!!old('developement.name')!!}" name="developement[name]" type="text" id="c-24-1629" placeholder="eg  City View Villas"></div>
-                                              <div class="c-validation"></div>
-                                          </div>
-                                          <div class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-8 c-sml-span-6">
-                                              <div class="c-label  "><label for="c-26-1627">Plan No.</label></div>
-                                              <div class="c-editor"><input value="{!!old('developement.plan_no')!!}" name="developement[plan_no]" type="text" id="c-26-1627" placeholder="Plan number"></div>
-                                              <div class="c-validation"></div>
-                                          </div>
-                                          <div class="c-address c-address-us c-field c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
+                                          <div class="c-address c-address-us c-field c-col-1 c-sml-col-1 c-span-14 c-sml-span-12">
                                               <div class="c-label "><label>Address</label></div>
                                               <div>
                                                   <div class="c-offscreen"><label for="c-27-1626">Address Line 1</label></div>
@@ -93,7 +105,8 @@
                                                   <div class="c-editor c-partial-line" style="float: left;"><input value="{!!old('developement.address.city')!!}" name="developement[address][city]" type="text" id="c-29-1626" placeholder="City"></div>
                                                   <div class="c-offscreen"><label for="c-30-1626">Paris</label></div>
                                                   <div class="c-editor c-partial-line" style="float: left;">
-                                                      <div class="c-dropdown">
+                                                    <input value="{!!old('developement.address.state')!!}" name="developement[address][state]" class="c-placeholder-text-styled" type="text" id="state" autocomplete="new-password" placeholder="Parish">
+                                                      {{-- <div class="c-dropdown">
                                                           <select value="{!!old('developement.address.state')!!}" name="developement[address][state]" id="c-30-1626" class="c-placeholder-text-styled ">
                                                               <option value="">Parish</option>
                                                               <option value="Clarendon">Clarendonn</option>
@@ -111,13 +124,18 @@
                                                               <option value="Trelawny">Trelawny</option>
                                                               <option value="Westmore Land">Westmore Land</option>
                                                           </select>
-                                                      </div>
+                                                      </div> --}}
                                                   </div>
                                               </div>
                                               <div class="c-validation"></div>
                                           </div>
+                                          <div class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-8 c-sml-span-6">
+                                              <div class="c-label  "><label for="c-26-1627">Plan No.</label></div>
+                                              <div class="c-editor"><input value="{!!old('developement.plan_no')!!}" name="developement[plan_no]" type="text" id="c-26-1627" placeholder="Plan number"></div>
+                                              <div class="c-validation"></div>
+                                          </div>
                                           <div class="c-name c-field c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
-                                              <div class="c-label "><label>Development Surveyor</label></div>
+                                              <div class="c-label "><h3>Development Surveyor</h3></div>
                                               <div>
                                                   <div class="c-offscreen"><label for="c-32-1625">Title</label></div>
                                                   <div class="c-editor c-span-1" style="width: 20%; float: left;"><input value="{!!old('developement.surveyor.title')!!}" name="developement[surveyor][title]" type="text" id="c-32-1625" placeholder="Title"></div>
@@ -129,57 +147,52 @@
                                               <div class="c-validation"></div>
                                           </div>
                                           <div class="c-section c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
-                                              <div class="c-title">
+                                              {{-- <div class="c-title">
                                                   <h4>Lots (Subdivisions)</h4>
-                                              </div>
+                                              </div> --}}
                                               <div class="">
                                                   <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-8 c-sml-span-12">
-                                                      <div class="c-label  "><label for="c-36-1624">Total Lots</label></div>
-                                                      <div class="c-editor"><input value="{!!old('developement.t_lots_i')!!} "name="developement[t_lots_i]" type="text" id="c-36-1624" placeholder="65"></div>
+                                                      <div class="c-label  "><label for="half_title">Title Cost</label></div>
+                                                      <div class="c-editor"><input value="{!!old('developement.half_title')!!} "name="developement[half_title]" type="text" id="half_title" placeholder=""></div>
                                                       <div class="c-validation"></div>
-                                                      {{-- <div class="c-helptext">Total amount of Lots, in numerals</div> --}}
-                                                  </div>{{-- 
-                                                  <div class="c-text-singleline c-field c-col-9 c-sml-col-1 c-span-16 c-sml-span-12">
-                                                      <div class="c-label  "><label for="c-37-1623">Total Amount of lots in words</label></div>
-                                                      <div class="c-editor"><input value="{!!old('developement.surveyor.t_lots_w')!!}" name="developement[t_lots_w]" type="text" id="c-37-1623" placeholder="sixty-five" maxlength="50"></div>
-                                                      <div class="c-validation"></div>
-                                                      <div class="c-helptext">Input the total amount of Lots / Subdivisions, in words</div>
-                                                  </div> --}}
+                                                  </div>
                                                   <div class="c-currency c-field c-col-9 c-sml-col-1 c-span-8 c-sml-span-12">
-                                                      <div class="c-label  "><label for="c-38-1622">Residential Lots</label></div>
-                                                      <div class="c-editor"><input value="{!!old('developement.r_lots_i')!!}" name="developement[r_lots_i]" type="text" id="c-38-1622" placeholder="51"></div>
+                                                      <div class="c-label  "><label for="half_agreement">Agreement Cost</label></div>
+                                                      <div class="c-editor"><input value="{!!old('developement.half_agreement')!!}" name="developement[half_agreement]" type="text" id="half_agreement" placeholder=""></div>
                                                       <div class="c-validation"></div>
-                                                      {{-- <div class="c-helptext">Amount of Residential Lots in numerals</div> --}}
                                                   </div>
-{{--                                                   <div class="c-text-singleline c-field c-col-9 c-sml-col-1 c-span-16 c-sml-span-12">
-                                                      <div class="c-label  "><label for="c-39-1621"># of Residential Lots in words</label></div>
-                                                      <div class="c-editor"><input value="{!!old('developement.surveyor.r_lots_w')!!}" name="developement[r_lots_w]" type="text" id="c-39-1621" placeholder="fifty-one" maxlength="50"></div>
-                                                      <div class="c-validation"></div>
-                                                      <div class="c-helptext">Input the amount of Residential Lots in words</div>
-                                                  </div> --}}
                                                   <div class="c-currency c-field c-col-17 c-sml-col-1 c-span-8 c-sml-span-12">
-                                                      <div class="c-label  "><label for="c-40-1620">Common Area Lots</label></div>
-                                                      <div class="c-editor"><input value="{!!old('developement.c_lots_i')!!}" name="developement[c_lots_i]" type="text" id="c-40-1620" placeholder="14"></div>
+                                                      <div class="c-label  "><label for="identification_fee">ID Fee</label></div>
+                                                      <div class="c-editor"><input value="{!!old('developement.identification_fee')!!}" name="developement[identification_fee]" type="text" id="identification_fee" placeholder=""></div>
                                                       <div class="c-validation"></div>
-                                                      {{-- <div class="c-helptext">Input the amount of Common Area Lots in numerals</div> --}}
                                                   </div>
-{{--                                                   <div class="c-text-singleline c-field c-col-9 c-sml-col-1 c-span-16 c-sml-span-12">
-                                                      <div class="c-label  "><label for="c-41-1619">#of Common Area Lots in words</label></div>
-                                                      <div class="c-editor"><input name="developement[c_lots_w]" type="text" id="c-41-1619" placeholder="fourteen" maxlength="50"></div>
+                                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-6 c-sml-span-12">
+                                                      <div class="c-label  "><label for="c-36-1624">Total Lots</label></div>
+                                                      <div class="c-editor"><input value="{!!old('developement.t_lots_i')!!} "name="developement[t_lots_i]" type="text" id="c-36-1624" placeholder=""></div>
                                                       <div class="c-validation"></div>
-                                                      <div class="c-helptext">Input the amount of Common Area Lots in words</div>
-                                                  </div> --}}
-                                                  <div class="c-text-multiplelines c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12">
+                                                  </div>
+                                                  <div class="c-currency c-field c-col-9 c-sml-col-1 c-span-6 c-sml-span-12">
+                                                      <div class="c-label  "><label for="c-38-1622">Residential Lots</label></div>
+                                                      <div class="c-editor"><input value="{!!old('developement.r_lots_i')!!}" name="developement[r_lots_i]" type="text" id="c-38-1622" placeholder=""></div>
+                                                      <div class="c-validation"></div>
+                                                  </div>
+                                                  <div class="c-currency c-field c-col-17 c-sml-col-1 c-span-6 c-sml-span-12">
+                                                      <div class="c-label  "><label for="c-40-1620">Common Area Lots</label></div>
+                                                      <div class="c-editor"><input value="{!!old('developement.c_lots_i')!!}" name="developement[c_lots_i]" type="text" id="c-40-1620" placeholder=""></div>
+                                                      <div class="c-validation"></div>
+                                                  </div>
+                                                  <div class="c-text-singleline c-field c-col-19 c-sml-col-1 c-span-6 c-sml-span-12">
+                                                      <div class="c-label  "><label for="c-43-1617">Reserved Roads</label></div>
+                                                      <div class="c-editor"><input value="{!!old('developement.rsrv_road')!!}" name="developement[rsrv_road]" type="text" id="c-43-1617" placeholder=""></div>
+                                                      <div class="c-validation"></div>
+                                                  </div>
+                                                  <div class="c-text-multiplelines c-field c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
                                                       <div class="c-label  "><label for="c-42-1618">Lot ID numbers</label></div>
-                                                      <div class="c-editor"><textarea value="{!!old('developement.lot_ids')!!}" name="developement[lot_ids]" id="c-42-1618" placeholder="1 - 45, 51 - 59, 64" type="text" height=""></textarea></div>
+                                                      <div class="c-editor"><input value="{!!old('developement.lot_ids')!!}" name="developement[lot_ids]" id="c-42-1618" placeholder="1 - 45, 51 - 59, 64, 83 - 86" type="text" height=""></input></div>
                                                       <div class="c-validation"></div>
                                                       <div class="c-helptext">Enter the range of Lot ID numbers</div>
                                                   </div>
-                                                  <div class="c-text-singleline c-field c-col-13 c-sml-col-1 c-span-12 c-sml-span-12">
-                                                      <div class="c-label  "><label for="c-43-1617">Reserved Roads</label></div>
-                                                      <div class="c-editor"><input value="{!!old('developement.rsrv_road')!!}" name="developement[rsrv_road]" type="text" id="c-43-1617" placeholder="Reserved Road Numbers"></div>
-                                                      <div class="c-validation"></div>
-                                                  </div>
+                                                  
                                               </div>
                                               <div class="c-validation"></div>
                                           </div>
@@ -203,7 +216,7 @@
                                         <div class="">
                                             <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
                                                 <div class="c-label  ">
-                                                    <label for="c-0-1607">Company  Name</label>
+                                                    <label for="c-0-1607">Name</label>
                                                 </div>
                                                 <div class="c-editor">
                                                     <input type="text" value="{!!old('developer.company_name')!!}" name="developer[company_name]" id="c-0-1607" placeholder="">
@@ -647,7 +660,7 @@
                               <div class="c-page toggle-off">
                                   <div class="c-section c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
                                       <div class="c-title">
-                                          <h3>Contractor / Builder Details</h3>
+                                          <h3>Building Contract Payment Schedule</h3>
                                       </div>
                                       <div class="">
                                           <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
@@ -958,7 +971,7 @@
                               </div>
                           </div>
                       </div>
-                      <div class="c-page-page4" style="display: block;">
+                      <div class="c-page-page4" style="display: none;">
                           <div class="c-forms-template" >
                               <div class="c-page toggle-off">
                                   <div class="c-section c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
