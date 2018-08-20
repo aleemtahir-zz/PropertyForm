@@ -38,7 +38,7 @@
             <div class="c-forms-pages" style="">
                 <div class="c-page-page1" style="">
                     <div class="c-forms-template">
-                        <div class="c-page toggle-on" style="display: none;">
+                        <div class="c-page toggle-on" style="display: block;">
                             <div class="c-section c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
                                 <div class="c-title">
                                     <h3>Property Details</h3>
@@ -772,7 +772,7 @@
                       </div>
                   </div>
                 </div>
-                <div class="c-page-page3" style="display:block;">
+                <div class="c-page-page3" style="display:none;">
                     <div class="c-forms-template">
                       <div class="c-page toggle-off">
                           <div class="c-section c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">

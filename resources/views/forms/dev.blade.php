@@ -105,8 +105,8 @@
                                                   <div class="c-editor c-partial-line" style="float: left;"><input value="{!!old('developement.address.city')!!}" name="developement[address][city]" type="text" id="c-29-1626" placeholder="City"></div>
                                                   <div class="c-offscreen"><label for="c-30-1626">Paris</label></div>
                                                   <div class="c-editor c-partial-line" style="float: left;">
-                                                    <input value="{!!old('developement.address.state')!!}" name="developement[address][state]" class="c-placeholder-text-styled" type="text" id="state" autocomplete="new-password" placeholder="Parish">
-                                                      {{-- <div class="c-dropdown">
+                                                   <!--  <input value="{!!old('developement.address.state')!!}" name="developement[address][state]" class="c-placeholder-text-styled" type="text" id="state" autocomplete="new-password" placeholder="Parish"> -->
+                                                      <div class="c-dropdown">
                                                           <select value="{!!old('developement.address.state')!!}" name="developement[address][state]" id="c-30-1626" class="c-placeholder-text-styled ">
                                                               <option value="">Parish</option>
                                                               <option value="Clarendon">Clarendonn</option>
@@ -124,7 +124,7 @@
                                                               <option value="Trelawny">Trelawny</option>
                                                               <option value="Westmore Land">Westmore Land</option>
                                                           </select>
-                                                      </div> --}}
+                                                      </div> 
                                                   </div>
                                               </div>
                                               <div class="c-validation"></div>
