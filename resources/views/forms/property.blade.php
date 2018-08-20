@@ -11,7 +11,8 @@
         <div class="c-forms-heading">
             <div class="c-forms-logo" style="display:none;"></div>
             <div class="c-forms-form-title">
-                <h2>HMF Property Transfer Data Collection Form</h2>
+                <a href="{{url('')}}"><span class="float-right"><i class="fa fa-home"></i>Home</span></a>
+                <h2 >HMF Property Transfer Data Collection Form</h2>
             </div>
         </div>
         <div class="c-forms-form-main c-span-24 c-sml-span-12">
@@ -44,70 +45,74 @@
                                     <h3>Property Details</h3>
                                 </div>
                                 <div class="">
-                                    <!-- <div class="c-text-singleline c-field c-col-12 c-sml-col-1 c-span-7 c-sml-span-12">
-                                        <div class="c-label  "><label for="c-2-768">Volume/Folio No</label></div>
-                                        <div class="c-editor"><input name="property[folio_no]" type="text" id="c-2-768" placeholder=""></div>
+                                    <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-7 c-sml-span-12">
+                                        <div class="c-label  "><label for="c-2-768">Record #</label></div>
+                                        <div class="c-editor float-right" style="width: 150px"> 
+                                            <input name="" type="text"  placeholder="CITY-47">
+                                        </div>
                                         <div class="c-validation"></div>
-                                    </div> -->
-                                    <div style="margin: 10px 0 0 3px; position: absolute; left: 0;" class="c-label  ">
-                                      <label for="c-25-1627">Volume / Folio</label>
                                     </div>
-                                    <div style="margin-top: 22px; width: 65px;" class="c-field c-col-1 c-sml-col-1 c-span-2 c-sml-span-2">
-                                      <div class="c-editor">
-                                        <input name="property[volume_no]" type="text" id="c-25-1627"  value="{!! old('property.volume_no')!!}" placeholder="1234" maxlength="4" pattern="\d{4}"">
-                                      </div>
-
+                                    <div class="c-text-singleline c-field c-col-9 c-sml-col-1 c-span-7 c-sml-span-12">
+                                        <button type="button" class="c-button margin-auto" onclick="">LOOKUP
+                                              <i id="gear-folio" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>
+                                        </button>
                                     </div>
-                                    <span style="font-weight: bold; position: absolute; margin-top: 30px">/</span>
-
-                                    <div style="margin-top: 22px; padding-left: 4px; width: 65px;" class="c-field c-text-singleline c-col-17 c-sml-col-1 c-span-3 c-sml-span-2">
-                                      <div class="c-editor">
-                                        <input name="property[folio_no]" value="{!!old('property.folio_no')!!}" type="text" id="c-2-768" placeholder="1234" maxlength="4" pattern="\d{4}">
-                                      </div>
-
+                                    <div class="c-field  c-span-12 c-sml-span-12">
+                                        <div class="c-label "><label for="c-24-1629">Development Name</label></div>
+                                        <div class="c-editor "><input value="{!!old('property.name')!!}" name="property[name]" type="text" id="c-24-1629" placeholder="eg  City View Villas" style="font-size: 1.3em;"></div>
+                                        <div class="c-validation"></div>
                                     </div>
-
-                                    <div style="margin-top: 13px;" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-5 c-sml-span-6">
-                                    <button type="button" class="c-button" onclick="onClickFolio()">Fetch Record
-                                          <i id="gear-folio" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>
-                                    </button>
-                                    </div>
-
-                                    <div  id="c-message-folio" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-8 c-sml-span-6">
-
-                                    </div>
-
-                                    <div class="c-text c-field c-col-1 c-sml-col-1 c-span-6 c-sml-span-12">
+                                    
+                                    <div class="c-text c-field c-col-1 c-sml-col-1 c-span-4 c-sml-span-12">
                                         <div class="c-label  "><label for="c-0-770">Lot No</label></div>
                                         <div class="c-editor"><input name="property[lot_no]" value="{!!old('property.lot_no')!!}" type="text" id="c-0-770" placeholder=""></div>
                                         <div class="c-validation"></div>
                                     </div>
-                                    
-                                    <div style="margin-top: 13px;" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-5 c-sml-span-6">
-                                    <button type="button" class="c-button" onclick="onClickLot()">Fetch Record
-                                          <i id="gear-lot" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>
-                                    </button>
-                                    </div>
 
-                                    <div  id="c-message-lot" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-8 c-sml-span-6">
-
-                                    </div>
-
-
-                                    {{-- <div class="c-text-singleline c-field c-col-6 c-sml-col-6 c-span-6 c-sml-span-7">
-                                        <div class="c-label  "><label for="c-1-769">Volume No</label></div>
-                                        <div class="c-editor"><input name="property[volume_no]" type="text" id="c-1-769" placeholder=""></div>
-                                        <div class="c-validation"></div>
-                                    </div> --}}
-                                    
-                                    <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-6 c-sml-span-12">
+                                    <div class="c-text-singleline c-field c-col-9 c-sml-col-1 c-span-4 c-sml-span-12">
                                         <div class="c-label  "><label for="c-3-767">Plan No</label></div>
                                         <div class="c-editor"><input name="property[plan_no]" value="{!!old('property.plan_no')!!}" type="text" id="c-3-767" placeholder=""></div>
                                         <div class="c-validation"></div>
                                     </div>
+                                    
+                                    <div class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-12 c-sml-span-12 ">
+                                        <div class="c-label  ">
+                                          <label for="c-25-1627">Volume / Folio</label>
+                                        </div>
+                                        
+                                        <div>
+                                            <div class="c-editor float-left width-60">
+                                                <input name="property[volume_no]" type="text" id="c-25-1627"  
+                                                    value="{!! old('property.volume_no')!!}" placeholder="1234" maxlength="4" pattern="\d{4}"">
+                                            </div>
+
+                                            <span class="float-left" style="font-weight: bold;">/</span>
+                                            
+                                            <div class="c-editor float-left width-60">
+                                                <input name="property[folio_no]" value="{!!old('property.folio_no')!!}" 
+                                                    type="text" id="c-2-768" placeholder="1234" maxlength="4" pattern="\d{4}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- <div  id="c-message-folio" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-8 c-sml-span-6">
+
+                                    </div> -->
+                                    <!-- <div style="margin-top: 13px;" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-5 c-sml-span-6">
+                                    <button type="button" class="c-button" onclick="onClickLot()">Fetch Record
+                                          <i id="gear-lot" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>
+                                    </button>
+                                    </div> -->
+
+                                    <!-- <div  id="c-message-lot" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-8 c-sml-span-6">
+
+                                    </div> -->
+
+                                    
+                                    
 
 
-                                    <div class="c-address c-address-international c-field c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
+                                    <div class="c-address c-address-international c-field c-col-1 c-sml-col-1 c-span-14 c-sml-span-12">
                                         <div class="c-label "><label>Property Address</label></div>
                                         <div>
                                             <div class="c-offscreen"><label for="c-4-528">Address Line 1</label></div>

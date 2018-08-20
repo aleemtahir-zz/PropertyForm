@@ -13,6 +13,7 @@
                     <div class="c-forms-logo" style="display:none;">
                     </div>
                     <div class="c-forms-form-title">
+                        <a href="{{url('')}}"><span class="float-right"><i class="fa fa-home"></i>Home</span></a>
                         <h2>HMF Developer Data Form</h2>
                         <div class="c-forms-description">
                             Please complete the form .
@@ -53,16 +54,19 @@
                                           <h3>DEVELOPMENT DETAILS</h3>
                                       </div>
                                       <div class="">
-                                           
+                                          <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-2 c-sml-span-12">
+                                              <div class="c-label "><label for="c-24-1629">ID</label></div>
+                                              <div class="c-editor "><input value="" name="" type="text" id="" disabled></div>
+                                          </div>
                                           
-                                          <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-14 c-sml-span-12">
+                                          <div class="c-field  c-span-12 c-sml-span-12">
                                               <div class="c-label "><label for="c-24-1629">Name of Development</label></div>
-                                              <div class="c-editor "><input value="{!!old('developement.name')!!}" name="developement[name]" type="text" id="c-24-1629" placeholder="eg  City View Villas"></div>
+                                              <div class="c-editor "><input value="{!!old('developement.name')!!}" name="developement[name]" type="text" id="c-24-1629" placeholder="eg  City View Villas" style="font-size: 1.3em;"></div>
                                               <div class="c-validation"></div>
                                           </div>
                                           <div class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-9 c-sml-span-12 ">
                                               <div class="c-label">
-                                                <label for="c-25-1627">Volume / Folio</label>
+                                                <label for="c-25-1627">Parent Volume / Folio</label>
                                               </div>
 
                                               <div class="c-repeating-section-group">
