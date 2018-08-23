@@ -85,6 +85,7 @@ class DevController extends Controller
         {
             // Store result
             $request->session()->put('devRequest', $request->input('developement'));
+            $request->session()->put('devForm', $request->all());
 
             if(strpos($_SERVER['REQUEST_URI'], 'DeveloperDataFormA') !== false)
                 $template = 'FormA';

@@ -20,9 +20,22 @@ class PropertyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        return view('forms.property');
+    public function index(Request $request)
+    { 
+        $data['property'] = $request->session()->get('devForm')['developement'];
+        $data['vendor']   = $request->session()->get('devForm')['developer'];
+        $data['monetary'] = $request->session()->get('devForm')['payment'];
+        
+        $data['property']['volume_str'] = implode(',', $data['property']['volume_no']);
+        $data['property']['folio_str']  = implode(',', $data['property']['folio_no']);
+        $data['property']['volume_no']  = $data['property']['volume_no'][0] ? $data['property']['volume_no'][0] : '';
+        $data['property']['folio_no']   = $data['property']['folio_no'][0]  ? $data['property']['folio_no'][0]  : ''; 
+
+        $data['monetary']['half_title']          = !empty($data['monetary']['half_title']) ? $data['monetary']['half_title'] / 2 : '';
+        $data['monetary']['half_agreement']      = !empty($data['monetary']['half_agreement']) ? $data['monetary']['half_agreement'] / 2 : '';
+        $data['monetary']['identification_fee']  = !empty($data['monetary']['identification_fee']) ? $data['monetary']['identification_fee'] : '';
+        //pre($data); die;
+        return view('forms.property',compact('data'));
     }
 
     /**
