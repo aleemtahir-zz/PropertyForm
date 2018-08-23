@@ -3,6 +3,8 @@ $(document).on("keypress", "form", function(event) {
 });
 
 $(document).ready(function(){
+	//initialize developer page
+	vfRepeatButtons();
 
 	$(document).on('click', ".c-page-next-page", function() {
 		$('.c-forms-pages').children().each(function () {
@@ -84,6 +86,7 @@ $(document).ready(function(){
     	add_section.find('.c-editor input').val('');
     	
     	add_section.find('.c-editor input').each(function() {
+    		
     		//console.log($(this));
     		var arr			= $(this).attr('id').split('-');
     		var new_value 	= parseInt(arr[2]) + 1;
@@ -106,6 +109,7 @@ $(document).ready(function(){
 		if(vf_flag  == 1){
 			$(this).removeClass('c-repeating-section-add').addClass('c-repeating-section-remove');
 			$(this).children().find('i').removeClass('icon-plus').addClass('icon-remove');
+			vfRepeatButtons();
 		}
 		
 		//numbering
@@ -347,83 +351,97 @@ function checkDropDownStatus()
 
 /*Fetch Development Form Record
 =====================================*/
-function fetchRecordDev()
-{
-	var volume_no 	= $('#c-25-1627').val();
-	var folio_no 	= $('#c-25-1628').val();
+function vfRepeatButtons(){
 
-	var folio_key = volume_no+'_'+folio_no;
+	$('.vf-btn').each(function(){
 
-	if(volume_no && folio_no)
-	{
-		/*$.ajaxSetup({
-		  headers: {
-		    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-		  }
-		});*/
-		
-		$.ajax({
-            /* the route pointing to the post function */
-            url: 'updateDevelopmentView',
-            type: 'POST',
-            data: { key : folio_key },
-            dataType: 'JSON',
-            beforeSend: function () {
-            	/*Font Awesome
-				====================================*/
-				$('#gear1').css('display','block');
+		$(this).click(function(){
+
+			let repeat_section = $(this).parent().parent();
+			
+			var volume_no = repeat_section.children().find('.key')[0].value;
+			var folio_no = repeat_section.children().find('.key')[1].value;
+
+			var folio_key = volume_no+'_'+folio_no;
+
+			if(volume_no && folio_no)
+			{
+				/*$.ajaxSetup({
+				  headers: {
+				    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+				  }
+				});*/
 				
-            },
-            success: function (data) { 
-            	setTimeout(function(){ 
-            		$('#gear1').css('display','none'); 
+				$.ajax({
+		            /* the route pointing to the post function */
+		            url: 'updateDevelopmentView',
+		            type: 'POST',
+		            data: { key : folio_key },
+		            dataType: 'JSON',
+		            beforeSend: function () {
+		            	/*Font Awesome
+						====================================*/
+						$('#gear1').css('display','block');
+						
+		            },
+		            success: function (data) { 
+		            	setTimeout(function(){ 
+		            		$('#gear1').css('display','none'); 
 
-            		var form_data = data;
+		            		var form_data = data;
 
-	            	if(data == '')
-	            	{	
-	            		$('input').val('');
-						$('#c-message').text('*No record found!.') ; 
-	            	}
-	            	else
-	            	{
-	            		$('#c-message').empty(); 
-	            		$.each(form_data, function(key, value){
-		            		//console.log(key+'  :'+value.key);
-	            			var i = $("input[name='"+value.key+"']");
-	            			var t = $("textarea[name='"+value.key+"']");
-	            			var s = $("select[name='"+value.key+"']");
+			            	if(data == '')
+			            	{	
+			            		$('input').val('');
+								$('#showerror').css('display','') ; 
+								$('#showerror ul li').text('*No record found!.') ; 
+			            	}
+			            	else
+			            	{
+			            		$('#showerror').empty(); 
+			            		$('#showerror').css('display','none'); 
+			            		console.log(form_data);
+			            		$.each(form_data, function(key, value){
+				            		//console.log(key+'  :'+value.key);
+			            			var i = $("input[name='"+value.key+"']");
+			            			var t = $("textarea[name='"+value.key+"']");
+			            			var s = $("select[name='"+value.key+"']");
 
-	            			if(i.length)
-	            				$("input[name='"+value.key+"']").val(value.value);
-	            			if(t.length)
-	            				$("textarea[name='"+value.key+"']").val(value.value);
-	            			if(s.length){
-	            				$("select[name='"+value.key+"']").val(value.value);
-	            				$("select[name='"+value.key+"']").css('color','black')
-	            			}
+			            			if(i.length)
+			            				$("input[name='"+value.key+"']").val(value.value);
+			            			if(t.length)
+			            				$("textarea[name='"+value.key+"']").val(value.value);
+			            			if(s.length){
+			            				$("select[name='"+value.key+"']").val(value.value);
+			            				$("select[name='"+value.key+"']").css('color','black')
+			            			}
 
-		            	});
-	            		checkDropDownStatus();	
-	            	}
-            	}, 300);         
+				            	});
+			            		checkDropDownStatus();	
+			            	}
+		            	}, 300);         
 
-            }
-        }); 
-	}
-	else if(!volume_no)
-	{	
-		$('input').val('');
-		$('textarea').val('');
-		$('#c-message').text('*Please Fill Volume No. Field.') ; 
-	}
-	else if(!folio_no)
-	{	
-		$('input').val('');
-		$('textarea').val('');
-		$('#c-message').text('*Please Fill Folio No. Field.') ; 
-	}
+		            }
+		        }); 
+			}
+			else if(!volume_no)
+			{	
+				$('input').val('');
+				$('textarea').val('');
+				$('#showerror').css('display','') ; 
+				$('#showerror ul li').text('*Please Fill Volume No. Field.') ; 
+			}
+			else if(!folio_no)
+			{	
+				$('input').val('');
+				$('textarea').val('');
+				$('#showerror').css('display','') ; 
+				$('#showerror ul li').text('*Please Fill Folio No. Field.') ; 
+			}
 
+		}); 
+		
+	});
 }
 
 /*Fetch Property Form Record

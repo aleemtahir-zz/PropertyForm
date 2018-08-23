@@ -145,7 +145,7 @@ class Development extends Model
         $payment_id     = $ids['payment'];
 
         $mapper = array(
-            'name','volume_no','folio_no','plan_no','address_id','surveyor_id','developer_id','contractor_id','payment_id',
+            'name','volume_no','folio_no','volume_str','folio_str','plan_no','address_id','surveyor_id','developer_id','contractor_id','payment_id',
             't_lots_i','r_lots_i','c_lots_i','lot_ids','rsrv_road'
           );
 
@@ -200,8 +200,10 @@ class Development extends Model
         $data = [
                     'id'                => $folio_key, 
                     'name'              => $developement['name'], 
-                    'volume_no'          => $developement['volume_no'], 
+                    'volume_no'         => $developement['volume_no'], 
                     'folio_no'          => $developement['folio_no'], 
+                    'volume_str'        => $developement['volume_str'], 
+                    'folio_str'         => $developement['folio_str'], 
                     'plan_no'           => $developement['plan_no'], 
                     'address_id'        => $address_id, 
                     'surveyor_id'       => $officer_id,
@@ -359,6 +361,9 @@ class Development extends Model
                        ->where('third_payment', '=', $payment['third_pay'])
                        ->where('fourth_payment', '=', $payment['fourth_pay'])
                        ->where('final_payment', '=', $payment['final_pay'])
+                       ->where('half_title', '=', $payment['half_title'])
+                       ->where('half_agreement', '=', $payment['half_agreement'])
+                       ->where('identification_fee', '=', $payment['identification_fee'])
                        ->orderBy('id', 'desc')
                        ->first();
 
@@ -380,6 +385,9 @@ class Development extends Model
                       'third_payment' => $payment['third_pay'],
                       'fourth_payment'=> $payment['fourth_pay'],
                       'final_payment' => $payment['final_pay'],
+                      'half_title'       => $payment['half_title'],
+                      'half_agreement'   => $payment['half_agreement'],
+                      'identification_fee'    => $payment['identification_fee'],
                   ]
               );
               //DB::commit();
@@ -446,7 +454,7 @@ class Development extends Model
                           'do2.title as d-do2-title2','do2.first_name as d-do2-first2','do2.last_name as d-do2-last2','do2.suffix as d-do2-suffix2',
                           'do2.capacity as d-do2-capacity2','do2.landline as d-do2-landline2',
                           //Contract Payment
-                          'cp.price_i as cp-price_i','cp.j_price_i as cp-jprice_i','cp.deposit as cp-deposit','cp.second_payment as cp-second_pay','cp.third_payment as cp-third_pay','cp.fourth_payment as cp-fourth_pay','cp.final_payment as cp-final_pay',
+                          'cp.price_i as cp-price_i','cp.j_price_i as cp-jprice_i','cp.deposit as cp-deposit','cp.second_payment as cp-second_pay','cp.third_payment as cp-third_pay','cp.fourth_payment as cp-fourth_pay','cp.final_payment as cp-final_pay','cp.half_title as cp-half_title','cp.half_agreement as cp-half_agreement','cp.identification_fee as cp-identification_fee',
                           //Contract Payment Foriegn Currency
                           'fc.name as cp-fc-name','fc.symbol as cp-fc-symbol','fc.exchange_rate as cp-fc-rate'
                         )

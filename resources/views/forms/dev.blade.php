@@ -73,7 +73,7 @@
                                                 <div class="row vf-repeat">
                                                   <div>
                                                     <div class="c-editor width-60 float-left">
-                                                      <input value="{!!old('developement.volume_no')!!}" name="developement[volume_no]" type="text" id="c-25-1627" maxlength="4" pattern="\d{4}" placeholder="1234">
+                                                      <input id="c-v-1" class="key" value="{!!old('developement.volume_no')!!}" name="developement[volume_no][]" type="text" maxlength="4" pattern="\d{4}" placeholder="1234">
                                                     </div>
                                                   </div>
                                                   
@@ -81,7 +81,7 @@
 
                                                   <div>
                                                     <div class="c-editor width-60 float-left">
-                                                      <input value="{!!old('developement.folio_no')!!}" name="developement[folio_no]" type="text" id="c-25-1628" placeholder="1234" maxlength="4" pattern="\d{4}">
+                                                      <input id="c-f-1" class="key" value="{!!old('developement.folio_no')!!}" name="developement[folio_no][]" type="text"  placeholder="1234" maxlength="4" pattern="\d{4}">
                                                     </div>
                                                   </div>
                                                   
@@ -90,7 +90,7 @@
                                                   </div>
 
                                                   <div class="float-left">
-                                                    <button type="button" class="c-button keyBtn" onclick="fetchRecordDev()">Search
+                                                    <button type="button" class="c-button keyBtn vf-btn">Search
                                                       <i id="gear1" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>
                                                     </button>
                                                   </div>
@@ -157,17 +157,17 @@
                                               <div class="">
                                                   <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-8 c-sml-span-12">
                                                       <div class="c-label  "><label for="half_title">Title Cost</label></div>
-                                                      <div class="c-editor"><input value="{!!old('developement.half_title')!!} "name="developement[half_title]" type="text" id="half_title" placeholder=""></div>
+                                                      <div class="c-editor"><input value="{!!old('payment.half_title')!!} "name="payment[half_title]" type="text" id="half_title" placeholder=""></div>
                                                       <div class="c-validation"></div>
                                                   </div>
                                                   <div class="c-currency c-field c-col-9 c-sml-col-1 c-span-8 c-sml-span-12">
                                                       <div class="c-label  "><label for="half_agreement">Agreement Cost</label></div>
-                                                      <div class="c-editor"><input value="{!!old('developement.half_agreement')!!}" name="developement[half_agreement]" type="text" id="half_agreement" placeholder=""></div>
+                                                      <div class="c-editor"><input value="{!!old('payment.half_agreement')!!}" name="payment[half_agreement]" type="text" id="half_agreement" placeholder=""></div>
                                                       <div class="c-validation"></div>
                                                   </div>
                                                   <div class="c-currency c-field c-col-17 c-sml-col-1 c-span-8 c-sml-span-12">
                                                       <div class="c-label  "><label for="identification_fee">ID Fee</label></div>
-                                                      <div class="c-editor"><input value="{!!old('developement.identification_fee')!!}" name="developement[identification_fee]" type="text" id="identification_fee" placeholder=""></div>
+                                                      <div class="c-editor"><input value="{!!old('payment.identification_fee')!!}" name="payment[identification_fee]" type="text" id="identification_fee" placeholder=""></div>
                                                       <div class="c-validation"></div>
                                                   </div>
                                                   <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-6 c-sml-span-12">

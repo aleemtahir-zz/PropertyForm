@@ -45,11 +45,16 @@ class DevController extends Controller
     public function store(DevForm $request)
     {
 
-        //print_r($request->all()); die;
+        // print_r($request->all()); die;
         $error = false;
         $DevObj = new Development();
 
         $data     = $request->input('developement');
+        $data['volume_str'] = implode(',', $data['volume_no']);
+        $data['folio_str']  = implode(',', $data['folio_no']);
+        $data['volume_no']  = $data['volume_no'][0] ? $data['volume_no'][0] : '';
+        $data['folio_no']   = $data['folio_no'][0]  ? $data['folio_no'][0]  : ''; 
+        
         $devId    = $DevObj->check_developer($data);
 
         $developer          = $request->input('developer');
@@ -64,14 +69,17 @@ class DevController extends Controller
         if($error)
             return back()->withErrors($error->getMessage())->withInput();
 
-        $payment            = $request->input('payment');
+        $payment                        = $request->input('payment');
+        $payment['half_title']          = !empty($payment['half_title']) ? $payment['half_title'] / 2 : '';
+        $payment['half_agreement']      = !empty($payment['half_agreement']) ? $payment['half_agreement'] / 2 : '';
+        $payment['identification_fee']  = !empty($payment['identification_fee']) ? $payment['identification_fee'] : '';
+
         $ids['payment']     = $DevObj->add_payment($payment, $error);
 
         if($error)
             return back()->withErrors($error->getMessage())->withInput();
 
-        $developement       = $request->input('developement');
-        $developement_id    = $DevObj->add_developement($developement, $ids, $error);
+        $developement_id    = $DevObj->add_developement($data, $ids, $error);
 
         if(!$error)
         {
