@@ -1177,7 +1177,9 @@ class Property extends Model
     public function get_id($tbl_name, $key, $value)
     {
       $result = DB::table($tbl_name)->select('id')->where($key,$value)->first();
-      return $result->id;
+
+      $id = !empty($result->id) ? $result->id : '';
+      return $id;
     }
 
 }
