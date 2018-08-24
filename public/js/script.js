@@ -400,7 +400,7 @@ function vfRepeatButtons(){
 			            	{
 			            		$('#showerror').empty(); 
 			            		$('#showerror').css('display','none'); 
-			            		console.log(form_data);
+			            		// console.log(form_data);
 			            		$.each(form_data, function(key, value){
 				            		//console.log(key+'  :'+value.key);
 			            			var i = $("input[name='"+value.key+"']");
@@ -446,26 +446,23 @@ function vfRepeatButtons(){
 
 /*Fetch Property Form Record
 =====================================*/
-function onClickFolio()
+function lookUpProperty()
 {
-	var volume_no 	= $('#c-25-1627').val();
-	var folio_no 	= $('#c-2-768').val();
+	var record_id 	= $('#autocomplete').val();
 
-	folio_key = volume_no+'_'+folio_no;
-
-	if(volume_no && folio_no)
+	if(record_id)
 	{
-		$.ajaxSetup({
-		  headers: {
-		    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-		  }
-		});
+		// $.ajaxSetup({
+		//   headers: {
+		//     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		//   }
+		// });
 		
 		$.ajax({
             /* the route pointing to the post function */
             url: 'updatePropertyView',
             type: 'post',
-            data: { folio : folio_key },
+            data: { id : record_id },
             dataType: 'JSON',
             beforeSend: function () {
             	/*Font Awesome
@@ -482,11 +479,13 @@ function onClickFolio()
 	            	if(data == '')
 	            	{	
 	            		$('input').val('');
-						$('#c-message-folio').text('*No record found!.') ; 
+						$('#showerror').css('display','') ; 
+						$('#showerror ul li').text('*No record found!.') ;  
 	            	}
 	            	else
 	            	{
-	            		$('#c-message-folio').empty(); 
+	            		$('#showerror').empty(); 
+			            $('#showerror').css('display','none'); 
 	            		$.each(form_data, function(key, value){
 		            		//console.log(value.key+'  :'+value.value);
 		            		//console.log(value.key);
@@ -512,17 +511,12 @@ function onClickFolio()
             }
         }); 
 	}
-	else if(!volume_no)
+	else
 	{	
 		$('input').val('');
 		$('textarea').val('');
-		$('#c-message-folio').text('*Please Fill Volume No. Field.') ; 
-	}
-	else if(!folio_no)
-	{	
-		$('input').val('');
-		$('textarea').val('');
-		$('#c-message-folio').text('*Please Fill Folio No. Field.') ; 
+		$('#showerror').css('display','') ; 
+		$('#showerror ul li').text('*Please Fill Record No. Field.') ; 
 	}
 
 }

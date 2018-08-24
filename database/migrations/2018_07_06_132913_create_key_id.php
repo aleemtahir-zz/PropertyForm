@@ -15,9 +15,8 @@ class CreateKeyId extends Migration
     {
         Schema::create('tbl_key_id', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('volume_no');
-            $table->integer('folio_no');
-            $table->integer('lot_no');
+            $table->string('property_key');
+            $table->timestamps();
         });
     }
 

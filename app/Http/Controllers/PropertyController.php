@@ -22,18 +22,22 @@ class PropertyController extends Controller
      */
     public function index(Request $request)
     { 
-        $data['property'] = $request->session()->get('devForm')['developement'];
-        $data['vendor']   = $request->session()->get('devForm')['developer'];
-        $data['monetary'] = $request->session()->get('devForm')['payment'];
-        
-        $data['property']['volume_str'] = implode(',', $data['property']['volume_no']);
-        $data['property']['folio_str']  = implode(',', $data['property']['folio_no']);
-        $data['property']['volume_no']  = $data['property']['volume_no'][0] ? $data['property']['volume_no'][0] : '';
-        $data['property']['folio_no']   = $data['property']['folio_no'][0]  ? $data['property']['folio_no'][0]  : ''; 
+        //Getting Session data and render it to Property Form
+        if(!empty($request->session()->get('devForm')))
+        {
+          $data['property'] = $request->session()->get('devForm')['developement'];
+          $data['vendor']   = $request->session()->get('devForm')['developer'];
+          $data['monetary'] = $request->session()->get('devForm')['payment'];
+          
+          $data['property']['volume_str'] = implode(',', $data['property']['volume_no']);
+          $data['property']['folio_str']  = implode(',', $data['property']['folio_no']);
+          $data['property']['volume_no']  = $data['property']['volume_no'][0] ? $data['property']['volume_no'][0] : '';
+          $data['property']['folio_no']   = $data['property']['folio_no'][0]  ? $data['property']['folio_no'][0]  : ''; 
 
-        $data['monetary']['half_title']          = !empty($data['monetary']['half_title']) ? $data['monetary']['half_title'] / 2 : '';
-        $data['monetary']['half_agreement']      = !empty($data['monetary']['half_agreement']) ? $data['monetary']['half_agreement'] / 2 : '';
-        $data['monetary']['identification_fee']  = !empty($data['monetary']['identification_fee']) ? $data['monetary']['identification_fee'] : '';
+          $data['monetary']['half_title']          = !empty($data['monetary']['half_title']) ? $data['monetary']['half_title'] / 2 : '';
+          $data['monetary']['half_agreement']      = !empty($data['monetary']['half_agreement']) ? $data['monetary']['half_agreement'] / 2 : '';
+          $data['monetary']['identification_fee']  = !empty($data['monetary']['identification_fee']) ? $data['monetary']['identification_fee'] : '';
+        }
         //pre($data); die;
         return view('forms.property',compact('data'));
     }
@@ -182,16 +186,13 @@ class PropertyController extends Controller
 
     public function updateProperty(Request $request)
     {   
-
+        $id         = $request->input('id');
+        $PropObj    = new Property();
         $response   = '';
-        $lot        = $request->input('lot');
-        $folio      = $request->input('folio');
 
-        if(!empty($folio) && !empty($lot))
+        if(!empty($id))
         {
-            $values['folio'] = $folio;
-            $values['lot'] = $lot;
-            $PropObj    = new Property();
+            $values['id'] = $PropObj->get_id('tbl_key_id','property_key',$id);
             $response   = $PropObj->get_property($values);
 
             $vcount = 0;
@@ -210,7 +211,7 @@ class PropertyController extends Controller
         }
         else if(!empty($folio))
         {
-            $PropObj    = new Property();
+            
             $response   = $PropObj->get_development($folio);
         }
 
@@ -220,29 +221,27 @@ class PropertyController extends Controller
 
     public function mergeDownload(Request $request)
     {   
-       
+        $PropObj    = new Property();
+        
 	      if($request->mergeBtn)
           $template_name[] = $request->mergeBtn;
         /*else
           return Redirect::to('property/show')->with('message', 'Please Select Any Template.');*/
         
-        if(!empty($request->session()->get('propRequest')))
-        {
-          $req = $request->session()->get('propRequest'); 
-          $values['volume']   = $req['property']['volume_no']; 
-          $values['folio']    = $req['property']['folio_no']; 
-          $values['lot']      = $req['property']['lot_no'];
-        }
+        // if(!empty($request->session()->get('propRequest')))
+        // {
+        //   $req = $request->session()->get('propRequest'); 
+        //   $values['volume']   = $req['property']['volume_no']; 
+        //   $values['folio']    = $req['property']['folio_no']; 
+        //   $values['lot']      = $req['property']['lot_no'];
+        // }
         
         if(empty($request->autocomplete))
           return Redirect::to('property/show')->with('message', 'Please Select Any Record ID.');
         else
         {
-          $ids = explode(' ', $request->autocomplete);
 
-          $values['volume']   = $ids[0]; 
-          $values['folio']    = $ids[1]; 
-          $values['lot']      = $ids[2];
+          $values['id']   = $PropObj->get_id('tbl_key_id','property_key',$request->autocomplete); 
         } 
 
 	      $PropertyObj = new Property(); 
@@ -352,21 +351,21 @@ class PropertyController extends Controller
       $results = array();
       
       $queries = DB::table('tbl_key_id')
-        ->where('volume_no', 'LIKE', '%'.$ids[0].'%');
+        ->where('property_key', 'LIKE', '%'.$search.'%');
 
-      if(isset($ids[1])){
-        $queries->where('folio_no', 'LIKE', '%'.$ids[1].'%');
-      }  
+      // if(isset($ids[1])){
+      //   $queries->where('folio_no', 'LIKE', '%'.$ids[1].'%');
+      // }  
 
-      if(isset($ids[2])){
-        $queries->where('lot_no', 'LIKE', '%'.$ids[2].'%');
-      }  
+      // if(isset($ids[2])){
+      //   $queries->where('lot_no', 'LIKE', '%'.$ids[2].'%');
+      // }  
         
       $queries = $queries->take(5)->get();
       
       foreach ($queries as $query)
       {
-          $results[] = [ 'id' => $query->id, 'value' => $query->volume_no.' '.$query->folio_no.' '.$query->lot_no ];
+          $results[] = [ 'id' => $query->id, 'value' => $query->property_key ];
       }
       return Response::json($results);
     }

@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Traits\InsertOnDuplicateKey;
+use Illuminate\Http\Request;
 use Exception;
 use App\Helper;
 
@@ -18,7 +19,8 @@ class Property extends Model
         
         $data     = $req['property'];
         $devId    = $this->check_developer($data);
-        $purchasserId  = $this->check_purchaser($data);
+
+        $purchasserId  = '';//$this->check_purchaser($data);
 
         $vendor             = $req['vendor'];
         $ids['vendor']      = $this->add_developer($vendor, $devId, $error);
@@ -146,14 +148,15 @@ class Property extends Model
           }
 
           //pre($data); die;
-          if( !empty($id) && $i == 0 )
+          if( !empty($devId) && $i == 0 )
           { 
+
             $table_name = 'tbl_developer_detail';
             
             try {
               //Update Developer
               DB::table($table_name)
-                ->where('id', $id)
+                ->where('id', $devId)
                 ->update($data);
  
             } catch (Exception $e) {
@@ -163,7 +166,7 @@ class Property extends Model
             }
 
             $i++;
-            $dev_id[] = $id;
+            $dev_id[] = $devId;
           }
           else
           {
@@ -532,14 +535,12 @@ class Property extends Model
 
         }
 
-        //Folio Key
-        $folio_key = '';
-        if(!empty($property['folio_no'])){
-          $folio_key = explode(',', $property['folio_no']);
-          $folio_key = $folio_key[0];
+        //Property Key
+        $property_key = '';
+        if(!empty($property['name']) && !empty($property['lot_no'])){
+          $property_key = substr($property['name'], 0, 5).'-'.$property['lot_no'];
         }
 
-        $folio_key = $property['volume_no'].'_'.$property['folio_no'];
     
         //******************
         //ADD property INFO
@@ -548,9 +549,7 @@ class Property extends Model
         //Get Key ID
         $key = DB::table('tbl_key_id')
              ->select('id')
-             ->where('volume_no', '=', $property['volume_no'])
-             ->where('folio_no', '=', $property['folio_no'])
-             ->where('lot_no', '=', $property['lot_no'])
+             ->where('property_key', '=', $property_key)
              ->orderBy('id', 'desc')
              ->first();
 
@@ -558,9 +557,8 @@ class Property extends Model
         {
           DB::table('tbl_key_id')->insert(
               [
-                  'volume_no' => $property['volume_no'], 
-                  'folio_no'  => $property['folio_no'],
-                  'lot_no'    => $property['lot_no'],
+                  'property_key'  => $property_key, 
+                  'created_at'    => date('Y-m-d'), 
               ]
           );
           /*GET DEV ID */
@@ -745,23 +743,12 @@ class Property extends Model
       /*DB::enableQueryLog();*/
       /*dd(DB::getQueryLog());*/
 
-      $folio  = $values['folio'];
-      $lot    = $values['lot'];
+      $id  = $values['id'];
 
-      if(empty($folio) || empty($lot))
+      if(empty($id))
         return 0;
       else
       {
-        $folio  = explode(',', $folio);
-        $folio  = $folio[0];  //1st part is key
-
-        //id
-        $arr = explode('_', $folio);
-        $volume_no  = $arr[0];
-        $folio_no   = $arr[1];
-        $lot_no     = $lot;
-
-        //pre($folio);
         /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
         $property_info = DB::table('tbl_property_detail as p')
                         ->select('p.id as p-id','p.plan_no as p-plan_no', 
@@ -829,9 +816,7 @@ class Property extends Model
                         ->leftJoin('tbl_address as ca', 'c.address_id', '=', 'ca.id')
                         ->leftJoin('tbl_person_info as co', 'c.officer_id', '=', 'co.id')
 
-                        ->where('p.volume_no', '=', $volume_no)
-                        ->where('p.folio_no', '=', $folio_no)
-                        ->where('p.lot_no', '=', $lot_no)
+                        ->where('p.id', $id)
                         ->get(); 
         /*dd(DB::getQueryLog());*/
 
@@ -856,11 +841,9 @@ class Property extends Model
       /*DB::enableQueryLog();*/
       /*dd(DB::getQueryLog());*/
 
-      $volume  = $values['volume'];
-      $folio  = $values['folio'];
-      $lot    = $values['lot'];
+      $id = $values['id'];
 
-      if(empty($volume) || empty($folio) || empty($lot))
+      if( empty($id) )
         return 0;
       else
       {
@@ -972,9 +955,7 @@ class Property extends Model
                         ->leftJoin('tbl_dev_contract_payment as dcp', 'dt.payment_id', '=', 'dcp.id')
                         ->leftJoin('tbl_foriegn_currency as dfc', 'dcp.fc_id', '=', 'dfc.id')
 
-                        ->where('p.volume_no', '=', $volume)
-                        ->where('p.folio_no', '=', $folio)
-                        ->where('p.lot_no', '=', $lot)
+                        ->where('p.id', '=', $id)
                         ->get(); 
         /*dd(DB::getQueryLog());*/               
 
@@ -1191,6 +1172,12 @@ class Property extends Model
 
       return $data; 
 
+    }
+
+    public function get_id($tbl_name, $key, $value)
+    {
+      $result = DB::table($tbl_name)->select('id')->where($key,$value)->first();
+      return $result->id;
     }
 
 }
