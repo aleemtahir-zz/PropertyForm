@@ -575,6 +575,7 @@ class Property extends Model
           $table_name    = 'tbl_property_detail';
           $property_data = [
               'id'                => $key_id, 
+              'dev_name'          => $property['name'], 
               'lot_no'            => $property['lot_no'], 
               'volume_no'         => $property['volume_no'], 
               'folio_no'          => $property['folio_no'], 
@@ -751,7 +752,8 @@ class Property extends Model
       {
         /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
         $property_info = DB::table('tbl_property_detail as p')
-                        ->select('p.id as p-id','p.plan_no as p-plan_no', 
+                        ->select('p.id as p-id','p.plan_no as p-plan_no','p.lot_no as p-lot_no'
+                          ,'p.volume_no as p-volume_no','p.folio_no as p-folio_no','p.dev_name as p-name', 
                           //Property Address
                           'pa.line1 as p-address-line1','pa.line2 as p-address-line2','pa.city as p-address-city','pa.state as p-address-state', 'pa.postal as p-address-postal',
                           'pa.country as p-address-country',    
@@ -856,7 +858,7 @@ class Property extends Model
         //pre($folio);
         /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
         $property_info = DB::table('tbl_property_detail as p')
-                        ->select('p.id as p-id','p.plan_no as p-plan_no','p.lot_no as p-lot_no','p.volume_no as p-volume_no',
+                        ->select('p.id as p-id','p.plan_no as p-plan_no','p.lot_no as p-lot_no','p.volume_no as p-volume_no','p.dev_name as p-name',
                          'p.folio_no as p-folio_no', 
                           //Property Address
                           'pa.line1 as p-address-line1','pa.line2 as p-address-line2','pa.city as p-address-city',
@@ -994,12 +996,12 @@ class Property extends Model
       foreach ($vendorData as $key => $value) {
         $data[] = $this->custom_mapper($value);    
       }    
-      //pre($data); die;
+      // pre($data); die;
       $count = count($data);
 
       foreach ($data as $key => &$value) {
         foreach ($value as $k => $v) {
-          //$new_data[$k]['index'] = $key;
+          // $new_data[$k.'-'.$key] = $v;
           $new_data[$k][] = $v;
         }
       }
@@ -1026,6 +1028,7 @@ class Property extends Model
 
       foreach ($data as $key => &$value) {
         foreach ($value as $k => $v) {
+          // $new_data[$k.'-'.$key] = $v;
           //$new_data[$k]['index'] = $key;
           $new_data[$k][] = $v;
         }

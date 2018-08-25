@@ -14,11 +14,12 @@ class CreatePropertyDetail extends Migration
     public function up()
     {
         Schema::create('tbl_property_detail', function (Blueprint $table) {
-            $table->engine = 'MyISAM';
-            $table->integer('id');
-            $table->integer('volume_no')->unsigned();
-            $table->integer('folio_no')->unsigned();
+            // $table->engine = 'MyISAM';
+            $table->increments('id');
+            $table->integer('volume_no')->unsigned()->nullable();
+            $table->integer('folio_no')->unsigned()->nullable();
             $table->integer('lot_no')->unsigned();
+            $table->string('dev_name');
             $table->integer('plan_no')->nullable();
             $table->integer('attorney_id')->unsigned()->nullable(); 
             $table->foreign('attorney_id')->references('id')->on('tbl_attorney_detail');
@@ -26,7 +27,7 @@ class CreatePropertyDetail extends Migration
             $table->foreign('payment_id')->references('id')->on('tbl_monetary_detail');
             $table->integer('address_id')->unsigned()->nullable();
             $table->foreign('address_id')->references('id')->on('tbl_address');
-            $table->primary(['volume_no','folio_no','lot_no']); 
+            // $table->primary(['volume_no','folio_no','lot_no']); 
         });
     }
 

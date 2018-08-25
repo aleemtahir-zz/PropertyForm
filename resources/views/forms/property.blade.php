@@ -533,7 +533,7 @@
                                                       <div class="c-label  "><label for="c-21-1021">Mobile Phone</label></div>
                                                       <div class="c-editor">
                                                         <input 
-                                                        value="{!! !empty($data['vendor']['mobile']) ? $data['vendor']['mobile'] : old('vendor.mobile') !!}"  
+                                                        value="{!! !empty($data['vendor']['mobile']) ? $data['vendor']['mobile'] : old('vendor.mobile.0') !!}"  
                                                         name="vendor[mobile][]" 
                                                         maxlength="10" 
                                                         type="text" 
@@ -545,7 +545,7 @@
                                                       <div class="c-label  "><label for="c-22-1020">Email</label></div>
                                                       <div class="c-editor">
                                                         <input 
-                                                        value="{!! !empty($data['vendor']['email']) ? $data['vendor']['email'] : old('vendor.email') !!}"  
+                                                        value="{!! !empty($data['vendor']['email']) ? $data['vendor']['email'] : old('vendor.email.0') !!}"  
                                                         name="vendor[email][]" 
                                                         type="text" 
                                                         id="c-22-1020">
@@ -559,7 +559,7 @@
                                                           <div class="c-editor" style="float: left;">
                                                             <input 
                                                             value="{!! !empty($data['vendor']['address']['line1']) ?
-                                                                    $data['vendor']['address']['line1'] : old('vendor.address.line1') !!}" 
+                                                                    $data['vendor']['address']['line1'] : old('vendor.address.line1.0') !!}" 
                                                             name="vendor[address][line1][]" 
                                                             type="text" 
                                                             id="c-23-781" 
@@ -569,7 +569,7 @@
                                                           <div class="c-editor" style="float: left;">
                                                             <input 
                                                             value="{!! !empty($data['vendor']['address']['line2']) ?
-                                                                    $data['vendor']['address']['line2'] : old('vendor.address.line2') !!}" 
+                                                                    $data['vendor']['address']['line2'] : old('vendor.address.line2.0') !!}" 
                                                             name="vendor[address][line2][]" 
                                                             type="text" 
                                                             id="c-24-781" 
@@ -579,7 +579,7 @@
                                                           <div class="c-editor c-partial-line" style="float: left;">
                                                             <input 
                                                             value="{!! !empty($data['vendor']['address']['city']) ?
-                                                                    $data['vendor']['address']['city'] : old('vendor.address.city') !!}" 
+                                                                    $data['vendor']['address']['city'] : old('vendor.address.city.0') !!}" 
                                                             name="vendor[address][city][]" 
                                                             type="text" 
                                                             id="c-25-781" 
@@ -592,7 +592,7 @@
                                                                 <div class="c-dropdown">
                                                                     <select 
                                                                     value="{!! !empty($data['vendor']['address']['state']) ?
-                                                                    $data['vendor']['address']['state'] : old('vendor.address.state') !!}" 
+                                                                    $data['vendor']['address']['state'] : old('vendor.address.state.0') !!}" 
                                                                     name="vendor[address][state][]" 
                                                                     id="c-26-781" 
                                                                     class="c-placeholder-text-styled ">
@@ -621,7 +621,7 @@
                                                               <div class="c-dropdown">
                                                                   <select 
                                                                   value="{!! !empty($data['vendor']['address']['country']) ?
-                                                                    $data['vendor']['address']['country'] : old('vendor.address.country') !!}" 
+                                                                    $data['vendor']['address']['country'] : old('vendor.address.country.0') !!}" 
                                                                   name="vendor[address][country][]" id="c-28-781" class="c-placeholder-text-styled">
                                                                       <option value="">Country</option>
                                                                       <option value="Afghanistan">Afghanistan</option>

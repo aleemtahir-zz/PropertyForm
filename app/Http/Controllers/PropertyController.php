@@ -197,7 +197,8 @@ class PropertyController extends Controller
 
             $vcount = 0;
             $bcount = 0;
-
+            //pre($response); die;
+            //If Record found
             if(isset($response['p-id']['value']))
             {
               $id = $response['p-id']['value']; 
@@ -206,16 +207,10 @@ class PropertyController extends Controller
               $response['vcount'] = $vcount;
               $response['bcount'] = $bcount;
               $response = array_merge($response,$vendors, $buyers);
+
             }
-            //pre($response);die;
-        }
-        else if(!empty($folio))
-        {
-            
-            $response   = $PropObj->get_development($folio);
         }
 
-        //pre($response); die;
         return json_encode($response);
     }
 
