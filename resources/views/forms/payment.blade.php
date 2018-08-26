@@ -12,6 +12,7 @@
         <div class="c-forms-heading">
             <div class="c-forms-logo" style="display:none;"></div>
             <div class="c-forms-form-title">
+                <a href="{{url('')}}"><span class="float-right"><i class="fa fa-home"></i>Home</span></a>
                 <h2>HMF Account Statement Form</h2>
             </div>
             <div id="showerror" class = "alert alert-danger" style="display: none">

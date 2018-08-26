@@ -91,7 +91,7 @@ class DevController extends Controller
                 $template = 'FormA';
             else
                 $template = 'FormB';
-   
+    
             return view('forms.thank_you',compact('template'));
         }
         else

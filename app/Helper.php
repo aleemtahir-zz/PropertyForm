@@ -365,10 +365,10 @@ function get_foriegn_currency($currency)
 
 function upload_logo( $filename='')
 {
-  $target_dir = __DIR__.'/../uploads/';
-  $target_file = $target_dir . basename($_FILES[$filename]["name"]);
-  $uploadOk = 1;
-  $msg = array();
+  $uploadOk      = 1;
+  $msg           = array();
+  $target_file   = $_FILES[$filename]["name"];
+  $file_content  = file_get_contents($_FILES[$filename]["tmp_name"]);
   $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
   // Check if image file is a actual image or fake image
   /*if(isset($_POST["submit"])) {
@@ -397,14 +397,17 @@ function upload_logo( $filename='')
   {
       /*pre($target_file);
       pre($_FILES[$filename]["tmp_name"]); die;*/
-      if (move_uploaded_file($_FILES[$filename]["tmp_name"], $target_file)) {
-          $msg = "The file ". basename( $_FILES[$filename]["name"]). " has been uploaded.";
-      } 
-  }
+      // if (move_uploaded_file($_FILES[$filename]["tmp_name"], $target_file)) {
+      //     $msg = "The file ". basename( $_FILES[$filename]["name"]). " has been uploaded.";
+      // }
+      Storage::put('dev_logo/'.$target_file,$file_content);  //Storage::put($fileName, $path);
+      $url = storage_path() . '/app/public/dev_logo/' . $target_file;
 
+  }
+  
   $result['status']   = $uploadOk;
   $result['message']  = $msg;
-  $result['path']     = $target_file;
+  $result['path']     = $url;
 
   return $result;
 }
