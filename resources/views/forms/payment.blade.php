@@ -14,27 +14,25 @@
             <div class="c-forms-form-title">
                 <h2>HMF Account Statement Form</h2>
             </div>
+            <div id="showerror" class = "alert alert-danger" style="display: none">
+                <ul>
+                    <li></li>
+                </ul>
+             </div>  
         </div>
         <div class="c-forms-template">
             <div class="c-forms-form-main c-span-24 c-sml-span-12">
-                <div style="margin: 10px 0 0 3px; position: absolute; left: 18px;" class="c-label  ">
-                  <label for="c-25-1627">Volume / Folio</label>
-                </div>
-                <div style="margin-top: 22px; width: 65px;" class="c-field c-col-1 c-sml-col-1 c-span-2 c-sml-span-2">
-                  <div style=" " class="c-editor"><input value="{!!old('developement.volume_no')!!}" name="developement[volume_no]" type="text" id="c-25-1627" maxlength="4" pattern="\d{4}" placeholder="1234"></div>
-
-                </div>
-                <span style="font-weight: bold; position: absolute; margin-top: 30px; left: 82px;">/</span>
-
-                <div style="margin-top: 22px; padding-left: 0; width: 65px;" class="c-field c-text-singleline c-col-17 c-sml-col-1 c-span-3 c-sml-span-2">
-                  <div class="c-editor"><input value="{!!old('developement.folio_no')!!}" name="developement[folio_no]" type="text" id="c-25-1628" placeholder="1234" maxlength="4" pattern="\d{4}"></div>
-                  <div class="c-validation"></div>
-
-                </div>
-                <div class="c-text-singleline c-field c-col-5 c-sml-col-1 c-span-4 c-sml-span-6">
-                    <div class="c-label  "><label for="c-0-28">Lot No</label></div>
-                    <div class="c-editor"><input name="lot_no" type="text" id="c-0-28" placeholder=""></div>
+                <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-7 c-sml-span-12">
+                    <div class="c-label  "><label for="c-2-768">Record #</label></div>
+                    <div class="c-editor float-right" style="width: 150px"> 
+                        <input class="font-m" id="autocomplete" name="" type="text"  placeholder="CITY-47">
+                    </div>
                     <div class="c-validation"></div>
+                </div>
+                <div class="c-text-singleline c-field c-col-9 c-sml-col-1 c-span-7 c-sml-span-12">
+                    <button type="button" class="c-button margin-auto" onclick="lookUpProperty()">LOOKUP
+                          <i id="gear-folio" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>
+                    </button>
                 </div>
                 
                 <div class="c-section c-col-1 c-sml-col-1 c-span-12 c-sml-span-12">

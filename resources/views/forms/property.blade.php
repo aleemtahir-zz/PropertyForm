@@ -53,7 +53,7 @@
                                     <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-7 c-sml-span-12">
                                         <div class="c-label  "><label for="c-2-768">Record #</label></div>
                                         <div class="c-editor float-right" style="width: 150px"> 
-                                            <input id="autocomplete" name="" type="text"  placeholder="CITY-47">
+                                            <input class="font-m" id="autocomplete" name="" type="text"  placeholder="CITY-47">
                                         </div>
                                         <div class="c-validation"></div>
                                     </div>
