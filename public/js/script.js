@@ -4,6 +4,9 @@ $(document).on("keypress", "form", function(event) {
 
 $(document).ready(function(){
 	//initialize developer page
+
+	initDevId();
+
 	vfRepeatButtons();
 
 	$(document).on('click', ".c-page-next-page", function() {
@@ -158,8 +161,6 @@ $(document).ready(function(){
     $('#delete_btn').click(function(){
 
         var url = $(this).attr('data-url');
-        console.log(url);
-        console.log("bbe");
         $.ajax({
 		    url: baseurl+'/upload/',
 		    method: 'DELETE',
@@ -376,7 +377,7 @@ function vfRepeatButtons(){
 		            /* the route pointing to the post function */
 		            url: 'updateDevelopmentView',
 		            type: 'POST',
-		            data: { key : folio_key },
+		            data: { key : folio_key, vfFlag : 1 },
 		            dataType: 'JSON',
 		            beforeSend: function () {
 		            	/*Font Awesome
@@ -556,11 +557,11 @@ function onClickLot()
 
 	if(volume_no && folio_no  && lot_key)
 	{
-		$.ajaxSetup({
-		  headers: {
-		    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-		  }
-		});
+		// $.ajaxSetup({
+		//   headers: {
+		//     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+		//   }
+		// });
 		
 		$.ajax({
             /* the route pointing to the post function */
@@ -707,5 +708,20 @@ function add_section(id, count) {
 			}
 		});
 	}
+}
+
+function initDevId()
+{
+	$.ajax({
+	    url: baseurl+'/getDevId',
+	    type: 'get',
+	    success: function(result) {
+	        $('#dev_id').val(result);
+	    },
+	    error: function(request,msg,error) {
+	        // handle failure
+	        console.log("error: devId");
+	    }
+	});
 }
 

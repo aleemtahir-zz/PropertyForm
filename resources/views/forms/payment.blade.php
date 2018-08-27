@@ -43,52 +43,52 @@
                     <div class="">
                         <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12">
                             <div class="c-label  "><label for="c-2-26">Sale Price</label></div>
-                            <div class="c-editor"><input name="sale_price" type="text" id="c-2-26" placeholder=""></div>
+                            <div class="c-editor"><input name="monetary[price_i]" type="text" id="c-2-26" placeholder=""></div>
                             <div class="c-validation"></div>
                         </div>
                         <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">
                             <div class="c-label  "><label for="c-3-25">Contract Price</label></div>
-                            <div class="c-editor"><input type="text" id="c-3-25" placeholder=""></div>
+                            <div class="c-editor"><input name="monetary[cprice_i]" type="text" id="c-3-25" placeholder=""></div>
                             <div class="c-validation">Contract Price is required.</div>
                         </div>
                         <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">
                             <div class="c-label  "><label for="c-4-24">Upgrades</label></div>
-                            <div class="c-editor"><input type="text" id="c-4-24" placeholder=""></div>
+                            <div class="c-editor"><input name="monetary[upgrade]" type="text" id="c-4-24" placeholder=""></div>
                             <div class="c-validation">Upgrades is required.</div>
                         </div>
                         <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">
                             <div class="c-label  "><label for="c-5-23">½ Stamp Duty</label></div>
-                            <div class="c-editor"><input type="text" id="c-5-23" placeholder=""></div>
+                            <div class="c-editor"><input name="monetary[half_stamp]" type="text" id="c-5-23" placeholder=""></div>
                             <div class="c-validation">½ Stamp Duty is required.</div>
                         </div>
                         <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">
                             <div class="c-label  "><label for="c-6-22">½ Registration Fee</label></div>
-                            <div class="c-editor"><input type="text" id="c-6-22" placeholder=""></div>
+                            <div class="c-editor"><input name="monetary[half_reg_fee]" type="text" id="c-6-22" placeholder=""></div>
                             <div class="c-validation">½ Registration Fee is required.</div>
                         </div>
                         <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">
                             <div class="c-label  "><label for="c-7-21">½ Land Agreement Cost</label></div>
-                            <div class="c-editor"><input type="text" id="c-7-21" placeholder=""></div>
+                            <div class="c-editor"><input name="monetary[half_land_cost]" type="text" id="c-7-21" placeholder=""></div>
                             <div class="c-validation">½ Land Agreement Cost is required.</div>
                         </div>
                         <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">
                             <div class="c-label  "><label for="c-8-20">½ Building Agreement Cost</label></div>
-                            <div class="c-editor"><input type="text" id="c-8-20" placeholder=""></div>
+                            <div class="c-editor"><input name="monetary[half_build_cost]" type="text" id="c-8-20" placeholder=""></div>
                             <div class="c-validation">½ Building Agreement Cost is required.</div>
                         </div>
                         <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">
                             <div class="c-label  "><label for="c-9-19">½ Maintenance Costs</label></div>
-                            <div class="c-editor"><input type="text" id="c-9-19" placeholder=""></div>
+                            <div class="c-editor"><input name="monetary[half_maintain_cost]" type="text" id="c-9-19" placeholder=""></div>
                             <div class="c-validation">½ Maintenance Costs is required.</div>
                         </div>
                         <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">
                             <div class="c-label  "><label for="c-10-18">½ Title Costs</label></div>
-                            <div class="c-editor"><input type="text" id="c-10-18" placeholder=""></div>
+                            <div class="c-editor"><input name="monetary[half_title]" type="text" id="c-10-18" placeholder=""></div>
                             <div class="c-validation">½ Title Costs is required.</div>
                         </div>
                         <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">
                             <div class="c-label  "><label for="c-11-17">Miscellaneous Expenses</label></div>
-                            <div class="c-editor"><input type="text" id="c-11-17" placeholder=""></div>
+                            <div class="c-editor"><input name="monetary[misc_expense]" type="text" id="c-11-17" placeholder=""></div>
                             <div class="c-validation">Miscellaneous Expenses is required.</div>
                         </div>
                         <div class="c-section c-col-1 c-sml-col-1 c-span-12 c-sml-span-12">

@@ -56,7 +56,7 @@
                                       <div class="">
                                           <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-2 c-sml-span-12">
                                               <div class="c-label "><label for="c-24-1629">ID</label></div>
-                                              <div class="c-editor "><input value="" name="" type="text" id="" disabled></div>
+                                              <div class="c-editor "><input id="dev_id" value="" name="developement[dev_id]" type="text" id="" disabled></div>
                                           </div>
                                           
                                           <div class="c-field  c-span-12 c-sml-span-12">
@@ -73,7 +73,7 @@
                                                 <div class="row vf-repeat">
                                                   <div>
                                                     <div class="c-editor width-60 float-left">
-                                                      <input id="c-v-1" class="key" value="{!!old('developement.volume_no')!!}" name="developement[volume_no][]" type="text" maxlength="4" pattern="\d{4}" placeholder="1234">
+                                                      <input id="c-v-1" class="key" value="{!!old('developement.volume_no.0')!!}" name="developement[volume_no][]" type="text" maxlength="4" pattern="\d{4}" placeholder="1234">
                                                     </div>
                                                   </div>
                                                   
@@ -81,7 +81,7 @@
 
                                                   <div>
                                                     <div class="c-editor width-60 float-left">
-                                                      <input id="c-f-1" class="key" value="{!!old('developement.folio_no')!!}" name="developement[folio_no][]" type="text"  placeholder="1234" maxlength="4" pattern="\d{4}">
+                                                      <input id="c-f-1" class="key" value="{!!old('developement.folio_no.0')!!}" name="developement[folio_no][]" type="text"  placeholder="1234" maxlength="4" pattern="\d{4}">
                                                     </div>
                                                   </div>
                                                   
@@ -1070,8 +1070,9 @@
               </div>
           </div>
         </div>
-        <input type="hidden" name="NoBots" id="c-nobots" value="Cpy9xdA3AeD6VuOZlzI7hF0cp+PxKQSFxbZWuPsDiNw=|8d3d2b1992a1961cb6d21eeaaf4a761b">
     </form>   
 </div>
-
+<script type="text/javascript">
+  
+</script>
 @stop

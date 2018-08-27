@@ -12,12 +12,11 @@ class Development extends Model
     //User Trait
     use InsertOnDuplicateKey;
 
-    public function check_developer($data)
+    public function check_developer($id)
     {
-      $folio_key = $data['volume_no'].'_'.$data['folio_no'];
       $dev_info = DB::table('tbl_developement_detail')
                          ->select('developer_id')
-                         ->where('id', $folio_key)
+                         ->where('id', $id)
                          ->first();
       $dev_id = '';                   
       if(!empty($dev_info))
@@ -68,7 +67,7 @@ class Development extends Model
         $logo_path = '';
         $filename = 'developer_logo';
         
-        if(isset($_FILES[$filename])){
+        if(!empty($_FILES[$filename]["tmp_name"])){
           $dev_logo = upload_logo($filename);
           //pre($dev_logo);
           $logo_path = "";
@@ -185,7 +184,7 @@ class Development extends Model
         /*$folio_key = explode(',', $developement['folio_no']);
         $folio_key = $folio_key[0];*/
 
-        $folio_key = $developement['volume_no'].'_'.$developement['folio_no'];
+        // $folio_key = $developement['volume_no'].'_'.$developement['folio_no'];
 
         if(!empty($developement['t_lots_i']))
           $total_lots_s = convertNumberToWord($developement['t_lots_i']);
@@ -198,7 +197,6 @@ class Development extends Model
         
         $table_name = 'tbl_developement_detail';
         $data = [
-                    'id'                => $folio_key, 
                     'name'              => $developement['name'], 
                     'volume_no'         => $developement['volume_no'], 
                     'folio_no'          => $developement['folio_no'], 
@@ -414,7 +412,7 @@ class Development extends Model
         return $payment_id;
     }
 
-    function get_development($id='')
+    function get_development($id='',$flag='')
     {
       DB::enableQueryLog();
       if(empty($id))
@@ -468,9 +466,21 @@ class Development extends Model
                         ->leftJoin('tbl_address as ca', 'c.address_id', '=', 'ca.id')
                         ->leftJoin('tbl_person_info as co', 'c.officer_id', '=', 'co.id')
                         ->leftJoin('tbl_dev_contract_payment as cp', 'dt.payment_id', '=', 'cp.id')
-                        ->leftJoin('tbl_foriegn_currency as fc', 'cp.fc_id', '=', 'fc.id')
-                        ->where('dt.id', '=', $id)
-                        ->get(); 
+                        ->leftJoin('tbl_foriegn_currency as fc', 'cp.fc_id', '=', 'fc.id');
+
+        if($flag == 1)
+        {
+          list($vol, $fol) = explode("_", $id);
+          $dev_info->where('dt.volume_no', $vol);
+          $dev_info->where('dt.folio_no', $fol);
+        }
+        else
+        {
+          $dev_info->where('dt.id', '=', $id);
+        }
+
+        $dev_info = $dev_info->get(); 
+
         /*dd(DB::getQueryLog());*/
 
         $mapper = array(

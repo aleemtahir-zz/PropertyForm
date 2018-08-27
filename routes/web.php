@@ -20,6 +20,7 @@ Route::get('property/autocomplete',[
 ]);
 Route::resource('property','PropertyController');
 Route::post('updateDevelopmentView', 'DevController@updateView');
+Route::get('getDevId', 'DevController@getDevId');
 Route::post('updatePropertyView', 'PropertyController@updateProperty');
 Route::post('merge',[
     'as' => 'merge',

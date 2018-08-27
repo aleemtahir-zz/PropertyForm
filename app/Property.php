@@ -814,6 +814,7 @@ class Property extends Model
                           $join->on('p.folio_no','=','dt.folio_no');
                         })
 
+                        // ->leftJoin('tbl_developement_detail as dt', 'p.dev_id', '=', 'dt.id')
                         ->leftJoin('tbl_contractor_detail as c', 'dt.contractor_id', '=', 'c.id')
                         ->leftJoin('tbl_address as ca', 'c.address_id', '=', 'ca.id')
                         ->leftJoin('tbl_person_info as co', 'c.officer_id', '=', 'co.id')

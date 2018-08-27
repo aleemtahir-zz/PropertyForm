@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Development;
 use App\Http\Requests\DevForm;
+use DB;
 use Mail;
 use Exception;
 
@@ -54,8 +55,9 @@ class DevController extends Controller
         $data['folio_str']  = implode(',', $data['folio_no']);
         $data['volume_no']  = $data['volume_no'][0] ? $data['volume_no'][0] : '';
         $data['folio_no']   = $data['folio_no'][0]  ? $data['folio_no'][0]  : ''; 
-        
-        $devId    = $DevObj->check_developer($data);
+
+        $id       = $request->session()->get('id');               
+        $devId    = $DevObj->check_developer($id);
 
         $developer          = $request->input('developer');
         $ids['developer']   = $DevObj->add_developer($developer, $devId, $error);
@@ -84,8 +86,15 @@ class DevController extends Controller
         if(!$error)
         {
             // Store result
-            $request->session()->put('devRequest', $request->input('developement'));
-            $request->session()->put('devForm', $request->all());
+            $data['developement']   = $request->input('developement');
+            $data['developer']      = $request->input('developer');
+            $data['payment']        = $request->input('payment');
+            $data['contractor']     = $request->input('contractor');
+            $data['developement']['id']   = $id;
+            
+
+            $request->session()->put('devRequest', $data['developement']);
+            $request->session()->put('devForm', $data);
 
             if(strpos($_SERVER['REQUEST_URI'], 'DeveloperDataFormA') !== false)
                 $template = 'FormA';
@@ -146,10 +155,11 @@ class DevController extends Controller
 
     public function updateView(Request $request)
     {   
-        $id = $request->input('key');
+        $id     = $request->input('key');
+        $flag   = !empty($request->input('vfFlag')) ? $request->input('vfFlag') : 0;
 
         $DevObj = new Development();
-        $response = $DevObj->get_development($id);
+        $response = $DevObj->get_development($id, $flag);
 
         return json_encode($response);
     }
@@ -167,5 +177,14 @@ class DevController extends Controller
 
         $template = 'FormA';
         return view('forms.thank_you',compact('template'));
+    }
+
+    function getDevId(Request $request)
+    {
+        $tblName= 'tbl_developement_detail';
+        $rs     = DB::select('SHOW TABLE STATUS where name = "'.$tblName.'" ;');
+        $rs     = $rs[0];
+        $request->session()->put('id', $rs->Auto_increment);
+        return $rs->Auto_increment; 
     }
 }
