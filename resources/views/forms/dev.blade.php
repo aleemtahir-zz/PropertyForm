@@ -113,20 +113,20 @@
                                                       <div class="c-dropdown">
                                                           <select value="{!!old('developement.address.state')!!}" name="developement[address][state]" id="c-30-1626" class="c-placeholder-text-styled ">
                                                               <option value="">Parish</option>
-                                                              <option value="Clarendon">Clarendonn</option>
+                                                              <option value="Clarendon">Clarendon</option>
                                                               <option value="Hanover">Hanover</option>
                                                               <option value="Kingston">Kingston</option>
                                                               <option value="Manchester">Manchester</option>
                                                               <option value="Portland">Portland</option>
                                                               <option value="Saint Andrew">Saint Andrew</option>
-                                                              <option value="Saint Ann">Sain Ann</option>
+                                                              <option value="Saint Ann">Saint Ann</option>
                                                               <option value="Saint Catherine">Saint Catherine</option>
                                                               <option value="Saint Elizabeth">Saint Elizabeth</option>
                                                               <option value="Saint James">Saint James</option>
-                                                              <option value="Saint Marry">Saint Marry</option>
+                                                              <option value="Saint Mary">Saint Mary</option>
                                                               <option value="Saint Thomas">Saint Thomas</option>
                                                               <option value="Trelawny">Trelawny</option>
-                                                              <option value="Westmore Land">Westmore Land</option>
+                                                              <option value="Westmoreland">Westmoreland</option>
                                                           </select>
                                                       </div> 
                                                   </div>
@@ -155,17 +155,22 @@
                                                   <h4>Lots (Subdivisions)</h4>
                                               </div> --}}
                                               <div class="">
-                                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-8 c-sml-span-12">
-                                                      <div class="c-label  "><label for="half_title">Title Cost</label></div>
-                                                      <div class="c-editor"><input value="{!!old('payment.half_title')!!} "name="payment[half_title]" type="text" id="half_title" placeholder=""></div>
+                                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-6 c-sml-span-12">
+                                                      <div class="c-label  "><label for="title_cost">Title Cost</label></div>
+                                                      <div class="c-editor"><input value="{!!old('payment.title_cost')!!} "name="payment[title_cost]" type="text" id="title_cost" placeholder=""></div>
                                                       <div class="c-validation"></div>
                                                   </div>
-                                                  <div class="c-currency c-field c-col-9 c-sml-col-1 c-span-8 c-sml-span-12">
-                                                      <div class="c-label  "><label for="half_agreement">Agreement Cost</label></div>
-                                                      <div class="c-editor"><input value="{!!old('payment.half_agreement')!!}" name="payment[half_agreement]" type="text" id="half_agreement" placeholder=""></div>
+                                                  <div class="c-currency c-field c-col-9 c-sml-col-1 c-span-6 c-sml-span-12">
+                                                      <div class="c-label  "><label for="land_agreement_cost">Landing Agreement Cost</label></div>
+                                                      <div class="c-editor"><input value="{!!old('payment.land_agreement_cost')!!}" name="payment[land_agreement_cost]" type="text" id="land_agreement_cost" placeholder=""></div>
                                                       <div class="c-validation"></div>
                                                   </div>
-                                                  <div class="c-currency c-field c-col-17 c-sml-col-1 c-span-8 c-sml-span-12">
+                                                  <div class="c-currency c-field c-col-9 c-sml-col-1 c-span-6 c-sml-span-12">
+                                                      <div class="c-label  "><label for="build_agreement_cost">Building Agreement Cost</label></div>
+                                                      <div class="c-editor"><input value="{!!old('payment.build_agreement_cost')!!}" name="payment[build_agreement_cost]" type="text" id="build_agreement_cost" placeholder=""></div>
+                                                      <div class="c-validation"></div>
+                                                  </div>
+                                                  <div class="c-currency c-field c-col-17 c-sml-col-1 c-span-6 c-sml-span-12">
                                                       <div class="c-label  "><label for="identification_fee">ID Fee</label></div>
                                                       <div class="c-editor"><input value="{!!old('payment.identification_fee')!!}" name="payment[identification_fee]" type="text" id="identification_fee" placeholder=""></div>
                                                       <div class="c-validation"></div>
@@ -371,21 +376,21 @@
                                                     <div class="c-editor c-partial-line" style="float: left;">
                                                         <div class="c-dropdown">
                                                             <select value="{!!old('developer.address.state')!!}" name="developer[address][state]" id="c-20-1360" class="c-placeholder-text-styled ">
-                                                                <option value="">Parish</option>
-                                                                <option value="Clarendon">Clarendonn</option>
-                                                                <option value="Hanover">Hanover</option>
-                                                                <option value="Kingston">Kingston</option>
-                                                                <option value="Manchester">Manchester</option>
-                                                                <option value="Portland">Portland</option>
-                                                                <option value="Saint Andrew">Saint Andrew</option>
-                                                                <option value="Saint Ann">Sain Ann</option>
-                                                                <option value="Saint Catherine">Saint Catherine</option>
-                                                                <option value="Saint Elizabeth">Saint Elizabeth</option>
-                                                                <option value="Saint James">Saint James</option>
-                                                                <option value="Saint Marry">Saint Marry</option>
-                                                                <option value="Saint Thomas">Saint Thomas</option>
-                                                                <option value="Trelawny">Trelawny</option>
-                                                                <option value="Westmore Land">Westmore Land</option>
+                                                              <option value="">Parish</option>
+                                                              <option value="Clarendon">Clarendon</option>
+                                                              <option value="Hanover">Hanover</option>
+                                                              <option value="Kingston">Kingston</option>
+                                                              <option value="Manchester">Manchester</option>
+                                                              <option value="Portland">Portland</option>
+                                                              <option value="Saint Andrew">Saint Andrew</option>
+                                                              <option value="Saint Ann">Saint Ann</option>
+                                                              <option value="Saint Catherine">Saint Catherine</option>
+                                                              <option value="Saint Elizabeth">Saint Elizabeth</option>
+                                                              <option value="Saint James">Saint James</option>
+                                                              <option value="Saint Mary">Saint Mary</option>
+                                                              <option value="Saint Thomas">Saint Thomas</option>
+                                                              <option value="Trelawny">Trelawny</option>
+                                                              <option value="Westmoreland">Westmoreland</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -664,7 +669,7 @@
                               <div class="c-page toggle-off">
                                   <div class="c-section c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
                                       <div class="c-title">
-                                          <h3>Building Contract Payment Schedule</h3>
+                                          <h3>Building Contract Details</h3>
                                       </div>
                                       <div class="">
                                           <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
@@ -700,20 +705,20 @@
                                                       <div class="c-dropdown">
                                                           <select value="{!!old('contractor.address.state')!!}" name="contractor[address][state]" id="c-52-1637" class="c-placeholder-text-styled ">
                                                               <option value="">Parish</option>
-                                                              <option value="Clarendon">Clarendonn</option>
+                                                              <option value="Clarendon">Clarendon</option>
                                                               <option value="Hanover">Hanover</option>
                                                               <option value="Kingston">Kingston</option>
                                                               <option value="Manchester">Manchester</option>
                                                               <option value="Portland">Portland</option>
                                                               <option value="Saint Andrew">Saint Andrew</option>
-                                                              <option value="Saint Ann">Sain Ann</option>
+                                                              <option value="Saint Ann">Saint Ann</option>
                                                               <option value="Saint Catherine">Saint Catherine</option>
                                                               <option value="Saint Elizabeth">Saint Elizabeth</option>
                                                               <option value="Saint James">Saint James</option>
-                                                              <option value="Saint Marry">Saint Marry</option>
+                                                              <option value="Saint Mary">Saint Mary</option>
                                                               <option value="Saint Thomas">Saint Thomas</option>
                                                               <option value="Trelawny">Trelawny</option>
-                                                              <option value="Westmore Land">Westmore Land</option>
+                                                              <option value="Westmoreland">Westmoreland</option>
                                                           </select>
                                                       </div>
                                                   </div>

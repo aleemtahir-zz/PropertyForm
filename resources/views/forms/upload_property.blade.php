@@ -5,8 +5,12 @@
 <div  id="c-forms-container" class="cognito c-safari c-lrg">
 
     <div class="container upload-container" style="">
-    <h2>Upload Property Data</h2>
-    
+    <div class="c-forms-heading">
+        <div class="c-forms-form-title">
+            <a href="{{url('')}}"><span class="float-right"><i class="fa fa-home"></i>Home</span></a>
+            <h2>Upload Property Data</h2>
+        </div>
+    </div>
 
     <br>
     <!-- The file upload form used as target for the file upload widget -->

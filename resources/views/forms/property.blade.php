@@ -66,6 +66,7 @@
                                         <div class="c-label "><label for="c-24-1629">Development Name</label></div>
                                         <div class="c-editor ">
                                             <input 
+                                            id="dev_name" 
                                             value="{!! !empty($data['property']['name']) ? $data['property']['name'] : old('property.name') !!}" 
                                             name="property[name]" type="text" id="c-24-1629" placeholder="eg  City View Villas" style="font-size: 1.3em;">
                                         </div>
@@ -183,20 +184,20 @@
                                                     id="c-7-528" 
                                                     class="c-placeholder-text-styled ">
                                                         <option value="">Parish</option>
-                                                        <option value="Clarendon">Clarendonn</option>
-                                                        <option value="Hanover">Hanover</option>
-                                                        <option value="Kingston">Kingston</option>
-                                                        <option value="Manchester">Manchester</option>
-                                                        <option value="Portland">Portland</option>
-                                                        <option value="Saint Andrew">Saint Andrew</option>
-                                                        <option value="Saint Ann">Sain Ann</option>
-                                                        <option value="Saint Catherine">Saint Catherine</option>
-                                                        <option value="Saint Elizabeth">Saint Elizabeth</option>
-                                                        <option value="Saint James">Saint James</option>
-                                                        <option value="Saint Marry">Saint Marry</option>
-                                                        <option value="Saint Thomas">Saint Thomas</option>
-                                                        <option value="Trelawny">Trelawny</option>
-                                                        <option value="Westmore Land">Westmore Land</option>
+                                                          <option value="Clarendon">Clarendon</option>
+                                                          <option value="Hanover">Hanover</option>
+                                                          <option value="Kingston">Kingston</option>
+                                                          <option value="Manchester">Manchester</option>
+                                                          <option value="Portland">Portland</option>
+                                                          <option value="Saint Andrew">Saint Andrew</option>
+                                                          <option value="Saint Ann">Saint Ann</option>
+                                                          <option value="Saint Catherine">Saint Catherine</option>
+                                                          <option value="Saint Elizabeth">Saint Elizabeth</option>
+                                                          <option value="Saint James">Saint James</option>
+                                                          <option value="Saint Mary">Saint Mary</option>
+                                                          <option value="Saint Thomas">Saint Thomas</option>
+                                                          <option value="Trelawny">Trelawny</option>
+                                                          <option value="Westmoreland">Westmoreland</option>
                                                     </select>
                                                 </div>
                                             </div>
@@ -597,20 +598,20 @@
                                                                     id="c-26-781" 
                                                                     class="c-placeholder-text-styled ">
                                                                         <option value="">Parish</option>
-                                                                        <option value="Clarendon">Clarendonn</option>
-                                                                        <option value="Hanover">Hanover</option>
-                                                                        <option value="Kingston">Kingston</option>
-                                                                        <option value="Manchester">Manchester</option>
-                                                                        <option value="Portland">Portland</option>
-                                                                        <option value="Saint Andrew">Saint Andrew</option>
-                                                                        <option value="Saint Ann">Sain Ann</option>
-                                                                        <option value="Saint Catherine">Saint Catherine</option>
-                                                                        <option value="Saint Elizabeth">Saint Elizabeth</option>
-                                                                        <option value="Saint James">Saint James</option>
-                                                                        <option value="Saint Marry">Saint Marry</option>
-                                                                        <option value="Saint Thomas">Saint Thomas</option>
-                                                                        <option value="Trelawny">Trelawny</option>
-                                                                        <option value="Westmore Land">Westmore Land</option>
+                                                                          <option value="Clarendon">Clarendon</option>
+                                                                          <option value="Hanover">Hanover</option>
+                                                                          <option value="Kingston">Kingston</option>
+                                                                          <option value="Manchester">Manchester</option>
+                                                                          <option value="Portland">Portland</option>
+                                                                          <option value="Saint Andrew">Saint Andrew</option>
+                                                                          <option value="Saint Ann">Saint Ann</option>
+                                                                          <option value="Saint Catherine">Saint Catherine</option>
+                                                                          <option value="Saint Elizabeth">Saint Elizabeth</option>
+                                                                          <option value="Saint James">Saint James</option>
+                                                                          <option value="Saint Mary">Saint Mary</option>
+                                                                          <option value="Saint Thomas">Saint Thomas</option>
+                                                                          <option value="Trelawny">Trelawny</option>
+                                                                          <option value="Westmoreland">Westmoreland</option>
                                                                     </select>
                                                                 </div>
                                                             </div>
@@ -962,12 +963,24 @@
                                   </div>
 
                                   <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
-                                      <div class="c-label  "><label for="c-41-1041">Half Agreement Cost</label></div>
-                                      <div class="c-editor float-right" style="width: 165px">
+                                      <div class="c-label  "><label for="c-41-1041">½ Land Agreement Cost</label></div>
+                                      <div class="c-editor float-right" style="width: 130px">
                                         <input 
-                                            value="{!! !empty($data['monetary']['half_agreement']) ? $data['monetary']['half_agreement'] :
-                                                old('monetary.half_agreement') !!}" 
-                                            name="monetary[half_agreement]" 
+                                            value="{!! !empty($data['monetary']['half_land_agreement']) ? $data['monetary']['half_land_agreement'] :
+                                                old('monetary.half_land_agreement') !!}" 
+                                            name="monetary[half_land_agreement]" 
+                                            type="text" 
+                                            id="cp_agreement" >
+                                        </div>
+                                      <div class="c-validation"></div>
+                                  </div>
+                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
+                                      <div class="c-label  "><label for="c-41-1041">½ Building Agreement Cost</label></div>
+                                      <div class="c-editor float-right" style="width: 130px">
+                                        <input 
+                                            value="{!! !empty($data['monetary']['half_build_agreement']) ? $data['monetary']['half_build_agreement'] :
+                                                old('monetary.half_build_agreement') !!}" 
+                                            name="monetary[half_build_agreement]" 
                                             type="text" 
                                             id="cp_agreement" >
                                         </div>
@@ -1099,20 +1112,20 @@
                                                         <div class="c-dropdown">
                                                             <select name="buyer[address][state][]" id="c-6-1061" class="c-placeholder-text-styled ">
                                                                 <option value="">Parish</option>
-                                                                <option value="Clarendon">Clarendonn</option>
-                                                                <option value="Hanover">Hanover</option>
-                                                                <option value="Kingston">Kingston</option>
-                                                                <option value="Manchester">Manchester</option>
-                                                                <option value="Portland">Portland</option>
-                                                                <option value="Saint Andrew">Saint Andrew</option>
-                                                                <option value="Saint Ann">Sain Ann</option>
-                                                                <option value="Saint Catherine">Saint Catherine</option>
-                                                                <option value="Saint Elizabeth">Saint Elizabeth</option>
-                                                                <option value="Saint James">Saint James</option>
-                                                                <option value="Saint Marry">Saint Marry</option>
-                                                                <option value="Saint Thomas">Saint Thomas</option>
-                                                                <option value="Trelawny">Trelawny</option>
-                                                                <option value="Westmore Land">Westmore Land</option>
+                                                              <option value="Clarendon">Clarendon</option>
+                                                              <option value="Hanover">Hanover</option>
+                                                              <option value="Kingston">Kingston</option>
+                                                              <option value="Manchester">Manchester</option>
+                                                              <option value="Portland">Portland</option>
+                                                              <option value="Saint Andrew">Saint Andrew</option>
+                                                              <option value="Saint Ann">Saint Ann</option>
+                                                              <option value="Saint Catherine">Saint Catherine</option>
+                                                              <option value="Saint Elizabeth">Saint Elizabeth</option>
+                                                              <option value="Saint James">Saint James</option>
+                                                              <option value="Saint Mary">Saint Mary</option>
+                                                              <option value="Saint Thomas">Saint Thomas</option>
+                                                              <option value="Trelawny">Trelawny</option>
+                                                              <option value="Westmoreland">Westmoreland</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -1420,20 +1433,20 @@
                                                 <div class="c-dropdown">
                                                     <select value="{!!old('attorney.address.state')!!}" name="attorney[address][state]" id="c-74-1316" class="c-placeholder-text-styled ">
                                                         <option value="">Parish</option>
-                                                        <option value="Clarendon">Clarendonn</option>
-                                                        <option value="Hanover">Hanover</option>
-                                                        <option value="Kingston">Kingston</option>
-                                                        <option value="Manchester">Manchester</option>
-                                                        <option value="Portland">Portland</option>
-                                                        <option value="Saint Andrew">Saint Andrew</option>
-                                                        <option value="Saint Ann">Sain Ann</option>
-                                                        <option value="Saint Catherine">Saint Catherine</option>
-                                                        <option value="Saint Elizabeth">Saint Elizabeth</option>
-                                                        <option value="Saint James">Saint James</option>
-                                                        <option value="Saint Marry">Saint Marry</option>
-                                                        <option value="Saint Thomas">Saint Thomas</option>
-                                                        <option value="Trelawny">Trelawny</option>
-                                                        <option value="Westmore Land">Westmore Land</option>
+                                                              <option value="Clarendon">Clarendon</option>
+                                                              <option value="Hanover">Hanover</option>
+                                                              <option value="Kingston">Kingston</option>
+                                                              <option value="Manchester">Manchester</option>
+                                                              <option value="Portland">Portland</option>
+                                                              <option value="Saint Andrew">Saint Andrew</option>
+                                                              <option value="Saint Ann">Saint Ann</option>
+                                                              <option value="Saint Catherine">Saint Catherine</option>
+                                                              <option value="Saint Elizabeth">Saint Elizabeth</option>
+                                                              <option value="Saint James">Saint James</option>
+                                                              <option value="Saint Mary">Saint Mary</option>
+                                                              <option value="Saint Thomas">Saint Thomas</option>
+                                                              <option value="Trelawny">Trelawny</option>
+                                                              <option value="Westmoreland">Westmoreland</option>
                                                     </select>
                                                 </div>
                                             </div>

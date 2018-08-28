@@ -25,7 +25,8 @@ class CreateMonetaryDeatil extends Migration
             $table->integer('second_payment')->nullable();
             $table->integer('final_payment')->nullable();
             $table->integer('half_title')->nullable();
-            $table->integer('half_agreement')->nullable();
+            $table->integer('half_land_agreement')->nullable();
+            $table->integer('half_build_agreement')->nullable();
             $table->integer('half_stamp_duty')->nullable();
             $table->integer('half_reg_fee')->nullable();
             $table->integer('inc_cost')->nullable();

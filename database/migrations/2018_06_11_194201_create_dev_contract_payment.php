@@ -27,8 +27,9 @@ class CreateDevContractPayment extends Migration
             $table->integer('third_payment')->nullable();
             $table->integer('fourth_payment')->nullable();
             $table->integer('final_payment')->nullable();
-            $table->integer('half_title')->nullable();
-            $table->integer('half_agreement')->nullable();
+            $table->integer('title_cost')->nullable();
+            $table->integer('land_agreement_cost')->nullable();
+            $table->integer('build_agreement_cost')->nullable();
             $table->integer('identification_fee')->nullable();
         });
     }

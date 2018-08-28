@@ -18,6 +18,10 @@ Route::get('property/autocomplete',[
     'as' => 'autocomplete',
     'uses' => 'PropertyController@autocomplete'
 ]);
+Route::get('property/autoDevName',[
+    'as' => 'autoDevName',
+    'uses' => 'PropertyController@autoDevName'
+]);
 Route::resource('property','PropertyController');
 Route::post('updateDevelopmentView', 'DevController@updateView');
 Route::get('getDevId', 'DevController@getDevId');

@@ -7,6 +7,7 @@
 			<div class="c-forms-confirmation" style="display: block;">
 				<div class="c-forms-heading">
 					<div class="c-forms-form-title">
+						<a href="{{url('')}}"><span class="float-right"><i class="fa fa-home"></i>Home</span></a>
 						<h2>HMF Developer Data Form</h2>
 					</div>
 				</div>

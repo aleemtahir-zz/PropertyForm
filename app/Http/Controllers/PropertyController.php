@@ -23,19 +23,20 @@ class PropertyController extends Controller
     public function index(Request $request)
     { 
         //Getting Session data and render it to Property Form
+
         if(!empty($request->session()->get('devForm')))
         {
           $data['property'] = $request->session()->get('devForm')['developement'];
           $data['vendor']   = $request->session()->get('devForm')['developer'];
           $data['monetary'] = $request->session()->get('devForm')['payment'];
-          
           $data['property']['volume_str'] = implode(',', $data['property']['volume_no']);
           $data['property']['folio_str']  = implode(',', $data['property']['folio_no']);
           $data['property']['volume_no']  = $data['property']['volume_no'][0] ? $data['property']['volume_no'][0] : '';
           $data['property']['folio_no']   = $data['property']['folio_no'][0]  ? $data['property']['folio_no'][0]  : ''; 
 
-          $data['monetary']['half_title']          = !empty($data['monetary']['half_title']) ? $data['monetary']['half_title'] / 2 : '';
-          $data['monetary']['half_agreement']      = !empty($data['monetary']['half_agreement']) ? $data['monetary']['half_agreement'] / 2 : '';
+          $data['monetary']['half_title']          = !empty($data['monetary']['title_cost']) ? $data['monetary']['title_cost'] / 2 : '';
+          $data['monetary']['half_land_agreement'] = !empty($data['monetary']['land_agreement_cost']) ? $data['monetary']['land_agreement_cost'] / 2 : '';
+          $data['monetary']['half_build_agreement']= !empty($data['monetary']['build_agreement_cost']) ? $data['monetary']['build_agreement_cost'] / 2 : '';
           $data['monetary']['identification_fee']  = !empty($data['monetary']['identification_fee']) ? $data['monetary']['identification_fee'] : '';
         }
         //pre($data); die;
@@ -187,10 +188,11 @@ class PropertyController extends Controller
     public function updateProperty(Request $request)
     {   
         $id         = $request->input('id');
+        $flag       = $request->input('devFlag');
         $PropObj    = new Property();
         $response   = '';
 
-        if(!empty($id))
+        if(!empty($id) && $flag != 1)
         {
             $values['id'] = $PropObj->get_id('tbl_key_id','property_key',$id);
             $response   = $PropObj->get_property($values);
@@ -209,6 +211,11 @@ class PropertyController extends Controller
               $response = array_merge($response,$vendors, $buyers);
 
             }
+        }
+        else
+        {
+            $PropObj    = new Property();
+            $response   = $PropObj->get_development($id);
         }
 
         return json_encode($response);
@@ -342,25 +349,35 @@ class PropertyController extends Controller
       
       //pre($_GET['term']); die;
       $search = $_GET['term'];
-      $ids = explode('/', $search);
       $results = array();
       
       $queries = DB::table('tbl_key_id')
         ->where('property_key', 'LIKE', '%'.$search.'%');
-
-      // if(isset($ids[1])){
-      //   $queries->where('folio_no', 'LIKE', '%'.$ids[1].'%');
-      // }  
-
-      // if(isset($ids[2])){
-      //   $queries->where('lot_no', 'LIKE', '%'.$ids[2].'%');
-      // }  
+ 
         
       $queries = $queries->take(5)->get();
       
       foreach ($queries as $query)
       {
           $results[] = [ 'id' => $query->id, 'value' => $query->property_key ];
+      }
+      return Response::json($results);
+    }
+
+    public function autoDevName(){
+      
+      //pre($_GET['term']); die;
+      $search = $_GET['term'];
+      $results = array();
+      
+      $queries = DB::table('tbl_developement_detail')
+        ->where('name', 'LIKE', '%'.$search.'%');  
+        
+      $queries = $queries->take(5)->get();
+      
+      foreach ($queries as $query)
+      {
+          $results[] = [ 'id' => $query->id, 'value' => $query->name ];
       }
       return Response::json($results);
     }

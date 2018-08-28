@@ -238,7 +238,7 @@ class Property extends Model
       	//MAPPER
       	$mapper = array(
 		    'price_i','jprice_i','deposit','second_pay','final_pay',
-		    'half_title','half_agreement','half_stamp_duty','half_reg_fee','inc_cost','maintenance_expense',
+		    'half_title','half_land_agreement','half_build_agreement','half_stamp_duty','half_reg_fee','inc_cost','maintenance_expense',
 		    'identification_fee'
 		    );
 
@@ -257,34 +257,7 @@ class Property extends Model
         if(!empty($payment['jprice_i']))
           $jprice_w = convertNumberToWord($payment['jprice_i']);
 
-
-        /*CHECK PAYMENT INFO IF EXIST ALREADY*/
-        $payment_info = DB::table('tbl_monetary_detail')
-                       ->select('id')
-                       ->where('fc_id', '=', $fc_id)
-                       ->where('price_i', '=', $payment['price_i'])
-                       ->where('price_w', '=', $price_w)
-                       ->where('j_price_i', '=', $payment['jprice_i'])
-                       ->where('j_price_w', '=', $jprice_w)
-                       ->where('deposit', '=', $payment['deposit'])
-                       ->where('second_payment', '=', $payment['second_pay'])
-                       ->where('final_payment', '=', $payment['final_pay'])
-                       ->where('half_title', '=', $payment['half_title'])
-                       ->where('half_agreement', '=', $payment['half_agreement'])
-                       ->where('half_stamp_duty', '=', $payment['half_stamp_duty'])
-                       ->where('half_reg_fee', '=', $payment['half_reg_fee'])
-                       ->where('inc_cost', '=', $payment['inc_cost'])
-                       ->where('maintenance_expense', '=', $payment['maintenance_expense'])
-                       ->where('identification_fee', '=', $payment['identification_fee'])
-                       ->orderBy('id', 'desc')
-                       ->first();
-        
-        if( empty($payment_info) ){
-
-          try {
-            /*INSERT CONTRACT PAYMENT DETAIL */
-            DB::table('tbl_monetary_detail')->insert(
-                [
+        $data = [
                     'fc_id'            => $fc_id, 
                     'price_i'          => $payment['price_i'],
                     'price_w'          => $price_w,
@@ -294,14 +267,27 @@ class Property extends Model
                     'second_payment'   => $payment['second_pay'],
                     'final_payment'    => $payment['final_pay'],
                     'half_title'       => $payment['half_title'],
-                    'half_agreement'   => $payment['half_agreement'],
+                    'half_land_agreement'     => $payment['half_land_agreement'],
+                    'half_build_agreement'    => $payment['half_build_agreement'],
                     'half_stamp_duty'  => $payment['half_stamp_duty'],
                     'half_reg_fee'     => $payment['half_reg_fee'],
                     'inc_cost'         => $payment['inc_cost'],
                     'maintenance_expense'   => $payment['maintenance_expense'],
                     'identification_fee'    => $payment['identification_fee'],
-                ]
-            );  
+                ];
+                
+        /*CHECK PAYMENT INFO IF EXIST ALREADY*/
+        $payment_info = DB::table('tbl_monetary_detail')
+                       ->select('id')
+                       ->where($data)
+                       ->orderBy('id', 'desc')
+                       ->first();
+        
+        if( empty($payment_info) ){
+
+          try {
+            /*INSERT CONTRACT PAYMENT DETAIL */
+            DB::table('tbl_monetary_detail')->insert();  
           } catch (Exception $e) {
             DB::rollback();
             $error = $e;
@@ -646,12 +632,10 @@ class Property extends Model
         return 0;
       else
       {
-        $ids  = explode(',', $id);
-        $id   = $ids[0];  //1st part is key
 
         /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
         $dev_info = DB::table('tbl_developement_detail as dt')
-                        ->select('dt.name as dt-name','dt.folio_no as dt-folio_no','dt.plan_no as dt-plan_no','dt.total_lots_i as dt-t_lots_i', 'dt.total_lots_s as dt-t_lots_w', 'dt.residential_lots_i as dt-r_lots_i',
+                        ->select('dt.name as dt-name','dt.volume_no as dt-volume_no','dt.folio_no as dt-folio_no','dt.plan_no as dt-plan_no','dt.total_lots_i as dt-t_lots_i', 'dt.total_lots_s as dt-t_lots_w', 'dt.residential_lots_i as dt-r_lots_i',
                           'dt.residential_lots_s as dt-r_lots_w', 'dt.common_lots_i as dt-c_lots_i',
                           'dt.common_lots_s as dt-c_lots_w', 'dt.lot_ids as dt-lot_ids', 'dt.rsrv_road_no as dt-rsrv_road', 
                           //Development Address
@@ -703,6 +687,7 @@ class Property extends Model
           'd'   => 'vendor',
           'c'   => 'contractor',
           'cp'  => 'payment',
+          'm'   => 'monetary',
         );                
 
         try{
@@ -789,7 +774,7 @@ class Property extends Model
                           'm.price_i as m-price_i','m.price_w as m-price_w','m.j_price_i as m-jprice_i', 
                           'm.j_price_w as m-jprice_w','m.deposit as m-deposit', 
                           'm.second_payment as m-second_pay','m.final_payment as m-final_pay',
-                          'm.half_title as m-half_title','m.half_agreement as m-half_agreement',
+                          'm.half_title as m-half_title','m.half_land_agreement as m-half_land_agreement','m.half_build_agreement as m-half_build_agreement',
                           'm.half_stamp_duty as m-half_stamp_duty', 'm.half_reg_fee as m-half_reg_fee',
                           'm.inc_cost as m-inc_cost','m.maintenance_expense as m-maintenance_expense',
                           'm.identification_fee as m-identification_fee',
@@ -911,7 +896,7 @@ class Property extends Model
                           'm.price_i as m-price_i','m.price_w as m-price_w','m.j_price_i as m-jprice_i', 
                           'm.j_price_w as m-jprice_w','m.deposit as m-deposit', 
                           'm.second_payment as m-second_pay','m.final_payment as m-final_pay',
-                          'm.half_title as m-half_title','m.half_agreement as m-half_agreement',
+                          'm.half_title as m-half_title','m.half_land_agreement as m-half_land_agreement','m.half_build_agreement as m-half_build_agreement',
                           'm.half_stamp_duty as m-half_stamp_duty', 'm.half_reg_fee as m-half_reg_fee',
                           'm.inc_cost as m-inc_cost','m.maintenance_expense as m-maintenance_expense',
                           'm.identification_fee as m-identification_fee',

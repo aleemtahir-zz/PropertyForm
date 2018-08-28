@@ -346,32 +346,7 @@ class Development extends Model
         if(!empty($payment['deposit']))
           $deposit_w = convertNumberToWord($payment['deposit']);
 
-        /*CHECK PAYMENT INFO IF EXIST ALREADY*/
-        $payment_info = DB::table('tbl_dev_contract_payment')
-                       ->select('id')
-                       ->where('fc_id', '=', $fc_id)
-                       ->where('price_i', '=', $payment['price_i'])
-                       ->where('price_w', '=', $price_w)
-                       ->where('j_price_i', '=', $payment['jprice_i'])
-                       ->where('j_price_w', '=', $jprice_w)
-                       ->where('deposit', '=', $payment['deposit'])
-                       ->where('second_payment', '=', $payment['second_pay'])
-                       ->where('third_payment', '=', $payment['third_pay'])
-                       ->where('fourth_payment', '=', $payment['fourth_pay'])
-                       ->where('final_payment', '=', $payment['final_pay'])
-                       ->where('half_title', '=', $payment['half_title'])
-                       ->where('half_agreement', '=', $payment['half_agreement'])
-                       ->where('identification_fee', '=', $payment['identification_fee'])
-                       ->orderBy('id', 'desc')
-                       ->first();
-
-
-        if( empty($payment_info) ){
-
-          try{
-            /*INSERT CONTRACT PAYMENT DETAIL */
-            DB::table('tbl_dev_contract_payment')->insert(
-                  [
+        $data = [
                       'fc_id'         => $fc_id, 
                       'price_i'       => $payment['price_i'],
                       'price_w'       => $price_w,
@@ -383,11 +358,25 @@ class Development extends Model
                       'third_payment' => $payment['third_pay'],
                       'fourth_payment'=> $payment['fourth_pay'],
                       'final_payment' => $payment['final_pay'],
-                      'half_title'       => $payment['half_title'],
-                      'half_agreement'   => $payment['half_agreement'],
-                      'identification_fee'    => $payment['identification_fee'],
-                  ]
-              );
+                      'title_cost'            => $payment['title_cost'],
+                      'land_agreement_cost'   => $payment['land_agreement_cost'],
+                      'build_agreement_cost'  => $payment['build_agreement_cost'],
+                      'identification_fee'    => $payment['identification_fee']
+                ];
+
+        /*CHECK PAYMENT INFO IF EXIST ALREADY*/
+        $payment_info = DB::table('tbl_dev_contract_payment')
+                       ->select('id')
+                       ->where($data)
+                       ->orderBy('id', 'desc')
+                       ->first();
+
+
+        if( empty($payment_info) ){
+
+          try{
+            /*INSERT CONTRACT PAYMENT DETAIL */
+            DB::table('tbl_dev_contract_payment')->insert($data);
               //DB::commit();
           }
           catch(\Exception $e)
@@ -452,7 +441,7 @@ class Development extends Model
                           'do2.title as d-do2-title2','do2.first_name as d-do2-first2','do2.last_name as d-do2-last2','do2.suffix as d-do2-suffix2',
                           'do2.capacity as d-do2-capacity2','do2.landline as d-do2-landline2',
                           //Contract Payment
-                          'cp.price_i as cp-price_i','cp.j_price_i as cp-jprice_i','cp.deposit as cp-deposit','cp.second_payment as cp-second_pay','cp.third_payment as cp-third_pay','cp.fourth_payment as cp-fourth_pay','cp.final_payment as cp-final_pay','cp.half_title as cp-half_title','cp.half_agreement as cp-half_agreement','cp.identification_fee as cp-identification_fee',
+                          'cp.price_i as cp-price_i','cp.j_price_i as cp-jprice_i','cp.deposit as cp-deposit','cp.second_payment as cp-second_pay','cp.third_payment as cp-third_pay','cp.fourth_payment as cp-fourth_pay','cp.final_payment as cp-final_pay','cp.title_cost as cp-title_cost','cp.land_agreement_cost as cp-land_agreement_cost','cp.build_agreement_cost as cp-build_agreement_cost','cp.identification_fee as cp-identification_fee',
                           //Contract Payment Foriegn Currency
                           'fc.name as cp-fc-name','fc.symbol as cp-fc-symbol','fc.exchange_rate as cp-fc-rate'
                         )
@@ -479,8 +468,7 @@ class Development extends Model
           $dev_info->where('dt.id', '=', $id);
         }
 
-        $dev_info = $dev_info->get(); 
-
+        $dev_info = $dev_info->orderBy('dt.id', 'desc')->get(); 
         /*dd(DB::getQueryLog());*/
 
         $mapper = array(

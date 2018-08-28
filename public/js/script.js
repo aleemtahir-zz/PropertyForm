@@ -246,25 +246,39 @@ $( "#autocomplete" ).autocomplete({
 	}
 });
 
-var states = [
-      "Clarendon",
-      "Hanover",
-      "Kingston",
-      "Manchester",
-      "Portland",
-      "Saint Andrew", 
-      "Saint Ann", 
-      "Saint Catherine", 
-      "Saint Elizabeth", 
-      "Saint James", 
-      "Saint Marry", 
-      "Saint Thomas", 
-      "Trelawny",
-      "Westmore Land" 
-    ];
-$( "#state" ).autocomplete({
-	source: states
+$( "#dev_name" ).autocomplete({
+	source: baseurl+"/property/autoDevName",
+	minLength: 2,
+	select: function(event, ui) {
+		$('#dev_name').val(ui.item.id);
+		lookUpProperty(1);
+		/*$('button[name="mergeBtn"]').map(function(){
+			//console.log(this);		
+			$(this).removeAttr("disabled");
+		
+		});*/
+	}
 });
+
+// var states = [
+//       "Clarendon",
+//       "Hanover",
+//       "Kingston",
+//       "Manchester",
+//       "Portland",
+//       "Saint Andrew", 
+//       "Saint Ann", 
+//       "Saint Catherine", 
+//       "Saint Elizabeth", 
+//       "Saint James", 
+//       "Saint Marry", 
+//       "Saint Thomas", 
+//       "Trelawny",
+//       "Westmore Land" 
+//     ];
+// $( "#state" ).autocomplete({
+// 	source: states
+// });
 
 
 /*END Document Ready
@@ -396,6 +410,9 @@ function vfRepeatButtons(){
 			            		$('input').val('');
 								$('#showerror').css('display','') ; 
 								$('#showerror ul li').text('*No record found!.') ; 
+								setTimeout(function(){ 
+									$('#showerror').css('display','none') ; 
+								},2000);
 			            	}
 			            	else
 			            	{
@@ -431,6 +448,9 @@ function vfRepeatButtons(){
 				$('textarea').val('');
 				$('#showerror').css('display','') ; 
 				$('#showerror ul li').text('*Please Fill Volume No. Field.') ; 
+				setTimeout(function(){ 
+					$('#showerror').css('display','none') ; 
+				},2000);
 			}
 			else if(!folio_no)
 			{	
@@ -438,6 +458,9 @@ function vfRepeatButtons(){
 				$('textarea').val('');
 				$('#showerror').css('display','') ; 
 				$('#showerror ul li').text('*Please Fill Folio No. Field.') ; 
+				setTimeout(function(){ 
+					$('#showerror').css('display','none') ; 
+				},2000);
 			}
 
 		}); 
@@ -447,10 +470,14 @@ function vfRepeatButtons(){
 
 /*Fetch Property Form Record
 =====================================*/
-function lookUpProperty()
+function lookUpProperty(flag='')
 {
-	var record_id 	= $('#autocomplete').val();
-
+	if(flag === 1)
+		var record_id 	= $('#dev_name').val();
+	else
+		var record_id 	= $('#autocomplete').val();
+	console.log(flag);
+	console.log(record_id);
 	if(record_id)
 	{
 		// $.ajaxSetup({
@@ -463,12 +490,13 @@ function lookUpProperty()
             /* the route pointing to the post function */
             url: 'updatePropertyView',
             type: 'post',
-            data: { id : record_id },
+            data: { id : record_id, devFlag : flag},
             dataType: 'JSON',
             beforeSend: function () {
             	/*Font Awesome
 				====================================*/
-				$('#gear-folio').css('display','block');
+				if(flag != 1)
+					$('#gear-folio').css('display','block');
 				
             },
             success: function (data) { 
@@ -481,6 +509,9 @@ function lookUpProperty()
 	            		$('input').val('');
 						$('#showerror').css('display','') ; 
 						$('#showerror ul li').text('*No record found!.') ;  
+	            		setTimeout(function(){ 
+							$('#showerror').css('display','none') ; 
+						},2000);
 	            	}
 	            	else
 	            	{
@@ -542,6 +573,9 @@ function lookUpProperty()
 		$('textarea').val('');
 		$('#showerror').css('display','') ; 
 		$('#showerror ul li').text('*Please Fill Record No. Field.') ; 
+		setTimeout(function(){ 
+			$('#showerror').css('display','none') ; 
+		},2000);
 	}
 
 }

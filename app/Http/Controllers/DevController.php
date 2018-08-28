@@ -71,11 +71,7 @@ class DevController extends Controller
         if($error)
             return back()->withErrors($error->getMessage())->withInput();
 
-        $payment                        = $request->input('payment');
-        $payment['half_title']          = !empty($payment['half_title']) ? $payment['half_title'] / 2 : '';
-        $payment['half_agreement']      = !empty($payment['half_agreement']) ? $payment['half_agreement'] / 2 : '';
-        $payment['identification_fee']  = !empty($payment['identification_fee']) ? $payment['identification_fee'] : '';
-
+        $payment            = $request->input('payment');
         $ids['payment']     = $DevObj->add_payment($payment, $error);
 
         if($error)
@@ -185,6 +181,9 @@ class DevController extends Controller
         $rs     = DB::select('SHOW TABLE STATUS where name = "'.$tblName.'" ;');
         $rs     = $rs[0];
         $request->session()->put('id', $rs->Auto_increment);
-        return $rs->Auto_increment; 
+        if(empty($rs->Auto_increment))
+            return 0;
+        else
+            return json_encode($rs->Auto_increment); 
     }
 }
