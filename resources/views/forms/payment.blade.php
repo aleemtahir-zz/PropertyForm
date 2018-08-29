@@ -58,7 +58,7 @@
                         </div>
                         <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">
                             <div class="c-label  "><label for="c-5-23">½ Stamp Duty</label></div>
-                            <div class="c-editor"><input name="monetary[half_stamp]" type="text" id="c-5-23" placeholder=""></div>
+                            <div class="c-editor"><input name="monetary[half_stamp_duty]" type="text" id="c-5-23" placeholder=""></div>
                             <div class="c-validation">½ Stamp Duty is required.</div>
                         </div>
                         <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">
@@ -68,12 +68,12 @@
                         </div>
                         <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">
                             <div class="c-label  "><label for="c-7-21">½ Land Agreement Cost</label></div>
-                            <div class="c-editor"><input name="monetary[half_land_cost]" type="text" id="c-7-21" placeholder=""></div>
+                            <div class="c-editor"><input name="monetary[half_land_agreement]" type="text" id="c-7-21" placeholder=""></div>
                             <div class="c-validation">½ Land Agreement Cost is required.</div>
                         </div>
                         <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">
                             <div class="c-label  "><label for="c-8-20">½ Building Agreement Cost</label></div>
-                            <div class="c-editor"><input name="monetary[half_build_cost]" type="text" id="c-8-20" placeholder=""></div>
+                            <div class="c-editor"><input name="monetary[half_build_agreement]" type="text" id="c-8-20" placeholder=""></div>
                             <div class="c-validation">½ Building Agreement Cost is required.</div>
                         </div>
                         <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">

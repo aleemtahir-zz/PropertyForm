@@ -251,6 +251,7 @@ $( "#dev_name" ).autocomplete({
 	minLength: 2,
 	select: function(event, ui) {
 		$('#dev_name').val(ui.item.id);
+		$('#dev_id').val(ui.item.id);
 		lookUpProperty(1);
 		/*$('button[name="mergeBtn"]').map(function(){
 			//console.log(this);		
@@ -476,8 +477,7 @@ function lookUpProperty(flag='')
 		var record_id 	= $('#dev_name').val();
 	else
 		var record_id 	= $('#autocomplete').val();
-	console.log(flag);
-	console.log(record_id);
+
 	if(record_id)
 	{
 		// $.ajaxSetup({

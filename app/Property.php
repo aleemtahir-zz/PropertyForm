@@ -54,10 +54,10 @@ class Property extends Model
 
     public function check_developer($data)
     {
-      $folio_key = $data['volume_no'].'_'.$data['folio_no'];
+      $dev_id = $data['dev_id'];
       $dev_info = DB::table('tbl_developement_detail')
                          ->select('developer_id')
-                         ->where('id', $folio_key)
+                         ->where('id', $dev_id)
                          ->first();
       $dev_id = '';                   
       if(!empty($dev_info))
@@ -275,7 +275,7 @@ class Property extends Model
                     'maintenance_expense'   => $payment['maintenance_expense'],
                     'identification_fee'    => $payment['identification_fee'],
                 ];
-                
+
         /*CHECK PAYMENT INFO IF EXIST ALREADY*/
         $payment_info = DB::table('tbl_monetary_detail')
                        ->select('id')
@@ -287,7 +287,7 @@ class Property extends Model
 
           try {
             /*INSERT CONTRACT PAYMENT DETAIL */
-            DB::table('tbl_monetary_detail')->insert();  
+            DB::table('tbl_monetary_detail')->insert($data);  
           } catch (Exception $e) {
             DB::rollback();
             $error = $e;
@@ -562,6 +562,7 @@ class Property extends Model
           $property_data = [
               'id'                => $key_id, 
               'dev_name'          => $property['name'], 
+              'dev_id'            => $property['dev_id'], 
               'lot_no'            => $property['lot_no'], 
               'volume_no'         => $property['volume_no'], 
               'folio_no'          => $property['folio_no'], 
@@ -738,7 +739,7 @@ class Property extends Model
         /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
         $property_info = DB::table('tbl_property_detail as p')
                         ->select('p.id as p-id','p.plan_no as p-plan_no','p.lot_no as p-lot_no'
-                          ,'p.volume_no as p-volume_no','p.folio_no as p-folio_no','p.dev_name as p-name', 
+                          ,'p.volume_no as p-volume_no','p.folio_no as p-folio_no','p.dev_name as p-name','p.dev_id as p-dev_id', 
                           //Property Address
                           'pa.line1 as p-address-line1','pa.line2 as p-address-line2','pa.city as p-address-city','pa.state as p-address-state', 'pa.postal as p-address-postal',
                           'pa.country as p-address-country',    
@@ -777,7 +778,8 @@ class Property extends Model
                           'm.half_title as m-half_title','m.half_land_agreement as m-half_land_agreement','m.half_build_agreement as m-half_build_agreement',
                           'm.half_stamp_duty as m-half_stamp_duty', 'm.half_reg_fee as m-half_reg_fee',
                           'm.inc_cost as m-inc_cost','m.maintenance_expense as m-maintenance_expense',
-                          'm.identification_fee as m-identification_fee',
+                          'm.identification_fee as m-identification_fee',       
+                          'dcp.price_i as m-cprice_i', //contract price for account statement form 
                           //Payment Foriegn Currency
                           'fc.name as m-fc-name','fc.symbol as m-fc-symbol','fc.exchange_rate as m-fc-rate'
                         )
@@ -794,12 +796,13 @@ class Property extends Model
                         ->leftJoin('tbl_monetary_detail as m', 'p.payment_id', '=', 'm.id')
                         ->leftJoin('tbl_foriegn_currency as fc', 'm.fc_id', '=', 'fc.id')
 
-                        ->leftJoin('tbl_developement_detail as dt', function($join){
-                          $join->on('p.volume_no', '=', 'dt.volume_no');
-                          $join->on('p.folio_no','=','dt.folio_no');
-                        })
+                        // ->leftJoin('tbl_developement_detail as dt', function($join){
+                        //   $join->on('p.volume_no', '=', 'dt.volume_no');
+                        //   $join->on('p.folio_no','=','dt.folio_no');
+                        // })
+                        ->leftJoin('tbl_developement_detail as dt', 'p.dev_id', '=', 'dt.id')
+                        ->leftJoin('tbl_dev_contract_payment as dcp', 'dt.payment_id', '=', 'dcp.id')
 
-                        // ->leftJoin('tbl_developement_detail as dt', 'p.dev_id', '=', 'dt.id')
                         ->leftJoin('tbl_contractor_detail as c', 'dt.contractor_id', '=', 'c.id')
                         ->leftJoin('tbl_address as ca', 'c.address_id', '=', 'ca.id')
                         ->leftJoin('tbl_person_info as co', 'c.officer_id', '=', 'co.id')
@@ -845,7 +848,7 @@ class Property extends Model
         /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
         $property_info = DB::table('tbl_property_detail as p')
                         ->select('p.id as p-id','p.plan_no as p-plan_no','p.lot_no as p-lot_no','p.volume_no as p-volume_no','p.dev_name as p-name',
-                         'p.folio_no as p-folio_no', 
+                         'p.folio_no as p-folio_no','p.dev_id as p-dev_id',
                           //Property Address
                           'pa.line1 as p-address-line1','pa.line2 as p-address-line2','pa.city as p-address-city',
                           'pa.state as p-address-state', 'pa.postal as p-address-postal',
@@ -904,7 +907,7 @@ class Property extends Model
                           'fc.name as m-fc-name','fc.symbol as m-fc-symbol','fc.exchange_rate as m-fc-rate',
 
                           //Dev Contract Payment
-                          'dcp.price_i as dcp-price_i','dcp.price_w as dcp-price_w','dcp.j_price_i as dcp-jprice_i', 
+                          'dcp.price_i as dcp-price_i','dcp.price_i as m-cprice_i','dcp.price_w as dcp-price_w','dcp.j_price_i as dcp-jprice_i', 
                           'dcp.j_price_w as dcp-jprice_w','dcp.deposit as dcp-deposit','dcp.deposit_w as dcp-deposit_w' , 
                           'dcp.second_payment as dcp-second_payment', 'dcp.third_payment as dcp-third_payment',
                           'dcp.fourth_payment as dcp-fourth_payment', 'dcp.final_payment as dcp-final_payment',
@@ -930,12 +933,13 @@ class Property extends Model
                         ->leftJoin('tbl_monetary_detail as m', 'p.payment_id', '=', 'm.id')
                         ->leftJoin('tbl_foriegn_currency as fc', 'm.fc_id', '=', 'fc.id')
 
-                        ->leftJoin('tbl_developement_detail as dt', function($join){
-                          $join->on('p.volume_no', '=', 'dt.volume_no');
-                          $join->on('p.folio_no','=','dt.folio_no');
-                        })
-                        ->leftJoin('tbl_person_info as ds', 'dt.surveyor_id', '=', 'ds.id')
+                        // ->leftJoin('tbl_developement_detail as dt', function($join){
+                        //   $join->on('p.volume_no', '=', 'dt.volume_no');
+                        //   $join->on('p.folio_no','=','dt.folio_no');
+                        // })
+                        ->leftJoin('tbl_developement_detail as dt', 'p.dev_id', '=', 'dt.id')
 
+                        ->leftJoin('tbl_person_info as ds', 'dt.surveyor_id', '=', 'ds.id')
                         ->leftJoin('tbl_contractor_detail as c', 'dt.contractor_id', '=', 'c.id')
                         ->leftJoin('tbl_address as ca', 'c.address_id', '=', 'ca.id')
                         ->leftJoin('tbl_person_info as co', 'c.officer_id', '=', 'co.id')
