@@ -527,7 +527,7 @@
                                                   </div>
                                                   <div class="c-phone c-phone-international c-field c-col-1 c-sml-col-1 c-span-6 c-sml-span-6">
                                                       <div class="c-label  "><label for="c-20-1022">Office Phone</label></div>
-                                                      <div class="c-editor"><input value="{!!old('vednor.phone.0')!!}" name="vendor[phone][]" type="text" id="c-20-1022" placeholder=""></div>
+                                                      <div class="c-editor"><input value="{!!old('vednor.phone.0')!!}" name="vendor[phone][]" type="text" id="c-20-1022" placeholder="(876) 123-4567" class="phone-mask"></div>
                                                       <div class="c-validation"></div>
                                                   </div>
                                                   <div class="c-phone c-phone-international c-field c-col-7 c-sml-col-7 c-span-6 c-sml-span-6">
@@ -536,7 +536,7 @@
                                                         <input 
                                                         value="{!! !empty($data['vendor']['mobile']) ? $data['vendor']['mobile'] : old('vendor.mobile.0') !!}"  
                                                         name="vendor[mobile][]" 
-                                                        maxlength="10" 
+                                                        placeholder="(876) 123-4567" class="phone-mask"
                                                         type="text" 
                                                         id="c-21-1021" >
                                                     </div>
@@ -1083,12 +1083,12 @@
                                           </div>
                                           <div class="c-phone c-phone-international c-field c-col-1 c-sml-col-1 c-span-7 c-sml-span-12">
                                               <div class="c-label  "><label for="c-56-1302">Office Phone</label></div>
-                                              <div class="c-editor"><input name="buyer[phone][]" type="text" id="c-56-1302" placeholder=""></div>
+                                              <div class="c-editor"><input name="buyer[phone][]" type="text" id="c-56-1302" placeholder="(876) 123-4567" class="phone-mask"></div>
                                               <div class="c-validation"></div>
                                           </div>
                                           <div class="c-phone c-phone-international c-field c-col-8 c-sml-col-1 c-span-6 c-sml-span-12">
                                               <div class="c-label  "><label for="c-57-1301">Mobile Phone</label></div>
-                                              <div class="c-editor"><input name="buyer[mobile][]" maxlength="10" type="text" id="c-57-1301" placeholder=""></div>
+                                              <div class="c-editor"><input name="buyer[mobile][]" type="text" id="c-57-1301" placeholder="(876) 123-4567" class="phone-mask"></div>
                                               <div class="c-validation"></div>
                                           </div>
                                           <div class="c-email c-field c-col-14 c-sml-col-1 c-span-11 c-sml-span-12">

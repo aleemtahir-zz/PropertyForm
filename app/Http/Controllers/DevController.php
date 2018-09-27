@@ -168,7 +168,7 @@ class DevController extends Controller
         Mail::send('layouts.email',$data, function ($message) use ($to_address) /*variable innheriting*/{
             $message->from('hmf@williamswebs.com','HMF Property');
             $message->to($to_address);
-            $message->subject('HMF Property Code');
+            $message->subject('HMF Property Volume/Folio No.');
         });
 
         $template = 'FormA';
