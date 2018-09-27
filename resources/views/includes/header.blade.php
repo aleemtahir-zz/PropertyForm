@@ -17,14 +17,13 @@
 <link rel="stylesheet" type="text/css" href="{{asset('css/custom.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('css/jquery.dm-uploader.min.css')}}">
 
-<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-<script
-  src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"
-  integrity="sha256-VazP97ZCwtekAsvgPBSUwPFKdrwD3unUfSGVYrahUqU="
-  crossorigin="anonymous"></script>
+<script type="text/javascript" src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script type="text/javascript" src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
 <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/datepicker/0.6.5/datepicker.js"></script>
+<script type="text/javascript" src="{{asset('js/jquery.dm-uploader.min.js')}}"></script>   
+<script type="text/javascript" src="{{asset('js/jquery.inputmask.bundle.min.js')}}"></script>   
+<script type="text/javascript" src="{{asset('js/inputmask.binding.js')}}"></script>   
 <script type="text/javascript" src="{{asset('js/script.js')}}"></script>   
-<script src="{{asset('js/jquery.dm-uploader.min.js')}}"></script>   
 <script type="text/javascript">
     var baseurl = "{{url('/')}}";
 </script>

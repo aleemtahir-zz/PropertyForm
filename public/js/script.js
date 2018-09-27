@@ -192,34 +192,21 @@ $(document).ready(function(){
 
 var fc = $('#fc_name').val();
 var mapper = {'United States Dollar': 'USD', 'Canadian Dollar': 'CAD', 'Pound Sterling': 'UKP'};
+var symbolMapper = {'United States Dollar': '$', 'Canadian Dollar': '$', 'Pound Sterling': '£'};
 
 $('#fc_symbol').val('');		        
 $('#fc_symbol').val(mapper[fc]);	
+initInputMask(symbolMapper[fc]);
 /*Foriegn Currency
 =====================================*/
 $('#fc_name').change(function(){
-	var fc = $('#fc_name').val();
-	var mapper = {'United States Dollar': 'USD', 'Canadian Dollar': 'CAD', 'Pound Sterling': 'UKP'};
+	var fc = $('#fc_name').val();	
 
 	$('#fc_symbol').val('');		        
-	$('#fc_symbol').val(mapper[fc]);		        
+	$('#fc_symbol').val(mapper[fc]);
+	console.log(symbolMapper[fc]);
+	initInputMask(symbolMapper[fc]);		        
 })
-
-/*Calculate Price
-=====================================*/
-$('input[name*="payment"]').each(function (){
-	var id = $(this).attr('id');
-	$(this).change(function(){
-		updateBuilderContractPayment(id);       
-	});
-});
-
-$('input[name*="monetary"]').each(function (){
-	var id = $(this).attr('id');
-	$(this).change(function(){
-		updateBuilderContractPayment(id);       
-	});
-});
 
 
 $('#fileUpload').change(function () {
@@ -290,6 +277,26 @@ $( "#dev_name" ).autocomplete({
 ====================================*/
 });
 
+
+/*Calculate Price
+=====================================*/
+$(function(){
+	$('input[name*="payment"]').each(function (){
+		var id = $(this).attr('id');
+		$(this).change(function(){
+			updateBuilderContractPayment(id);       
+		});
+	});
+
+	$('input[name*="monetary"]').each(function (){
+		var id = $(this).attr('id');
+		$(this).change(function(){
+			updateBuilderContractPayment(id);       
+		});
+	});
+
+});
+
 function updateBuilderContractPayment(id)
 {	
 	let price 		= $('#c_price').val();
@@ -305,12 +312,19 @@ function updateBuilderContractPayment(id)
 	let cp_reg_fee 	= $('#cp_reg_fee').val();
 
 	if(id == 'c_price' ||  id == 'fc_rate')
-	{
+	{	
+		price = ( price !== '' ? price.replace(/,/g, '') : '');
+		rate = ( rate !== '' ? rate.replace(/,/g, '') : '');
+
 		$('#c_pricej').val(price*rate);	       
 		$('#cp_deposit').val(price*rate);	 
 
 		let cp_stamp 	= parseInt(price*rate) * 0.5 * (4 / 100);      
 		let cp_reg_fee 	= parseInt(price*rate) * 0.5 * (0.5 / 100);      
+		
+		cp_stamp = ( cp_stamp !== '' ? cp_stamp.replace(/,/g, '') : '');
+		cp_reg_fee = ( cp_reg_fee !== '' ? cp_reg_fee.replace(/,/g, '') : '');
+		
 		$('#cp_stamp').val(cp_stamp);	 
 		$('#cp_reg_fee').val(cp_reg_fee);	 
 
@@ -318,6 +332,9 @@ function updateBuilderContractPayment(id)
 	else if(id == 'c_pricej')
 	{
 		$('#cp_deposit').val(cp_jamaican);	
+
+		price = ( price !== '' ? price.replace(/,/g, '') : '');
+		rate = ( rate !== '' ? rate.replace(/,/g, '') : '');
 
 		let cp_stamp 	= parseInt(price*rate) * 0.5 * (4 / 100);      
 		let cp_reg_fee 	= parseInt(price*rate) * 0.5 * (0.5 / 100);      
@@ -328,10 +345,18 @@ function updateBuilderContractPayment(id)
 	{
 		if(id == 'cp_deposit'){
 
+			cp_deposit = ( cp_deposit !== '' ? cp_deposit.replace(/,/g, '') : '');
+			cp_jamaican = ( cp_jamaican !== '' ? cp_jamaican.replace(/,/g, '') : '');
+
 			let cp_second 	= cp_jamaican - cp_deposit;
 			$('#cp_second').val(cp_second);	
 		}
 		else if(id == 'cp_second'){
+
+			cp_deposit = ( cp_deposit !== '' ? cp_deposit.replace(/,/g, '') : '');
+			cp_jamaican = ( cp_jamaican !== '' ? cp_jamaican.replace(/,/g, '') : '');
+			cp_second = ( cp_second !== '' ? cp_second.replace(/,/g, '') : '');
+
 			let sum = parseInt(cp_deposit) + parseInt(cp_second);
 			let cp_third 	= parseInt(cp_jamaican) - parseInt(sum);
 			$('#cp_third').val(cp_third);	
@@ -339,10 +364,21 @@ function updateBuilderContractPayment(id)
 		}	
 		else if(id == 'cp_third'){
 
+			cp_deposit = ( cp_deposit !== '' ? cp_deposit.replace(/,/g, '') : '');
+			cp_jamaican = ( cp_jamaican !== '' ? cp_jamaican.replace(/,/g, '') : '');
+			cp_second = ( cp_second !== '' ? cp_second.replace(/,/g, '') : '');
+			cp_third = ( cp_third !== '' ? cp_third.replace(/,/g, '') : '');
+
 			let cp_fourth 	= parseInt(cp_jamaican) - (parseInt(cp_deposit) + parseInt(cp_second) + parseInt(cp_third));
 			$('#cp_fourth').val(cp_fourth);	
 		}
 		else if(id == 'cp_fourth'){
+
+			cp_deposit = ( cp_deposit !== '' ? cp_deposit.replace(/,/g, '') : '');
+			cp_jamaican = ( cp_jamaican !== '' ? cp_jamaican.replace(/,/g, '') : '');
+			cp_second = ( cp_second !== '' ? cp_second.replace(/,/g, '') : '');
+			cp_third = ( cp_third !== '' ? cp_third.replace(/,/g, '') : '');
+			cp_fourth = ( cp_fourth !== '' ? cp_fourth.replace(/,/g, '') : '');
 			
 			let cp_final 	= parseInt(cp_jamaican) - 
 			(parseInt(cp_deposit) + parseInt(cp_second) + parseInt(cp_third) + parseInt(cp_fourth));
@@ -763,3 +799,15 @@ function initDevId()
 	});
 }
 
+//Currency Input Mask
+function initInputMask(symbol){
+	$('.currency').inputmask("numeric", {
+	    radixPoint: ".",
+	    groupSeparator: ",",
+	    digits: 2,
+	    autoGroup: true,
+	    // prefix: symbol+' ', 		//Space after $, this will not truncate the first character.
+	    rightAlign: false
+	    // ,oncleared: function () { self.Value(''); }
+	});
+}
