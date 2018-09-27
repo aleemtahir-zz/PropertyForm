@@ -46,7 +46,7 @@
                           </ul>
                        </div>
                     <div class="c-forms-pages">
-                      <div class="c-page-page1" style="display: none;">
+                      <div class="c-page-page1" style="display: block;">
                           <div class="c-forms-template">
                               <div class="c-page toggle-off" >
                                   <div class="c-section c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
@@ -300,7 +300,7 @@
                                                     <label for="c-13-1602">Landline 1</label>
                                                 </div>
                                                 <div class="c-editor">
-                                                    <input value="{!!old('developer.do1.landline1')!!}" name="developer[do1][landline1]" type="text" id="c-13-1602" placeholder="">
+                                                    <input value="{!!old('developer.do1.landline1')!!}" name="developer[do1][landline1]" type="text" id="c-13-1602" placeholder="(876) 123-4567" class="phone-mask">
                                                 </div>
                                                 <div class="c-validation"></div>
                                             </div>
@@ -309,7 +309,7 @@
                                                     <label for="c-14-1601"> Landline 2</label>
                                                 </div>
                                                 <div class="c-editor">
-                                                    <input value="{!!old('developer.do2.landline2')!!}" name="developer[do2][landline2]" type="text" id="c-14-1601" placeholder="">
+                                                    <input value="{!!old('developer.do2.landline2')!!}" name="developer[do2][landline2]" type="text" id="c-14-1601" placeholder="(876) 123-4567" class="phone-mask">
                                                 </div>
                                                 <div class="c-validation"></div>
                                             </div>
@@ -318,7 +318,7 @@
                                                     <label for="c-15-1600">Mobile</label>
                                                 </div>
                                                 <div class="c-editor">
-                                                    <input value="{!!old('developer.mobile')!!}" name="developer[mobile]" type="text" id="c-15-1600" placeholder="">
+                                                    <input value="{!!old('developer.mobile')!!}" name="developer[mobile]" type="text" id="c-15-1600" placeholder="(876) 123-4567" class="phone-mask">
                                                 </div>
                                                 <div class="c-validation"></div>
                                             </div>
@@ -961,7 +961,7 @@
                               </div>
                           </div>
                       </div>
-                      <div class="c-page-page4" style="display: block;">
+                      <div class="c-page-page4" style="display: none;">
                           <div class="c-forms-template" >
                               <div class="c-page toggle-off">
                                   <div class="c-section c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
@@ -1021,7 +1021,7 @@
                                           <div class="c-text-singleline c-field c-col-7 c-sml-col-1 c-span-12 c-sml-span-12">
                                               <div class="c-label  "><label for="title_cost">Title Cost</label></div>
                                               <div class="c-editor float-right" style="width: 165px">
-                                                <input value="{!!old('payment.title_cost')!!}" "name="payment[title_cost]" type="text" id="title_cost" placeholder="1,234,567.89" class="currency">
+                                                <input value="{!!old('payment.title_cost')!!}" name="payment[title_cost]" type="text" id="title_cost" placeholder="1,234,567.89" class="currency">
                                               </div>
                                               <div class="c-validation"></div>
                                           </div>
