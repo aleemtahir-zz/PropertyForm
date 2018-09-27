@@ -11,7 +11,7 @@
 					</div>
 				</div>
 				<div class="c-forms-confirmation-message c-html"><span>Thank you for filling out the form. Your response has been recorded.</span></div>
-				<div class="c-forms-confirmation-message c-html"><span>Your Volume/Folio No. is {!! $volume_no !!}/{!! $folio_no !!}.</span></div>
+				<div class="c-forms-confirmation-message c-html"><span>Your Volume/Folio No. is {!! $volume_str !!}/{!! $folio_str !!}.</span></div>
 			</div>
 			
 			<div class="c-footer-terms" >

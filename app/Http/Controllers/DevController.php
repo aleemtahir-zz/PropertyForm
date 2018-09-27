@@ -82,15 +82,15 @@ class DevController extends Controller
         if(!$error)
         {
             // Store result
-            $data['developement']   = $request->input('developement');
-            $data['developer']      = $request->input('developer');
-            $data['payment']        = $request->input('payment');
-            $data['contractor']     = $request->input('contractor');
-            $data['developement']['id']   = $id;
+            $pData['developement']   = $request->input('developement');
+            $pData['developer']      = $request->input('developer');
+            $pData['payment']        = $request->input('payment');
+            $pData['contractor']     = $request->input('contractor');
+            $pData['developement']['id']   = $id;
             
 
-            $request->session()->put('devRequest', $data['developement']);
-            $request->session()->put('devForm', $data);
+            $request->session()->put('devRequest', $data);
+            $request->session()->put('devForm', $pData);
 
             if(strpos($_SERVER['REQUEST_URI'], 'DeveloperDataFormA') !== false)
                 $template = 'FormA';
