@@ -228,6 +228,10 @@ $('#fileUpload').change(function () {
 });
 
 checkDropDownStatus();
+$('select.c-placeholder-text-styled').on('change',function(){
+	console.log('parish change');
+	checkDropDownStatus();
+});
 
 
 /*RECORD ID AUTOCOMPLETE
