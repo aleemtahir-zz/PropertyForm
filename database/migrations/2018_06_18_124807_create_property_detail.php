@@ -22,7 +22,6 @@ class CreatePropertyDetail extends Migration
             $table->string('dev_name');
             $table->integer('plan_no')->nullable();
             $table->integer('dev_id')->unsigned()->nullable(); 
-            $table->foreign('dev_id')->references('id')->on('tbl_developement_detail');
             $table->integer('attorney_id')->unsigned()->nullable(); 
             $table->foreign('attorney_id')->references('id')->on('tbl_attorney_detail');
             $table->integer('payment_id')->unsigned()->nullable(); 

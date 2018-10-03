@@ -161,7 +161,7 @@ class Property extends Model
  
             } catch (Exception $e) {
               DB::rollback();
-              $error = $e;
+              $error = $e->getMessage()."<br>File: ".__FILE__."<br>Line: ".__LINE__;
               return;
             }
 
@@ -193,9 +193,9 @@ class Property extends Model
                 DB::table('tbl_developer_detail')->insert($data);    
               } catch (Exception $e) {
                 DB::rollback();
-                $error = $e;
-                //return;
-                pre($e->getMessage());
+                $error = $e->getMessage()."<br>File: ".__FILE__."<br>Line: ".__LINE__;
+                return $error;
+                // pre($e->getMessage());
               }
               
               /*GET DEV ID */
@@ -290,7 +290,7 @@ class Property extends Model
             DB::table('tbl_monetary_detail')->insert($data);  
           } catch (Exception $e) {
             DB::rollback();
-            $error = $e;
+            $error = $e->getMessage()."<br>File: ".__FILE__."<br>Line: ".__LINE__;
             return;
           }
 
@@ -379,7 +379,7 @@ class Property extends Model
  
             } catch (Exception $e) {
               DB::rollback();
-              $error = $e;
+              $error = $e->getMessage()."<br>File: ".__FILE__."<br>Line: ".__LINE__;
               return;
             }
 
@@ -410,7 +410,7 @@ class Property extends Model
                 DB::table('tbl_purchaser_detail')->insert($data);    
               } catch (Exception $e) {
                 DB::rollback();
-                $error = $e;
+                $error = $e->getMessage()."<br>File: ".__FILE__."<br>Line: ".__LINE__;
                 return;
               }
               
@@ -486,7 +486,7 @@ class Property extends Model
             );    
           } catch (Exception $e) {
             DB::rollback();
-            $error = $e;
+            $error = $e->getMessage()."<br>File: ".__FILE__."<br>Line: ".__LINE__;
             return;
           }
           
@@ -532,10 +532,11 @@ class Property extends Model
         //ADD property INFO
         //******************
 
+        DB::enableQueryLog();
         //Get Key ID
         $key = DB::table('tbl_key_id')
              ->select('id')
-             ->where('property_key', '=', $property_key)
+             ->where('property_key', $property_key)
              ->orderBy('id', 'desc')
              ->first();
 
@@ -544,7 +545,7 @@ class Property extends Model
           DB::table('tbl_key_id')->insert(
               [
                   'property_key'  => $property_key, 
-                  'created_at'    => date('Y-m-d'), 
+                  'created_at'    => date('Y-m-d')
               ]
           );
           /*GET DEV ID */
@@ -555,6 +556,8 @@ class Property extends Model
           $key_id = $key->id;
 
         }
+        //dd(DB::getQueryLog());
+
 
         try {
           //Insert Property
@@ -577,7 +580,7 @@ class Property extends Model
           Property::insertOnDuplicateKey($property_data,$table_name);          
         } catch (Exception $e) {
           DB::rollback();
-          $error = $e;
+          $error = $e->getMessage()."<br>File: ".__FILE__."<br>Line: ".__LINE__;
           return;
         }
 
@@ -597,7 +600,7 @@ class Property extends Model
               
             } catch (Exception $e) {
               DB::rollback();
-              $error = $e;
+              $error = $e->getMessage()."<br>File: ".__FILE__."<br>Line: ".__LINE__;
               return;
             }
         }
@@ -618,7 +621,7 @@ class Property extends Model
               
             } catch (Exception $e) {
               DB::rollback();
-              $error = $e;
+              $error = $e->getMessage()."<br>File: ".__FILE__."<br>Line: ".__LINE__;
               return;
             }
         }
@@ -629,6 +632,8 @@ class Property extends Model
     public function get_development($id='')
     {
       /*DB::enableQueryLog();*/
+      /*dd(DB::getQueryLog());*/
+
       if(empty($id))
         return 0;
       else

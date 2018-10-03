@@ -124,6 +124,8 @@ $(document).ready(function(){
 				num++;
 			}
 		});
+
+		initInputMask();
 	});
 
 	//Remove VF Section 
@@ -196,7 +198,7 @@ var symbolMapper = {'United States Dollar': '$', 'Canadian Dollar': '$', 'Pound 
 
 $('#fc_symbol').val('');		        
 $('#fc_symbol').val(mapper[fc]);	
-initInputMask(symbolMapper[fc]);
+initInputMask(/*symbolMapper[fc]*/);
 /*Foriegn Currency
 =====================================*/
 $('#fc_name').change(function(){
@@ -205,7 +207,7 @@ $('#fc_name').change(function(){
 	$('#fc_symbol').val('');		        
 	$('#fc_symbol').val(mapper[fc]);
 	console.log(symbolMapper[fc]);
-	initInputMask(symbolMapper[fc]);		        
+	initInputMask(/*symbolMapper[fc]*/);		        
 })
 
 
@@ -322,8 +324,8 @@ function updateBuilderContractPayment(id)
 		let cp_stamp 	= parseInt(price*rate) * 0.5 * (4 / 100);      
 		let cp_reg_fee 	= parseInt(price*rate) * 0.5 * (0.5 / 100);      
 		
-		cp_stamp = ( cp_stamp !== '' ? cp_stamp.replace(/,/g, '') : '');
-		cp_reg_fee = ( cp_reg_fee !== '' ? cp_reg_fee.replace(/,/g, '') : '');
+		// cp_stamp = ( cp_stamp !== '' ? cp_stamp.replace(/,/g, '') : '');
+		// cp_reg_fee = ( cp_reg_fee !== '' ? cp_reg_fee.replace(/,/g, '') : '');
 		
 		$('#cp_stamp').val(cp_stamp);	 
 		$('#cp_reg_fee').val(cp_reg_fee);	 
@@ -657,7 +659,7 @@ function onClickLot()
 
 	            	if(data == '')
 	            	{	
-	            		$('input').val('');
+	            		// $('input').val('');
 						$('#c-message-lot').text('*No record found!.') ; 
 	            	}
 	            	else
@@ -781,6 +783,7 @@ function add_section(id, count) {
 				num++;
 			}
 		});
+		initInputMask();
 	}
 }
 
@@ -800,7 +803,7 @@ function initDevId()
 }
 
 //Currency Input Mask
-function initInputMask(symbol){
+function initInputMask(/*symbol*/){
 	$('.currency').inputmask("numeric", {
 	    radixPoint: ".",
 	    groupSeparator: ",",
@@ -810,8 +813,10 @@ function initInputMask(symbol){
 	    rightAlign: false
 	    // ,oncleared: function () { self.Value(''); }
 	});
-}
 
-$(function(){
 	$('.phone-mask').inputmask({"mask": "(999) 999-9999"});
-});
+	
+	$('.trn-mask').inputmask({
+		"mask": "[999-999-999]"
+	});
+}

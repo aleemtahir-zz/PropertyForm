@@ -12,6 +12,19 @@ class Development extends Model
     //User Trait
     use InsertOnDuplicateKey;
 
+    public function validateRequest($data)
+    {
+      $dev_info = DB::table('tbl_developement_detail')
+                         ->select('id')
+                         ->where('volume_no', $data['volume_no'])
+                         ->where('folio_no', $data['folio_no'])
+                         ->first();
+      $error = false;
+      if(!empty($dev_info))
+        $error = true;                
+      
+      return $error;                
+    }
     public function check_developer($id)
     {
       $dev_info = DB::table('tbl_developement_detail')

@@ -56,6 +56,10 @@ class DevController extends Controller
         $data['volume_no']  = $data['volume_no'][0] ? $data['volume_no'][0] : '';
         $data['folio_no']   = $data['folio_no'][0]  ? $data['folio_no'][0]  : ''; 
 
+        //Check Duplicate Volume/Folio
+        if($DevObj->validateRequest($data))
+            return back()->withErrors("*Volume/Folio Fields Already Exists.")->withInput();            
+
         $id       = $request->session()->get('id');               
         $devId    = $DevObj->check_developer($id);
 

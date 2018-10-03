@@ -36,9 +36,9 @@ class PropFromRequest extends FormRequest
     public function messages()
     {
         return [
-            'property.name.required'   => 'Development Name is a required field',
-            'property.lot_no.required'      => 'Lot No. is a required field',
-            'property.lot_no.numeric'       => 'Lot No. no must be a number'
+            'property.name.required'   => '*Development Name is a required field',
+            'property.lot_no.required'      => '*Lot No. is a required field',
+            'property.lot_no.numeric'       => '*Lot No. no must be a number'
         ];
     }
 }

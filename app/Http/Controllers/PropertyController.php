@@ -29,15 +29,20 @@ class PropertyController extends Controller
           $data['property'] = $request->session()->get('devForm')['developement'];
           $data['vendor']   = $request->session()->get('devForm')['developer'];
           $data['monetary'] = $request->session()->get('devForm')['payment'];
+
           $data['property']['volume_str'] = implode(',', $data['property']['volume_no']);
           $data['property']['folio_str']  = implode(',', $data['property']['folio_no']);
           $data['property']['volume_no']  = $data['property']['volume_no'][0] ? $data['property']['volume_no'][0] : '';
           $data['property']['folio_no']   = $data['property']['folio_no'][0]  ? $data['property']['folio_no'][0]  : ''; 
 
-          $data['monetary']['half_title']          = !empty($data['monetary']['title_cost']) ? $data['monetary']['title_cost'] / 2 : '';
-          $data['monetary']['half_land_agreement'] = !empty($data['monetary']['land_agreement_cost']) ? $data['monetary']['land_agreement_cost'] / 2 : '';
-          $data['monetary']['half_build_agreement']= !empty($data['monetary']['build_agreement_cost']) ? $data['monetary']['build_agreement_cost'] / 2 : '';
-          $data['monetary']['identification_fee']  = !empty($data['monetary']['identification_fee']) ? $data['monetary']['identification_fee'] : '';
+          $data['monetary']['half_title']          = !empty($data['monetary']['title_cost']) ? 
+                                                      (int)str_replace(',', '', $data['monetary']['title_cost']) / 2 : '';
+          $data['monetary']['half_land_agreement'] = !empty($data['monetary']['land_agreement_cost']) ? 
+                                                      str_replace(',', '', $data['monetary']['land_agreement_cost']) / 2 : '';
+          $data['monetary']['half_build_agreement']= !empty($data['monetary']['build_agreement_cost']) ? 
+                                                      str_replace(',', '', $data['monetary']['build_agreement_cost']) / 2 : '';
+          $data['monetary']['identification_fee']  = !empty($data['monetary']['identification_fee']) ? 
+                                                      str_replace(',', '', $data['monetary']['identification_fee']) : '';
         }
         //pre($data); die;
         return view('forms.property',compact('data'));
@@ -85,7 +90,7 @@ class PropertyController extends Controller
         DB::commit();
 
         if($error)
-            return back()->withErrors($error->getMessage())->withInput();
+            return back()->withErrors($error)->withInput();
         else
         {
           // Store all input
@@ -132,7 +137,7 @@ class PropertyController extends Controller
           
           DB::commit();
           if(!empty($error))
-            return $error->getMessage();
+            return $error->getMessage()."<br>File: ".__FILE__."<br>Line: ".__LINE__;
         }
       }
       
