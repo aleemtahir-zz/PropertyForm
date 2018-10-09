@@ -168,3 +168,11 @@ border-bottom: 0; }
 .font-m{
   font-size: 1.5em;
 }
+#paymentModal{
+  text-align: center;
+}
+.modal-header{
+  color: white;
+  background: #C24B23;
+  font-size: 1.6em;
+}

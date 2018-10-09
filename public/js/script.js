@@ -820,3 +820,11 @@ function initInputMask(/*symbol*/){
 		"mask": "[999-999-999]"
 	});
 }
+$(function(){
+
+	$(document).on('click', '#payment-submit-button', function(){
+		event.preventDefault();
+		console.log("asdas");
+		$("#paymentModal").modal('show');
+	});
+});
