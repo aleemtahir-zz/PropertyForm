@@ -29,7 +29,10 @@ class PropertyController extends Controller
           $data['property'] = $request->session()->get('devForm')['developement'];
           $data['vendor']   = $request->session()->get('devForm')['developer'];
           $data['monetary'] = $request->session()->get('devForm')['payment'];
-
+          $data['developement'] = $request->session()->get('devForm')['developement'];
+          
+          $data['property']['dev_id']     = $data['developement']['id'];
+          
           $data['property']['volume_str'] = implode(',', $data['property']['volume_no']);
           $data['property']['folio_str']  = implode(',', $data['property']['folio_no']);
           $data['property']['volume_no']  = $data['property']['volume_no'][0] ? $data['property']['volume_no'][0] : '';
@@ -231,7 +234,7 @@ class PropertyController extends Controller
         $PropObj    = new Property();
         
 	      if($request->mergeBtn)
-          $template_name[] = $request->mergeBtn;
+          $template_name = $request->mergeBtn;
         /*else
           return Redirect::to('property/show')->with('message', 'Please Select Any Template.');*/
         
@@ -247,89 +250,8 @@ class PropertyController extends Controller
           return Redirect::to('property/show')->with('message', 'Please Select Any Record ID.');
         else
         {
-
-          $values['id']   = $PropObj->get_id('tbl_key_id','property_key',$request->autocomplete); 
+          $PropObj->mergeIntoTemplates($request->autocomplete, $template_name);
         } 
-
-	      $PropertyObj = new Property(); 
-        $data = $PropertyObj->get_all($values);
-        $id = $data['p-id']['value']; 
-        $allVendors = $PropertyObj->getVendors($id,$vCount);
-        $allBuyers = $PropertyObj->getBuyers($id,$bCount);
-        
-        //Organize Data
-        foreach ($data as $key => $value) {
-          $array[$value['prefix']][$value['key']] = $value['value'];
-        }
-        unset($array['v']);
-        unset($array['b']);
-        //pre($allVendors); die;
-        
-        $i = 0;
-        foreach ($allVendors as $k => $vendor) {
-          foreach ($vendor as $key => $value) {
-            $array[$vendor['prefix']][$vendor['index']][$vendor['key']] = $vendor['value'];    
-          }
-
-          if($vendor['index'] < $vCount - 1)
-          {
-            $array[$vendor['prefix']][$vendor['index']]['cand'] = 'AND';
-            $array[$vendor['prefix']][$vendor['index']]['and'] = 'and';
-            $array[$vendor['prefix']][$vendor['index']]['comma'] = ',';
-            $i++;
-          }
-          else
-            $array[$vendor['prefix']][$vendor['index']]['cand'] = '';
-            $array[$vendor['prefix']][$vendor['index']]['and'] = '';
-            $array[$vendor['prefix']][$vendor['index']]['comma'] = '';
-
-        }
-        
-        foreach ($allBuyers as $k => $buyer) {
-          foreach ($buyer as $key => $value ) {
-            $array[$buyer['prefix']][$buyer['index']][$buyer['key']] = $buyer['value'];
-          }
-
-          if($buyer['index'] < $bCount - 1)
-          {
-            $array[$buyer['prefix']][$buyer['index']]['and'] = 'AND';
-            $i++;
-          }
-          else
-            $array[$buyer['prefix']][$buyer['index']]['and'] = '';
-        }
-        //pre($array); die;
-        
-        //File Counter
-        $var = file_get_contents('counter.txt');
-        $var++;
-        file_put_contents('counter.txt', $var);
-        
-        if(strlen($var) == 1)
-          $var = '000'.$var;
-        elseif(strlen($var) == 2)
-          $var = '00'.$var;
-        elseif(strlen($var) == 3)
-          $var = '0'.$var;
-
-        //pre(strlen($var)); die;
-
-        //File Save As Name
-        $buyer = (isset($array['b'][0]['middle'])) ? $array['b'][0]['middle'] : $array['b'][0]['last'];
-        $vendor = (isset($array['v'][0]['middle'])) ? $array['v'][0]['middle'] : $array['v'][0]['last'];
-
-
-
-        if(!empty($request->filename))
-          $file = $request->filename;
-        else
-          $file = $buyer.'_'.$vendor.'_'.$array['p']['volume_no'].'/'.$array['p']['folio_no'].'_'.$var;
-
-        $file = str_replace('__', '_', $file);
-
-        //Action
-        saveDoc($template_name, $file, $array);
-
 
         //Show Word Templates
         $templates = array(

@@ -34,8 +34,16 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-        echo "<pre>"; print_r($request->all()); echo "</pre>";
+        pre($request->all());
 
+        $data = array();
+        $data = array_merge($data, $request->input('monetary'));
+        pre($data);
+die;
+
+        $showModal = true; 
+        $filename  = "SOA_Record#_date";
+        return view('forms.payment',compact('showModal','filename'));
     }
 
     /**
@@ -44,10 +52,11 @@ class PaymentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($data)
     {
 
-        
+        /*Merge Statement of Account Template*/
+        saveDoc("statement_of_account", $file, $data);
 
     }
 

@@ -21,8 +21,8 @@
                             <li><a href="{{url('DeveloperDataFormA')}}" title="">Developer Data A <!-- <span class="pull-right">13</span> --></a></li>
                             <li><a href="{{url('DeveloperDataFormB')}}" title="">Developer Data B</a></li>
                             <li><a href="{{url('property')}}" title="">Property Data</a></li>
-                            <li><a href="{{url('property/show')}}" title="">Merge Templates</a></li>
-                            <li><a href="{{url('payment')}}" title="">Payment Form</a></li>
+                            <li><a href="{{url('payment')}}" title="">Account Statement</a></li>
+                            <li><a href="{{url('property/show')}}" title="">Downloads</a></li>
                             <li><a href="{{url('upload')}}" title="">Upload Data</a></li>
                         </ul>
                    </div>

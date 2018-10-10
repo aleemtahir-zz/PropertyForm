@@ -1180,4 +1180,88 @@ class Property extends Model
       return $id;
     }
 
+    public function mergeIntoTemplates($key, $template_name, $extra='')
+    {
+        $values['id']   = $this->get_id('tbl_key_id','property_key',$key); 
+
+        $data = $this->get_all($values);
+        $id = $data['p-id']['value']; 
+        $allVendors = $this->getVendors($id,$vCount);
+        $allBuyers = $this->getBuyers($id,$bCount);
+        
+        //Organize Data
+        foreach ($data as $key => $value) {
+          $array[$value['prefix']][$value['key']] = $value['value'];
+        }
+        unset($array['v']);
+        unset($array['b']);
+        //pre($allVendors); die;
+        
+        $i = 0;
+        foreach ($allVendors as $k => $vendor) {
+          foreach ($vendor as $key => $value) {
+            $array[$vendor['prefix']][$vendor['index']][$vendor['key']] = $vendor['value'];    
+          }
+
+          if($vendor['index'] < $vCount - 1)
+          {
+            $array[$vendor['prefix']][$vendor['index']]['cand'] = 'AND';
+            $array[$vendor['prefix']][$vendor['index']]['and'] = 'and';
+            $array[$vendor['prefix']][$vendor['index']]['comma'] = ',';
+            $i++;
+          }
+          else
+            $array[$vendor['prefix']][$vendor['index']]['cand'] = '';
+            $array[$vendor['prefix']][$vendor['index']]['and'] = '';
+            $array[$vendor['prefix']][$vendor['index']]['comma'] = '';
+
+        }
+        
+        foreach ($allBuyers as $k => $buyer) {
+          foreach ($buyer as $key => $value ) {
+            $array[$buyer['prefix']][$buyer['index']][$buyer['key']] = $buyer['value'];
+          }
+
+          if($buyer['index'] < $bCount - 1)
+          {
+            $array[$buyer['prefix']][$buyer['index']]['and'] = 'AND';
+            $i++;
+          }
+          else
+            $array[$buyer['prefix']][$buyer['index']]['and'] = '';
+        }
+        //pre($array); die;
+        
+        //File Counter
+        $var = file_get_contents('counter.txt');
+        $var++;
+        file_put_contents('counter.txt', $var);
+        
+        if(strlen($var) == 1)
+          $var = '000'.$var;
+        elseif(strlen($var) == 2)
+          $var = '00'.$var;
+        elseif(strlen($var) == 3)
+          $var = '0'.$var;
+
+        //pre(strlen($var)); die;
+
+        //File Save As Name
+        $buyer = (isset($array['b'][0]['middle'])) ? $array['b'][0]['middle'] : $array['b'][0]['last'];
+        $vendor = (isset($array['v'][0]['middle'])) ? $array['v'][0]['middle'] : $array['v'][0]['last'];
+
+
+
+        if(!empty($request->filename))
+          $file = $request->filename;
+        else
+          $file = $buyer.'_'.$vendor.'_'.$array['p']['volume_no'].'/'.$array['p']['folio_no'].'_'.$var;
+
+        $file = str_replace('__', '_', $file);
+
+        //Action
+        saveDoc($template_name, $file, $array);
+
+    }
+
 }

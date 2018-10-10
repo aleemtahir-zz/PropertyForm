@@ -169,10 +169,20 @@ border-bottom: 0; }
   font-size: 1.5em;
 }
 #paymentModal{
-  text-align: center;
+  /*text-align: center;*/
+  position: absolute;
+  top: 40%;
 }
 .modal-header{
   color: white;
-  background: #C24B23;
+  background: #c26623;
   font-size: 1.6em;
+}
+.modal-header button{
+  padding: 10px !important;
+}
+
+.modal-body{
+  padding: 30px;
+  line-height: 2em;
 }

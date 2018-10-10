@@ -1720,7 +1720,7 @@
         </div>
     </div>
   </div>
-  <input type="hidden" name="property[dev_id]" id="dev_id" >
+  <input type="hidden" name="property[dev_id]" value="{!! !empty($data['property']['dev_id']) ? $data['property']['dev_id'] : old('property.dev_id') !!}" >
 </form>
 </div>
 @stop

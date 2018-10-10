@@ -820,11 +820,99 @@ function initInputMask(/*symbol*/){
 		"mask": "[999-999-999]"
 	});
 }
-$(function(){
 
-	$(document).on('click', '#payment-submit-button', function(){
-		event.preventDefault();
-		console.log("asdas");
-		$("#paymentModal").modal('show');
-	});
-});
+//Statement of Account Submission
+// $(function(){
+
+// 	$(document).on('click', '#payment-submit-button', function(){
+// 		//event.preventDefault();
+// 		var req = [];
+// 		var request = $("input[name*='monetary']").map(function(){
+// 			let name 	= $(this).attr("name");
+// 			let value 	= $(this).val();
+// 			console.log(name);
+// 			console.log(value);
+// 			req[name] = value;
+// 			return req;
+// 		}).get();
+// 		console.log(request);
+// 		/*Merge Data into Statement of Account Template*/
+// 		// $.ajax({
+//   //           /* the route pointing to the post function */
+//   //           url: 'payment/show',
+//   //           type: 'post',
+//   //           data: {  },
+//   //           dataType: 'JSON',
+//   //           beforeSend: function () {
+//   //           	/*Font Awesome
+// 		// 		====================================*/
+// 		// 		$('#gear-lot').css('display','block');
+				
+//   //           },
+//   //           success: function (data) { 
+//   //           	setTimeout(function(){ 
+//   //           		$('#gear-lot').css('display','none'); 
+
+//   //           		var form_data = data;
+
+// 	 //            	if(data == '')
+// 	 //            	{	
+// 	 //            		// $('input').val('');
+// 		// 				$('#c-message-lot').text('*No record found!.') ; 
+// 	 //            	}
+// 	 //            	else
+// 	 //            	{
+// 	 //            		//Multiple Vendor Handling
+// 	 //            		vcount = form_data.vcount - 1;
+// 	 //            		bcount = form_data.bcount - 1;
+// 	 //            		console.log(vcount);
+
+// 	 //            		delete form_data.vcount;
+// 	 //            		delete form_data.bcount;
+
+// 	 //            		add_section('#vendor',vcount);
+// 	 //            		add_section('#buyer',bcount);
+
+// 	 //            		$('#c-message-lot').empty(); 
+// 	 //            		//console.log(form_data);
+// 	 //            		$.each(form_data, function(key, value){
+// 		//             		// console.log(value.key+'  :'+value.value);
+// 		//             		// console.log(value.key);
+// 		//             		// console.log(value.value);
+// 		//             		// console.log($("input[name*='"+value.key+"']"));
+// 	 //            			var i = $("input[name*='"+value.key+"']");
+// 	 //            			var t = $("textarea[name*='"+value.key+"']");
+// 	 //            			var s = $("select[name*='"+value.key+"']");	            			
+
+// 	 //            			if(Array.isArray(value)){
+// 	 //            				//console.log(value);
+//   //           					var i = 0;
+//   //           					$("form [name='"+value[0].key+"[]']").map(function(){
+// 		// 		            		$(this).val(value[i++].value);
+			            			
+// 		// 	            		});
+// 	 //            			}
+// 	 //            			else{
+
+// 	 //            				if(i.length){
+
+// 		//             				$("input[name*='"+value.key+"']").val(value.value);
+// 		//             			}
+// 		//             			if(t.length)
+// 		//             				$("textarea[name*='"+value.key+"']").val(value.value);
+// 		//             			if(s.length){
+// 		//             				$("select[name*='"+value.key+"']").val(value.value);
+// 		//             				$("select[name*='"+value.key+"']").css('color','black')
+// 		//             			}	
+// 	 //            			}	
+// 	 //            			checkDropDownStatus();
+// 		//             	});
+
+// 	 //            	}
+//   //           	}, 300);         	
+//   //           }
+//   //       }); 
+
+// 		//
+// 	});
+// });

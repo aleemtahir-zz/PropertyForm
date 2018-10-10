@@ -2,7 +2,7 @@
 @section('content')
 <div id="c-forms-container" class="cognito c-safari c-lrg">
 
-<form method="post" action="{{url('property')}}">
+<form method="post" action="{{url('payment')}}">
   {{ csrf_field() }}
     <div class="c-forms-form" tabindex="0">
         <div class="c-editor" style="display:none;">
@@ -26,7 +26,7 @@
                     <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-7 c-sml-span-12">
                         <div class="c-label  "><label for="c-2-768">Record #</label></div>
                         <div class="c-editor float-right" style="width: 150px"> 
-                            <input class="font-m" id="autocomplete" name="" type="text"  placeholder="CITY-47">
+                            <input class="font-m" id="autocomplete" name="monetary[record_id]" type="text"  placeholder="CITY-47">
                         </div>
                         <div class="c-validation"></div>
                     </div>
@@ -104,12 +104,12 @@
                                         <div class="c-repeating-section-item">
                                             <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-6 c-sml-span-6">
                                                 <div class="c-label  "><label for="c-12-16">Expense Name</label></div>
-                                                <div class="c-editor"><input type="text" id="c-12-16" placeholder=""></div>
+                                                <div class="c-editor"><input type="text" id="c-12-16" name="expense[name][]" placeholder=""></div>
                                                 <div class="c-validation"></div>
                                             </div>
                                             <div class="c-currency c-field c-col-7 c-sml-col-7 c-span-6 c-sml-span-6">
                                                 <div class="c-label  "><label for="c-13-15">Amount</label></div>
-                                                <div class="c-editor"><input type="text" id="c-13-15" placeholder=""></div>
+                                                <div class="c-editor"><input type="text" id="c-13-15" name="expense[price][]" placeholder=""></div>
                                                 <div class="c-validation"></div>
                                             </div>
                                         </div>
@@ -117,6 +117,11 @@
                                 </div>
                                 <div class="c-validation" style="display: block;"></div>
                                 <div class="c-repeating-section-add"><a class="c-add-item" title="Add" tabindex="0">Add Expense</a></div>
+                                <div class="c-currency c-field c-col-9 c-sml-col-5 c-span-6 c-sml-span-6">
+                                    <div class="c-label  "><label for="total_expense">Total Expense</label></div>
+                                    <div class="c-editor"><input type="text" id="total_expense" name="monetary[total_expense]"></div>
+                                    <div class="c-validation"></div>
+                                </div>
                             </div>
                         </div>
                         <div class="c-validation"></div>
@@ -139,14 +144,14 @@
                                         <div class="c-repeating-section-item">
                                             <div class="c-text-multiplelines c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12">
                                                 <div class="c-label  "><label for="c-14-10">Description </label></div>
-                                                <div class="c-editor"><textarea id="c-14-10" placeholder="" type="text" height=""></textarea></div>
+                                                <div class="c-editor"><textarea id="c-14-10" name="payment[description][]" placeholder="" type="text" height=""></textarea></div>
                                                 <div class="c-validation"></div>
                                             </div>
                                             <div class="c-choice-dropdown c-field c-col-1 c-sml-col-1 c-span-6 c-sml-span-6">
                                                 <div class="c-label  "><label for="c-15-9">Foreign Currency</label></div>
                                                 <div class="c-editor">
                                                   <div class="c-dropdown ">
-                                                      <select value="{!!old('monetary.fc.name')!!}" name="monetary[fc][name]" id="fc_name">
+                                                      <select value="{!!old('monetary.fc.name')!!}" name="payment[fc_name][]" id="fc_name">
                                                           <option></option>
                                                           <option selected="selected" value="United States Dollar">United States Dollar</option>
                                                           <option value="Canadian Dollar">Canadian Dollar</option>
@@ -158,7 +163,7 @@
                                             </div>
                                             <div class="c-currency c-field c-col-7 c-sml-col-7 c-span-6 c-sml-span-6">
                                                 <div class="c-label  "><label for="c-16-8">Amount </label></div>
-                                                <div class="c-editor"><input type="text" id="c-16-8" placeholder=""></div>
+                                                <div class="c-editor"><input type="text" id="c-16-8" name="payment[price][]" placeholder=""></div>
                                                 <div class="c-validation"></div>
                                             </div>
 
@@ -166,7 +171,7 @@
                                                 <div class="c-label  "><label for="c-17-7">Date Received</label></div>
                                                 <div class="c-editor">
                                                     <div class="input-group date c-editor-date c-datepicker" >
-                                                      <input class="datepicker" name="vendor[dob][]" type="text" id="c-6-252"placeholder="" >
+                                                      <input class="datepicker" name="payment[date][]" type="text" id="c-6-252"placeholder="" >
                                                     </div>
                                                     <div class="c-editor-date-icon input-group-addon"><i class="icon-calendar"></i></div>
                                                 </div>
@@ -174,7 +179,7 @@
                                             </div>
                                             <div class="c-currency c-field c-col-5 c-sml-col-5 c-span-6 c-sml-span-6">
                                                 <div class="c-label  "><label for="c-18-6">Amount J$</label></div>
-                                                <div class="c-editor"><input type="text" id="c-18-6" placeholder=""></div>
+                                                <div class="c-editor"><input type="text" id="c-18-6" name="payment[price_j][]" placeholder=""></div>
                                                 <div class="c-validation"></div>
                                             </div>
                                         </div>
@@ -182,6 +187,11 @@
                                 </div>
                                 <div class="c-validation" style="display: block;"></div>
                                 <div class="c-repeating-section-add"><a class="c-add-item" title="Add" tabindex="0">Add Payment</a></div>
+                                <div class="c-currency c-field c-col-9 c-sml-col-5 c-span-6 c-sml-span-6">
+                                    <div class="c-label  "><label for="total_payment">Total Payment</label></div>
+                                    <div class="c-editor"><input type="text" id="total_payment" name="monetary[total_payment]"></div>
+                                    <div class="c-validation"></div>
+                                </div>
                             </div>
                         </div>
                         <div class="c-validation"></div>
@@ -197,6 +207,15 @@
             </div>
         </div>
     </div>
+    @if (isset($showModal) && $showModal)
+        <script type="text/javascript">
+            setTimeout(function(){ 
+                $("#paymentModal").modal('show');
+                console.log("there");
+            },500);
+            console.log("here");
+        </script>
+    @endif
 
     <!-- The Modal -->
     <div class="modal" id="paymentModal">
@@ -211,7 +230,12 @@
             
             <!-- Modal body -->
             <div class="modal-body">
-                Your Account Statement is Ready!
+                <span>Your Statement of Account has been updated and</span><br>
+                <span>Saved as </span>&nbsp;<strong>
+                    @if(isset($filename))
+                        {{$filename}}
+                    @endif
+                </strong>
             </div>
             
             <!-- Modal footer -->
