@@ -34,12 +34,12 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-        pre($request->all());
-
         $data = array();
-        $data = array_merge($data, $request->input('monetary'));
-        pre($data);
-die;
+        $req  = $request->All();
+        $data = array_merge($data, $req);
+
+        $PropObj    = new Property();
+        $PropObj->mergeIntoTemplates($data['monetary']['record_id'], 'statement_of_account', $data);
 
         $showModal = true; 
         $filename  = "SOA_Record#_date";

@@ -1180,10 +1180,11 @@ class Property extends Model
       return $id;
     }
 
-    public function mergeIntoTemplates($key, $template_name, $extra='')
+    public function mergeIntoTemplates($record_id, $template_name, $extra='')
     {
-        $values['id']   = $this->get_id('tbl_key_id','property_key',$key); 
 
+        $values['id']   = $this->get_id('tbl_key_id','property_key',$record_id); 
+        
         $data = $this->get_all($values);
         $id = $data['p-id']['value']; 
         $allVendors = $this->getVendors($id,$vCount);
@@ -1258,6 +1259,13 @@ class Property extends Model
           $file = $buyer.'_'.$vendor.'_'.$array['p']['volume_no'].'/'.$array['p']['folio_no'].'_'.$var;
 
         $file = str_replace('__', '_', $file);
+
+        if(!empty($extra))
+        {
+          $array = array_merge($array, $extra);
+          $file  = "SOA_".$record_id."_".date("Y-m-d");
+          $file  = preg_replace('/\s+/', '', $file);
+        }
 
         //Action
         saveDoc($template_name, $file, $array);

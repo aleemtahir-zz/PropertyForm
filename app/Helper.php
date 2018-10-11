@@ -250,7 +250,7 @@ function get_officer($officer, &$error=false, $source='', $postfix='')
 
 }
 
-function saveDoc($templates='', $file, $data='')
+function saveDoc($template='', $file, $data='')
 { 
 
   $date['day']    = date('l');
@@ -264,50 +264,53 @@ function saveDoc($templates='', $file, $data='')
   require_once base_path('vendor/mbence/opentbs-bundle/MBence/OpenTBSBundle/lib/tbs_plugin_opentbs.php'); 
 
 
-  foreach ($templates as $template) {
-
-    // Initialize the TBS instance 
-    $TBS = new \clsTinyButStrong; // new instance of TBS 
-    $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN); // load the OpenTBS plugin
-    // load your template
-    $TBS->LoadTemplate('templates/'.$template.'.docx');
-    //$TBS->SetOption('noerr','true');
-    
-    if(isset($data['v'][0]['logo']) && !empty($data['v'][0]['logo'])){
-      $prms = array('unique' => true);
-      $TBS->Plugin(OPENTBS_CHANGE_PICTURE, 'dev_logo',$data['v'][0]['logo'] , $prms);        
-    }
-
-    //pre($data); die;
-    if(!empty($data)){
-      
-        //pre($data); die;
-        try{
-            // replace variables
-            $TBS->MergeField('date', $date);
-            $TBS->MergeBlock('v', 'array',$data['v']);
-            $TBS->MergeField('p', $data['p']);
-            $TBS->MergeBlock('b,b1,b2,b3,b4,b5,b6,b7,b8,b9','array', $data['b']);
-            $TBS->MergeField('dcp', $data['dcp']);
-            $TBS->MergeField('c', $data['c']);
-            $TBS->MergeField('da1', $data['da1']);
-            $TBS->MergeField('da2', $data['da2']);
-            $TBS->MergeField('a', $data['a']);
-            $TBS->MergeField('m', $data['m']);
-            $TBS->MergeField('ds', $data['ds']);
-        }
-        catch(\Exception $e)
-        {
-          pre($e->getMessage());
-          //$property_info = '';  
-          //return $property_info;
-        }
-    
-        // Download the file
-        $TBS->Show(OPENTBS_DOWNLOAD, $file.'.docx');    
-    }
-  }
+  // Initialize the TBS instance 
+  $TBS = new \clsTinyButStrong; // new instance of TBS 
+  $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN); // load the OpenTBS plugin
+  // load your template
+  $TBS->LoadTemplate('templates/'.$template.'.docx');
+  //$TBS->SetOption('noerr','true');
   
+  if(isset($data['v'][0]['logo']) && !empty($data['v'][0]['logo'])){
+    $prms = array('unique' => true);
+    $TBS->Plugin(OPENTBS_CHANGE_PICTURE, 'dev_logo',$data['v'][0]['logo'] , $prms);        
+  }
+
+  // pre($data); die;
+  if(!empty($data)){
+    
+      //pre($data); die;
+      try{
+          // replace variables
+          $TBS->MergeField('date', $date);
+          $TBS->MergeBlock('v', 'array',$data['v']);
+          $TBS->MergeField('p', $data['p']);
+          $TBS->MergeBlock('b,b1,b2,b3,b4,b5,b6,b7,b8,b9','array', $data['b']);
+          $TBS->MergeField('dcp', $data['dcp']);
+          $TBS->MergeField('c', $data['c']);
+          $TBS->MergeField('da1', $data['da1']);
+          $TBS->MergeField('da2', $data['da2']);
+          $TBS->MergeField('a', $data['a']);
+          $TBS->MergeField('m', $data['m']);
+          $TBS->MergeField('ds', $data['ds']);
+
+
+          //For Statment of Account
+          $TBS->MergeField('st', $data['monetary']);
+          $TBS->MergeBlock('exp','array', $data['expense']);
+          $TBS->MergeBlock('pay','array', $data['payment']);
+
+      }
+      catch(\Exception $e)
+      {
+        pre($e->getMessage());
+        //$property_info = '';  
+        //return $property_info;
+      }
+  
+      // Download the file
+      $TBS->Show(OPENTBS_DOWNLOAD, $file.'.docx');    
+  }
 
 
 }
