@@ -1093,7 +1093,7 @@ class Property extends Model
         $data[] = $this->custom_mapper_t($value);    
       }    
       //pre($data); die;
-      $count = count($data);
+      $count = !empty($data) ? count($data) : 0;
 
       foreach ($data as $key => &$value) {
         foreach ($value as $k => $v) {
@@ -1120,7 +1120,7 @@ class Property extends Model
       foreach ($buyerData as $key => $value) {
         $data[] = $this->custom_mapper_t($value);    
       }    
-      $count = count($data);
+      $count = !empty($data) ? count($data) : 0;
 
       foreach ($data as $key => &$value) {
         foreach ($value as $k => $v) {
@@ -1270,6 +1270,8 @@ class Property extends Model
         //Action
         saveDoc($template_name, $file, $array);
 
+
+        return $file;
     }
 
 }

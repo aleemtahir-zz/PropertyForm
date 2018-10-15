@@ -276,7 +276,7 @@ function saveDoc($template='', $file, $data='')
     $TBS->Plugin(OPENTBS_CHANGE_PICTURE, 'dev_logo',$data['v'][0]['logo'] , $prms);        
   }
 
-  // pre($data); die;
+  //pre($data); die;
   if(!empty($data)){
     
       //pre($data); die;
@@ -307,9 +307,10 @@ function saveDoc($template='', $file, $data='')
         //$property_info = '';  
         //return $property_info;
       }
-  
+      
       // Download the file
-      $TBS->Show(OPENTBS_DOWNLOAD, $file.'.docx');    
+      $TBS->Show(OPENTBS_FILE, $file.'.docx');
+      // $ok = $TBS->Show(OPENTBS_DOWNLOAD, $file.'.docx');  
   }
 
 

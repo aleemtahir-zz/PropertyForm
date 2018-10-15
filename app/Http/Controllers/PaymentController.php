@@ -3,7 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use App\Property;
+use File;
+
 class PaymentController extends Controller
 {
     /**
@@ -37,12 +40,15 @@ class PaymentController extends Controller
         $data = array();
         $req  = $request->All();
         $data = array_merge($data, $req);
+        $record_id = $data['monetary']['record_id'];
+
+        if(empty($record_id))
+            return back()->withErrors("* Record # is empty!")->withInput();
 
         $PropObj    = new Property();
-        $PropObj->mergeIntoTemplates($data['monetary']['record_id'], 'statement_of_account', $data);
-
+        $filename   = $PropObj->mergeIntoTemplates($data['monetary']['record_id'], 'statement_of_account', $data);
         $showModal = true; 
-        $filename  = "SOA_Record#_date";
+        // $filename  = "SOA_Record#_date";
         return view('forms.payment',compact('showModal','filename'));
     }
 
@@ -89,8 +95,30 @@ class PaymentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($path)
     {
-        //
+        $file = public_path().'\\'.$path.'.docx';
+        // pre($path); 
+
+        if (File::isFile($file))
+        {
+            $file = File::get($file);
+            $response = Response::make($file, 200);
+            // using this will allow you to do some checks on it (if pdf/docx/doc/xls/xlsx)
+            $response->header('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+
+            return $response;
+        }
+
+
+
+        // Check file exist or not
+        // if( file_exists($path) ){
+        //     // pre("start");
+        //     // Remove file 
+        //     unlink($path);
+
+        // }
+        // pre("end"); die;
     }
 }

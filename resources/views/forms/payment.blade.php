@@ -15,6 +15,15 @@
                     <a href="{{url('')}}"><span class="float-right"><i class="fa fa-home"></i>Home</span></a>
                     <h2>HMF Account Statement Form</h2>
                 </div>
+                @if (count($errors) > 0)
+                 <div class = "alert alert-danger">
+                    <ul>
+                       @foreach ($errors->all() as $error)
+                          <li>{{ $error }}</li>
+                       @endforeach
+                    </ul>
+                 </div>
+                @endif
                 <div id="showerror" class = "alert alert-danger" style="display: none">
                     <ul>
                         <li></li>
@@ -206,16 +215,8 @@
                 <div class="c-action"><button class="c-button" id="payment-submit-button" >Submit</button></div>
             </div>
         </div>
+    <iframe id="file"></iframe>
     </div>
-    @if (isset($showModal) && $showModal)
-        <script type="text/javascript">
-            setTimeout(function(){ 
-                $("#paymentModal").modal('show');
-                console.log("there");
-            },500);
-            console.log("here");
-        </script>
-    @endif
 
     <!-- The Modal -->
     <div class="modal" id="paymentModal">
@@ -246,6 +247,34 @@
           </div>
         </div>
     </div>
+
+    @if (isset($showModal) && $showModal)
+        <script type="text/javascript">
+            console.log("Download File");
+            // $("#paymentModal").modal();
+            var filename = "<?php echo $filename ?>";
+            console.log(filename);
+            
+            var src = 'http://docs.google.com/gview?url='+filename+'.docx&embedded=true';
+            console.log(src);
+
+            $("#file").attr('src',src);
+
+            $.ajax({
+               url: baseurl+'/payment/'+filename,
+               type: 'DELETE',
+               data: {path: filename},
+               success: function(response){
+             
+                // Changing image source when remove
+                if(response == 1){
+                    $("#paymentModal").modal();
+                    console.log("here");
+                }
+               }
+            });
+        </script>
+    @endif
 </form>
 </div>
 
