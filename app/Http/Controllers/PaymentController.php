@@ -134,14 +134,29 @@ class PaymentController extends Controller
         if(!File::exists($path)) abort(404);
 
         $file = File::get($path);
-        unlink($path);
+        // unlink($path);
         // $type = File::mimeType($path);
 
-        $response = Response::make($file, 200);
-        // using this will allow you to do some checks on it (if pdf/docx/doc/xls/xlsx)
-        $response->header('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-
-        return $response;
+        // $response = Response::make($file, 200);
+        // // using this will allow you to do some checks on it (if pdf/docx/doc/xls/xlsx)
+        // $response->header('Pragma', ' no-cache');
+        // $response->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0');
+        // $response->header('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+        // $response->header('Content-Disposition', 'attachment; filename='.$filename.';');
+        // $response->header('Content-Transfer-Encoding', 'binary');
+        // $response->header('Content-Length', .filesize($file));
+        // readfile('GIE.docx');
+        $name = "filename=".$filename.";";
+        header('Pragma: no-cache');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+        header('Content-Disposition: attachment; '.$name);
+        header('Content-Transfer-Encoding: binary');
+        header('Content-Length: '.filesize($path));
+        readfile($path);
+        unlink($path);
+        // return $response;
 
     }
 }
