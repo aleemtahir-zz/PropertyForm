@@ -309,8 +309,12 @@ function saveDoc($template='', $file, $data='')
       }
       
       // Download the file
-      $TBS->Show(OPENTBS_FILE, $file.'.docx');
-      // $ok = $TBS->Show(OPENTBS_DOWNLOAD, $file.'.docx');  
+      $filePath = storage_path() . '/app/public/docs/' . $file.'.docx';
+      
+      if($template == 'statement_of_account')
+        $TBS->Show(OPENTBS_FILE, $filePath);
+      else
+        $TBS->Show(OPENTBS_DOWNLOAD, $file.'.docx');  
   }
 
 

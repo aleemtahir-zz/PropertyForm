@@ -171,7 +171,13 @@ border-bottom: 0; }
 #paymentModal{
   /*text-align: center;*/
   position: absolute;
-  top: 40%;
+  /*top: 20%;*/
+}
+.modal-title{
+  padding-left: 10px;
+  font-size: 1.0em !important;
+  color: #fff !important;
+  font-weight: normal !important; 
 }
 .modal-header{
   color: white;
@@ -180,9 +186,19 @@ border-bottom: 0; }
 }
 .modal-header button{
   padding: 10px !important;
+  min-width: 0 !important;
+}
+.modal-body{
+  padding: 30px 30px 40px 30px;
+  line-height: 2em;
 }
 
-.modal-body{
-  padding: 30px;
-  line-height: 2em;
+#btn-download{
+  position: absolute;
+  left: 20px;
+  padding: 10px;
+  text-decoration: none;
+  color: #fff;
+  background-color: #D85427;
+  /*padding-left: 0 !important;*/
 }

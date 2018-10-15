@@ -3,9 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Http\Response;
 use App\Property;
-use File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\File;
 
 class PaymentController extends Controller
 {
@@ -95,30 +96,52 @@ class PaymentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($path)
+    public function destroy($file)
     {
-        $file = public_path().'\\'.$path.'.docx';
-        // pre($path); 
+        $filePath = storage_path() . '/app/public/docs/' . $file.'.docx';
+        pre($filePath);
 
-        if (File::isFile($file))
+        /*$ok = Storage::url('app/public/docs/'.$file);   
+        pre($ok);  
+        $file = Storage::get('docs/'.$file);   
+        pre($file);  
+
+        if ($file)
         {
-            $file = File::get($file);
             $response = Response::make($file, 200);
             // using this will allow you to do some checks on it (if pdf/docx/doc/xls/xlsx)
             $response->header('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
 
             return $response;
-        }
+        }*/
 
 
 
         // Check file exist or not
-        // if( file_exists($path) ){
-        //     // pre("start");
-        //     // Remove file 
-        //     unlink($path);
+        if( file_exists($filePath) ){
+            // pre("start");
+            // Remove file 
+            unlink($filePath);
 
-        // }
+        }
         // pre("end"); die;
+    }
+
+    public function download($filename='')
+    {
+        $path = storage_path() . '/app/public/docs/' . $filename;
+
+        if(!File::exists($path)) abort(404);
+
+        $file = File::get($path);
+        unlink($path);
+        // $type = File::mimeType($path);
+
+        $response = Response::make($file, 200);
+        // using this will allow you to do some checks on it (if pdf/docx/doc/xls/xlsx)
+        $response->header('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+
+        return $response;
+
     }
 }

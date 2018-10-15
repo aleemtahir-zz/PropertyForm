@@ -52,52 +52,52 @@
                         <div class="">
                             <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12">
                                 <div class="c-label  "><label for="c-2-26">Sale Price</label></div>
-                                <div class="c-editor"><input name="monetary[price_i]" type="text" id="c-2-26" placeholder=""></div>
+                                <div class="c-editor"><input name="monetary[price_i]" type="text" id="c-2-26" placeholder="1,234,567.89" class="currency totalExpense"></div>
                                 <div class="c-validation"></div>
                             </div>
                             <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">
                                 <div class="c-label  "><label for="c-3-25">Contract Price</label></div>
-                                <div class="c-editor"><input name="monetary[cprice_i]" type="text" id="c-3-25" placeholder=""></div>
+                                <div class="c-editor"><input name="monetary[cprice_i]" type="text" id="c-3-25" placeholder="1,234,567.89" class="currency"></div>
                                 <div class="c-validation">Contract Price is required.</div>
                             </div>
                             <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">
                                 <div class="c-label  "><label for="c-4-24">Upgrades</label></div>
-                                <div class="c-editor"><input name="monetary[upgrade]" type="text" id="c-4-24" placeholder=""></div>
+                                <div class="c-editor"><input name="monetary[upgrade]" type="text" id="c-4-24" placeholder="1,234,567.89" class="currency"></div>
                                 <div class="c-validation">Upgrades is required.</div>
                             </div>
                             <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">
                                 <div class="c-label  "><label for="c-5-23">½ Stamp Duty</label></div>
-                                <div class="c-editor"><input name="monetary[half_stamp_duty]" type="text" id="c-5-23" placeholder=""></div>
+                                <div class="c-editor"><input name="monetary[half_stamp_duty]" type="text" id="c-5-23" placeholder="1,234,567.89" class="currency"></div>
                                 <div class="c-validation">½ Stamp Duty is required.</div>
                             </div>
                             <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">
                                 <div class="c-label  "><label for="c-6-22">½ Registration Fee</label></div>
-                                <div class="c-editor"><input name="monetary[half_reg_fee]" type="text" id="c-6-22" placeholder=""></div>
+                                <div class="c-editor"><input name="monetary[half_reg_fee]" type="text" id="c-6-22" placeholder="1,234,567.89" class="currency"></div>
                                 <div class="c-validation">½ Registration Fee is required.</div>
                             </div>
                             <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">
                                 <div class="c-label  "><label for="c-7-21">½ Land Agreement Cost</label></div>
-                                <div class="c-editor"><input name="monetary[half_land_agreement]" type="text" id="c-7-21" placeholder=""></div>
+                                <div class="c-editor"><input name="monetary[half_land_agreement]" type="text" id="c-7-21" placeholder="1,234,567.89" class="currency"></div>
                                 <div class="c-validation">½ Land Agreement Cost is required.</div>
                             </div>
                             <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">
                                 <div class="c-label  "><label for="c-8-20">½ Building Agreement Cost</label></div>
-                                <div class="c-editor"><input name="monetary[half_build_agreement]" type="text" id="c-8-20" placeholder=""></div>
+                                <div class="c-editor"><input name="monetary[half_build_agreement]" type="text" id="c-8-20" placeholder="1,234,567.89" class="currency"></div>
                                 <div class="c-validation">½ Building Agreement Cost is required.</div>
                             </div>
                             <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">
                                 <div class="c-label  "><label for="c-9-19">½ Maintenance Costs</label></div>
-                                <div class="c-editor"><input name="monetary[half_maintain_cost]" type="text" id="c-9-19" placeholder=""></div>
+                                <div class="c-editor"><input name="monetary[half_maintain_cost]" type="text" id="c-9-19" placeholder="1,234,567.89" class="currency"></div>
                                 <div class="c-validation">½ Maintenance Costs is required.</div>
                             </div>
                             <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">
                                 <div class="c-label  "><label for="c-10-18">½ Title Costs</label></div>
-                                <div class="c-editor"><input name="monetary[half_title]" type="text" id="c-10-18" placeholder=""></div>
+                                <div class="c-editor"><input name="monetary[half_title]" type="text" id="c-10-18" placeholder="1,234,567.89" class="currency"></div>
                                 <div class="c-validation">½ Title Costs is required.</div>
                             </div>
                             <div class="c-number-integer c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12  c-required">
                                 <div class="c-label  "><label for="c-11-17">Miscellaneous Expenses</label></div>
-                                <div class="c-editor"><input name="monetary[misc_expense]" type="text" id="c-11-17" placeholder=""></div>
+                                <div class="c-editor"><input name="monetary[misc_expense]" type="text" id="c-11-17" placeholder="1,234,567.89" class="currency"></div>
                                 <div class="c-validation">Miscellaneous Expenses is required.</div>
                             </div>
                             <div class="c-section c-col-1 c-sml-col-1 c-span-12 c-sml-span-12">
@@ -118,7 +118,7 @@
                                             </div>
                                             <div class="c-currency c-field c-col-7 c-sml-col-7 c-span-6 c-sml-span-6">
                                                 <div class="c-label  "><label for="c-13-15">Amount</label></div>
-                                                <div class="c-editor"><input type="text" id="c-13-15" name="expense[price][]" placeholder=""></div>
+                                                <div class="c-editor"><input type="text" id="c-13-15" name="expense[price][]" placeholder="1,234,567.89" class="currency "></div>
                                                 <div class="c-validation"></div>
                                             </div>
                                         </div>
@@ -128,7 +128,7 @@
                                 <div class="c-repeating-section-add"><a class="c-add-item" title="Add" tabindex="0">Add Expense</a></div>
                                 <div class="c-currency c-field c-col-9 c-sml-col-5 c-span-6 c-sml-span-6">
                                     <div class="c-label  "><label for="total_expense">Total Expense</label></div>
-                                    <div class="c-editor"><input type="text" id="total_expense" name="monetary[total_expense]"></div>
+                                    <div class="c-editor"><input type="text" id="total_expense" name="monetary[total_expense]" placeholder="1,234,567.89" class="currency "></div>
                                     <div class="c-validation"></div>
                                 </div>
                             </div>
@@ -172,7 +172,7 @@
                                             </div>
                                             <div class="c-currency c-field c-col-7 c-sml-col-7 c-span-6 c-sml-span-6">
                                                 <div class="c-label  "><label for="c-16-8">Amount </label></div>
-                                                <div class="c-editor"><input type="text" id="c-16-8" name="payment[price][]" placeholder=""></div>
+                                                <div class="c-editor"><input type="text" id="c-16-8" name="payment[price][]" placeholder="1,234,567.89" class="currency"></div>
                                                 <div class="c-validation"></div>
                                             </div>
 
@@ -188,7 +188,7 @@
                                             </div>
                                             <div class="c-currency c-field c-col-5 c-sml-col-5 c-span-6 c-sml-span-6">
                                                 <div class="c-label  "><label for="c-18-6">Amount J$</label></div>
-                                                <div class="c-editor"><input type="text" id="c-18-6" name="payment[price_j][]" placeholder=""></div>
+                                                <div class="c-editor"><input type="text" id="c-18-6" name="payment[price_j][]" placeholder="1,234,567.89" class="currency"></div>
                                                 <div class="c-validation"></div>
                                             </div>
                                         </div>
@@ -198,7 +198,7 @@
                                 <div class="c-repeating-section-add"><a class="c-add-item" title="Add" tabindex="0">Add Payment</a></div>
                                 <div class="c-currency c-field c-col-9 c-sml-col-5 c-span-6 c-sml-span-6">
                                     <div class="c-label  "><label for="total_payment">Total Payment</label></div>
-                                    <div class="c-editor"><input type="text" id="total_payment" name="monetary[total_payment]"></div>
+                                    <div class="c-editor"><input type="text" id="total_payment" name="monetary[total_payment]" placeholder="1,234,567.89" class="currency"></div>
                                     <div class="c-validation"></div>
                                 </div>
                             </div>
@@ -214,65 +214,70 @@
             <div class="c-button-section">
                 <div class="c-action"><button class="c-button" id="payment-submit-button" >Submit</button></div>
             </div>
+            <!-- The Modal -->
+            <div class="modal" id="paymentModal">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                  
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                      <h4 class="modal-title">Account Statement</h4>
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                        <span>Your Statement of Account has been Updated.</span><br>
+                        <span>Saved as: </span>&nbsp;<strong>
+                            @if(isset($filename))
+                                {{$filename}}.docx
+                            @endif
+                        </strong>
+                        <div class="c-button-section st-down">
+                            @if(isset($filename))
+                                <div class="c-action"><a href="payment/download/{{$filename}}.docx" target="_blank" class="c-button" id="btn-download" >Download</a></div>
+                            @endif
+                        </div>
+                    </div>
+                    
+                    <!-- Modal footer -->
+                    <!-- <div class="modal-footer">
+                      <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+                    </div> -->
+                    
+                  </div>
+                </div>
+            </div>
         </div>
-    <iframe id="file"></iframe>
+    {{-- <iframe id="file"></iframe> --}}
     </div>
 
-    <!-- The Modal -->
-    <div class="modal" id="paymentModal">
-        <div class="modal-dialog">
-          <div class="modal-content">
-          
-            <!-- Modal Header -->
-            <div class="modal-header">
-              <h4 class="modal-title">Account Statement</h4>
-              <button type="button" class="close" data-dismiss="modal">&times;</button>
-            </div>
-            
-            <!-- Modal body -->
-            <div class="modal-body">
-                <span>Your Statement of Account has been updated and</span><br>
-                <span>Saved as </span>&nbsp;<strong>
-                    @if(isset($filename))
-                        {{$filename}}
-                    @endif
-                </strong>
-            </div>
-            
-            <!-- Modal footer -->
-            <!-- <div class="modal-footer">
-              <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-            </div> -->
-            
-          </div>
-        </div>
-    </div>
 
     @if (isset($showModal) && $showModal)
         <script type="text/javascript">
             console.log("Download File");
-            // $("#paymentModal").modal();
+            $("#paymentModal").modal();
             var filename = "<?php echo $filename ?>";
             console.log(filename);
             
-            var src = 'http://docs.google.com/gview?url='+filename+'.docx&embedded=true';
-            console.log(src);
+            // var src = 'http://docs.google.com/gview?url='+filename+'.docx&embedded=true';
+            // console.log(src);
 
-            $("#file").attr('src',src);
+            // $("#file").attr('src',src);
 
-            $.ajax({
-               url: baseurl+'/payment/'+filename,
-               type: 'DELETE',
-               data: {path: filename},
-               success: function(response){
+            // $.ajax({
+            //    url: baseurl+'/payment/'+filename,
+            //    type: 'DELETE',
+            //    data: {path: filename},
+            //    success: function(response){
              
-                // Changing image source when remove
-                if(response == 1){
-                    $("#paymentModal").modal();
-                    console.log("here");
-                }
-               }
-            });
+            //     // Changing image source when remove
+            //     if(response == 1){
+            //         $("#paymentModal").modal();
+            //         console.log("here");
+            //     }
+            //    }
+            // });
         </script>
     @endif
 </form>

@@ -273,7 +273,7 @@ $( "#dev_name" ).autocomplete({
 // $( "#state" ).autocomplete({
 // 	source: states
 // });
-
+// $("#paymentModal").modal();
 
 /*END Document Ready
 ====================================*/
@@ -297,6 +297,31 @@ $(function(){
 		});
 	});
 
+});
+
+$(document).ready( function() { 
+	var totalExpense = 0;
+	var totalPayment = 0;
+	$('.totalExpense').change(function(e){
+		/*let val = $(this).val();
+		// val = ( val !== '' ? val.replace(/,/g, '') : 0);
+		totalExpense = parseInt(totalExpense) + parseInt(val);     
+		console.log(this);
+		console.log(totalExpense);*/
+
+		let price 		= $('#c_price').val();
+		let rate 		= $('#fc_rate').val();	
+		let cp_jamaican = $('#c_pricej').val();
+		let cp_deposit 	= $('#cp_deposit').val();
+		let cp_second 	= $('#cp_second').val();
+		let cp_third 	= $('#cp_third').val();
+		let final_pay 	= $('#final_pay').val();
+		let cp_fourth 	= $('#cp_fourth').val();
+		let cp_final 	= $('#cp_final').val();
+		let cp_stamp 	= $('#cp_stamp').val();
+		let cp_reg_fee 	= $('#cp_reg_fee').val();
+	
+	});
 });
 
 function updateBuilderContractPayment(id)

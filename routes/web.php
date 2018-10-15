@@ -36,6 +36,7 @@ Route::post('sendemail',[
 ]);
 Route::resource('DeveloperDataFormA','DevController');
 Route::resource('DeveloperDataFormB','DevController');
+Route::get('payment/download/{filename}', 'PaymentController@download');
 Route::resource('payment','PaymentController');
 Route::resource('upload','UploadController');
 Route::post('upload/show',[
