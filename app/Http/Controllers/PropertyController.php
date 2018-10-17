@@ -250,7 +250,7 @@ class PropertyController extends Controller
           return Redirect::to('property/show')->with('message', 'Please Select Any Record ID.');
         else
         {
-          $PropObj->mergeIntoTemplates($request->autocomplete, $template_name);
+          $PropObj->mergeIntoTemplates($request->autocomplete, $request->filename, $template_name);
         } 
 
         //Show Word Templates

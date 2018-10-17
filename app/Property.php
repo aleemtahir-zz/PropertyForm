@@ -1180,7 +1180,7 @@ class Property extends Model
       return $id;
     }
 
-    public function mergeIntoTemplates($record_id, $template_name, $extra='')
+    public function mergeIntoTemplates($record_id, $template_name, $filename, $extra='')
     {
 
         $values['id']   = $this->get_id('tbl_key_id','property_key',$record_id); 
@@ -1231,47 +1231,40 @@ class Property extends Model
           else
             $array[$buyer['prefix']][$buyer['index']]['and'] = '';
         }
-        //pre($array); die;
+
         
-        //File Counter
-        $var = file_get_contents('counter.txt');
-        $var++;
-        file_put_contents('counter.txt', $var);
-        
-        if(strlen($var) == 1)
-          $var = '000'.$var;
-        elseif(strlen($var) == 2)
-          $var = '00'.$var;
-        elseif(strlen($var) == 3)
-          $var = '0'.$var;
-
-        //pre(strlen($var)); die;
-
-        //File Save As Name
-        $buyer = (isset($array['b'][0]['middle'])) ? $array['b'][0]['middle'] : $array['b'][0]['last'];
-        $vendor = (isset($array['v'][0]['middle'])) ? $array['v'][0]['middle'] : $array['v'][0]['last'];
-
-
-
-        if(!empty($request->filename))
-          $file = $request->filename;
-        else
-          $file = $buyer.'_'.$vendor.'_'.$array['p']['volume_no'].'/'.$array['p']['folio_no'].'_'.$var;
-
-        $file = str_replace('__', '_', $file);
-
         if(!empty($extra))
         {
           $array = array_merge($array, $extra);
-          $file  = "SOA_".$record_id."_".date("Y-m-d");
-          $file  = preg_replace('/\s+/', '', $file);
+        }
+        else
+        {
+          //File Counter
+          $var = file_get_contents('counter.txt');
+          $var++;
+          file_put_contents('counter.txt', $var);
+
+          if(strlen($var) == 1)
+            $var = '000'.$var;
+          elseif(strlen($var) == 2)
+            $var = '00'.$var;
+          elseif(strlen($var) == 3)
+            $var = '0'.$var;
+
+          //File Save As Name
+          $buyer = (isset($array['b'][0]['middle'])) ? $array['b'][0]['middle'] : $array['b'][0]['last'];
+          $vendor = (isset($array['v'][0]['middle'])) ? $array['v'][0]['middle'] : $array['v'][0]['last'];
+
+          if(empty($filename)){
+            $filename = $buyer.'_'.$vendor.'_'.$array['p']['volume_no'].'/'.$array['p']['folio_no'].'_'.$var;
+            $filename = str_replace('__', '_', $filename);
+          }
         }
 
         //Action
-        saveDoc($template_name, $file, $array);
+        saveDoc($template_name, $filename, $array);
 
-
-        return $file;
+        return $filename;
     }
 
 }

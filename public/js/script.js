@@ -126,6 +126,7 @@ $(document).ready(function(){
 		});
 
 		initInputMask();
+		_triggerStatementSum();
 	});
 
 	//Remove VF Section 
@@ -228,7 +229,7 @@ $('select.c-placeholder-text-styled').on('change',function(){
 
 $( "#autocomplete" ).autocomplete({
 	source: baseurl+"/property/autocomplete",
-	minLength: 2,
+	minLength: 1,
 	select: function(event, ui) {
 		$('#autocomplete').val(ui.item.id);
 		$('button[name="mergeBtn"]').map(function(){
@@ -236,12 +237,18 @@ $( "#autocomplete" ).autocomplete({
 			$(this).removeAttr("disabled");
 		
 		});
-	}
+	},   //HERE - make sure to add the comma after your select
+    response: function(event, ui) {
+        if (!ui.content.length) {
+            var noResult = { value:"",label:"No results found" };
+            ui.content.push(noResult);
+        }
+    }
 });
 
 $( "#dev_name" ).autocomplete({
 	source: baseurl+"/property/autoDevName",
-	minLength: 2,
+	minLength: 1,
 	select: function(event, ui) {
 		$('#dev_name').val(ui.item.id);
 		$('#dev_id').val(ui.item.id);
@@ -251,7 +258,13 @@ $( "#dev_name" ).autocomplete({
 			$(this).removeAttr("disabled");
 		
 		});*/
-	}
+	},   //HERE - make sure to add the comma after your select
+    response: function(event, ui) {
+        if (!ui.content.length) {
+            var noResult = { value:"",label:"No results found" };
+            ui.content.push(noResult);
+        }
+    }
 });
 
 // var states = [
@@ -275,10 +288,87 @@ $( "#dev_name" ).autocomplete({
 // });
 // $("#paymentModal").modal();
 
+
+_triggerStatementSum();
+
 /*END Document Ready
 ====================================*/
 });
 
+/*Account Statement Form*/
+function _triggerStatementSum()
+{ 
+	var totalExpense = 0;
+	// console.log($('.totalExpense'));
+	$('.totalExpense').change(function(e){
+
+		/*let val = $(this).val();
+		// val = ( val !== '' ? val.replace(/,/g, '') : 0);
+		totalExpense = parseInt(totalExpense) + parseInt(val);     
+		console.log(totalExpense);*/
+
+		sumExpenses();
+
+	});
+
+	$('.totalPayment').change(function(e){
+
+		var totalPayment = 0;
+		$("input[name*='payment[price]']").each(function(){ 
+			let other_price = $(this).val();
+			other_price 	= ( other_price !== '' ? parseInt(other_price.replace(/,/g, '')) : 0);
+			// console.log(other_price);
+			totalPayment += other_price;
+		});
+
+		$("#total_payment").val(totalPayment);
+
+	});
+}
+
+/*Sum Expenses
+======================================*/
+function sumExpenses()
+{ 
+	let sale_price 		= $('#sale_price').val();
+	let contract_price 	= $('#contract_price').val();	
+	let upgrades 		= $('#upgrades').val();
+	let half_stamp_duty = $('#half_stamp_duty').val();
+	let half_reg_fee 	= $('#half_reg_fee').val();
+	let half_land_agreement 	= $('#half_land_agreement').val();
+	let half_build_agreement 	= $('#half_build_agreement').val();
+	let maintenance_expense 	= $('#maintenance_expense').val();
+	let half_title_cost = $('#half_title_cost').val();
+	let misc_expense 	= $('#misc_expense').val();
+
+	var other_expenses = 0;
+	$("input[name*='expense[price]']").each(function(){ 
+		let other_price = $(this).val();
+		other_price 	= ( other_price !== '' ? parseInt(other_price.replace(/,/g, '')) : 0);
+		other_expenses += other_price;
+	});
+
+	sale_price 		= ( sale_price !== '' ? parseInt(sale_price.replace(/,/g, '')) : 0);
+	contract_price 	= ( contract_price !== '' ? parseInt(contract_price.replace(/,/g, '')) : 0);
+	upgrades 		= ( upgrades !== '' ? parseInt(upgrades.replace(/,/g, '')) : 0);
+	half_stamp_duty = ( half_stamp_duty !== '' ? parseInt(half_stamp_duty.replace(/,/g, '')) : 0);
+	half_reg_fee 	= ( half_reg_fee !== '' ? parseInt(half_reg_fee.replace(/,/g, '')) : 0);
+	half_land_agreement 	= ( half_land_agreement !== '' ? parseInt(half_land_agreement.replace(/,/g, '')) : 0);
+	half_build_agreement 	= ( half_build_agreement !== '' ? parseInt(half_build_agreement.replace(/,/g, '')) : 0);
+	maintenance_expense 	= ( maintenance_expense !== '' ? parseInt(maintenance_expense.replace(/,/g, '')) : 0);
+	half_title_cost = ( half_title_cost !== '' ? parseInt(half_title_cost.replace(/,/g, '')) : 0);
+	misc_expense 	= ( misc_expense !== '' ? parseInt(misc_expense.replace(/,/g, '')) : 0);
+
+	totalExpense = parseInt(sale_price) + parseInt(contract_price) + parseInt(upgrades) + parseInt(half_stamp_duty) + parseInt(half_reg_fee) 
+		+ parseInt(half_land_agreement) + parseInt(half_build_agreement) + parseInt(maintenance_expense) + parseInt(half_title_cost) 
+		+ parseInt(misc_expense) + parseInt(other_expenses);
+	
+	$("#total_expense").val(totalExpense);
+}
+
+/*
+Account Statement Form END
+=====================================*/
 
 /*Calculate Price
 =====================================*/
@@ -299,30 +389,6 @@ $(function(){
 
 });
 
-$(document).ready( function() { 
-	var totalExpense = 0;
-	var totalPayment = 0;
-	$('.totalExpense').change(function(e){
-		/*let val = $(this).val();
-		// val = ( val !== '' ? val.replace(/,/g, '') : 0);
-		totalExpense = parseInt(totalExpense) + parseInt(val);     
-		console.log(this);
-		console.log(totalExpense);*/
-
-		let price 		= $('#c_price').val();
-		let rate 		= $('#fc_rate').val();	
-		let cp_jamaican = $('#c_pricej').val();
-		let cp_deposit 	= $('#cp_deposit').val();
-		let cp_second 	= $('#cp_second').val();
-		let cp_third 	= $('#cp_third').val();
-		let final_pay 	= $('#final_pay').val();
-		let cp_fourth 	= $('#cp_fourth').val();
-		let cp_final 	= $('#cp_final').val();
-		let cp_stamp 	= $('#cp_stamp').val();
-		let cp_reg_fee 	= $('#cp_reg_fee').val();
-	
-	});
-});
 
 function updateBuilderContractPayment(id)
 {	
@@ -627,6 +693,8 @@ function lookUpProperty(flag='')
 		            			}	
 	            			}	
 	            			checkDropDownStatus();
+	            			if(flag !== 1)
+								sumExpenses();
 	            		});
 	            	}
             	}, 300);         	

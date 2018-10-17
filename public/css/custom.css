@@ -202,3 +202,9 @@ border-bottom: 0; }
   background-color: #D85427;
   /*padding-left: 0 !important;*/
 }
+
+
+/*Autocommplete spinner*/
+.ui-autocomplete-loading { 
+  background:url('../img/spinner.gif') no-repeat right center 
+}

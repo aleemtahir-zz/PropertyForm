@@ -276,7 +276,6 @@ function saveDoc($template='', $file, $data='')
     $TBS->Plugin(OPENTBS_CHANGE_PICTURE, 'dev_logo',$data['v'][0]['logo'] , $prms);        
   }
 
-  //pre($data); die;
   if(!empty($data)){
     
       //pre($data); die;
@@ -308,11 +307,13 @@ function saveDoc($template='', $file, $data='')
         //return $property_info;
       }
       
-      // Download the file
-      $filePath = storage_path() . '/app/public/docs/' . $file.'.docx';
-      
-      if($template == 'statement_of_account')
+      /*If template is Statemenet Of Account then save document on server then remove after downloading*/
+      if($template == 'statement_of_account'){
+        $filePath = storage_path() . '/app/public/docs/' . $file.'.docx';
+      // pre($filePath); die;
         $TBS->Show(OPENTBS_FILE, $filePath);
+      }
+      // Download the file
       else
         $TBS->Show(OPENTBS_DOWNLOAD, $file.'.docx');  
   }

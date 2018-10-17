@@ -38,16 +38,24 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-        $data = array();
-        $req  = $request->All();
-        $data = array_merge($data, $req);
+
+        $data = $request->All();
         $record_id = $data['monetary']['record_id'];
+        $total_expense = !empty($data['monetary']['total_expense']) ? str_replace(',', '', $data['monetary']['total_expense']) : 0;
+        $total_payment = !empty($data['monetary']['total_payment']) ? str_replace(',', '', $data['monetary']['total_payment']) : 0;
+        $data['monetary']['balance'] = $total_payment - $total_expense;
+        // pre($data); die;
 
         if(empty($record_id))
             return back()->withErrors("* Record # is empty!")->withInput();
 
+        //Create File Name
+        $filename  = "SOA_".$record_id."_".date("Y-m-d");
+        $filename  = preg_replace('/\s+/', '', $filename);
+
+        //Start Mergeing
         $PropObj    = new Property();
-        $filename   = $PropObj->mergeIntoTemplates($data['monetary']['record_id'], 'statement_of_account', $data);
+        $filename   = $PropObj->mergeIntoTemplates($record_id, 'statement_of_account', $filename, $data);
         $showModal = true; 
         // $filename  = "SOA_Record#_date";
         return view('forms.payment',compact('showModal','filename'));
