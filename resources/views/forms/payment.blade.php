@@ -16,15 +16,6 @@
                         <a href="{{url('')}}"><span class="float-right"><i class="fa fa-home"></i>Home</span></a>
                         <h2>HMF Account Statement Form</h2>
                     </div>
-                    @if (count($errors) > 0)
-                     <div class = "alert alert-danger">
-                        <ul>
-                           @foreach ($errors->all() as $error)
-                              <li>{{ $error }}</li>
-                           @endforeach
-                        </ul>
-                     </div>
-                    @endif
                     <div id="showerror" class = "alert alert-danger" style="display: none">
                         <ul>
                             <li></li>
@@ -33,6 +24,15 @@
                 </div>
                 <div class="c-forms-template">
                     <div class="c-forms-form-main c-span-24 c-sml-span-12">
+                        @if (count($errors) > 0)
+                         <div class = "alert alert-danger">
+                            <ul>
+                               @foreach ($errors->all() as $error)
+                                  <li>{{ $error }}</li>
+                               @endforeach
+                            </ul>
+                         </div>
+                        @endif
                         <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-7 c-sml-span-12">
                             <div class="c-label  "><label for="c-2-768">Record #</label></div>
                             <div class="c-editor float-right" style="width: 150px"> 
