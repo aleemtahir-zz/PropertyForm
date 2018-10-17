@@ -278,7 +278,7 @@ function saveDoc($template='', $file, $data='')
 
   if(!empty($data)){
     
-      //pre($data); die;
+      // pre($data); die;
       try{
           // replace variables
           $TBS->MergeField('date', $date);
@@ -296,7 +296,7 @@ function saveDoc($template='', $file, $data='')
 
           //For Statment of Account
           $TBS->MergeField('st', $data['monetary']);
-          $TBS->MergeBlock('exp','array', $data['expense']);
+          $TBS->MergeBlock('exp1,exp2','array', $data['expense']);
           $TBS->MergeBlock('pay','array', $data['payment']);
 
       }

@@ -43,11 +43,30 @@ class PaymentController extends Controller
         $record_id = $data['monetary']['record_id'];
         $total_expense = !empty($data['monetary']['total_expense']) ? str_replace(',', '', $data['monetary']['total_expense']) : 0;
         $total_payment = !empty($data['monetary']['total_payment']) ? str_replace(',', '', $data['monetary']['total_payment']) : 0;
+        $rate          = !empty($data['payment']['rate']) ? str_replace(',', '', $data['payment']['rate']) : 0;
         $data['monetary']['balance'] = $total_payment - $total_expense;
+        $data['monetary']['total_payment_j'] = $total_payment * $rate[0] ;
         // pre($data); die;
 
         if(empty($record_id))
             return back()->withErrors("* Record # is empty!")->withInput();
+
+        //Set Data
+        $expense = array();
+        foreach ($data['expense'] as $key => $value) {
+            foreach ($value as $k => $v) {
+                $expense[$k][$key] = $v;
+            }
+        }
+        $payment = array();
+        foreach ($data['payment'] as $key => $value) {
+            foreach ($value as $k => $v) {
+                $payment[$k][$key] = $v;
+            }
+        }
+
+        $data['expense'] = $expense;
+        $data['payment'] = $payment;
 
         //Create File Name
         $filename  = "SOA_".$record_id."_".date("Y-m-d");

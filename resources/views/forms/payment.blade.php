@@ -172,11 +172,21 @@
                                                     <div class="c-validation"></div>
                                                 </div>
                                                 <div class="c-currency c-field c-col-7 c-sml-col-7 c-span-6 c-sml-span-6">
+                                                  <div class="c-label  "><label for="c-57-1894">FX Rate</label></div>
+                                                  <div class="c-editor"><input name="payment[rate][]" type="text" id="fc_rate" placeholder="1,234,567.89" class="currency totalPayment"></div>
+                                                  <div class="c-validation"></div>
+                                              </div>
+                                                <div class="c-currency c-field c-col-7 c-sml-col-7 c-span-6 c-sml-span-6">
                                                     <div class="c-label  "><label for="c-16-8">Amount </label></div>
-                                                    <div class="c-editor"><input type="text" id="c-16-8" name="payment[price][]" placeholder="1,234,567.89" class="currency totalPayment"></div>
+                                                    <div class="c-editor"><input type="text" id="c_price" name="payment[price][]" placeholder="1,234,567.89" class="currency totalPayment"></div>
                                                     <div class="c-validation"></div>
                                                 </div>
 
+                                                <div class="c-currency c-field c-col-5 c-sml-col-5 c-span-6 c-sml-span-6">
+                                                    <div class="c-label  "><label for="c-18-6">Amount J$</label></div>
+                                                    <div class="c-editor"><input type="text" id="c_pricej" name="payment[price_j][]" placeholder="1,234,567.89" class="currency"></div>
+                                                    <div class="c-validation"></div>
+                                                </div>
                                                 <div class="c-date-date c-field c-col-1 c-sml-col-1 c-span-6 c-sml-span-6">
                                                     <div class="c-label  "><label for="c-17-7">Date Received</label></div>
                                                     <div class="c-editor">
@@ -185,11 +195,6 @@
                                                         </div>
                                                         <div class="c-editor-date-icon input-group-addon"><i class="icon-calendar"></i></div>
                                                     </div>
-                                                    <div class="c-validation"></div>
-                                                </div>
-                                                <div class="c-currency c-field c-col-5 c-sml-col-5 c-span-6 c-sml-span-6">
-                                                    <div class="c-label  "><label for="c-18-6">Amount J$</label></div>
-                                                    <div class="c-editor"><input type="text" id="c-18-6" name="payment[price_j][]" placeholder="1,234,567.89" class="currency"></div>
                                                     <div class="c-validation"></div>
                                                 </div>
                                             </div>

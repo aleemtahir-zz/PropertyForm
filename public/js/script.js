@@ -323,6 +323,8 @@ function _triggerStatementSum()
 
 		$("#total_payment").val(totalPayment);
 
+		// console.log($("input[name='payment[price_j]']"));
+
 	});
 }
 
