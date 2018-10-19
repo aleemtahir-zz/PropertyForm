@@ -105,6 +105,10 @@ $(document).ready(function(){
     			$(this).datepicker();
     		}
     	});
+
+    	//Show Remove Button
+		add_section.find('.c-action-col').removeClass('hide-remove-button');
+
     	//add_section.find('.c-datepicker').attr('id');
 		add_section.appendTo(section_group);
 
@@ -291,6 +295,8 @@ $( "#dev_name" ).autocomplete({
 
 _triggerStatementSum();
 
+
+
 /*END Document Ready
 ====================================*/
 });
@@ -300,7 +306,7 @@ function _triggerStatementSum()
 { 
 	var totalExpense = 0;
 	// console.log($('.totalExpense'));
-	$('.totalExpense').change(function(e){
+	$('.totalExpense').change(function(){
 
 		/*let val = $(this).val();
 		// val = ( val !== '' ? val.replace(/,/g, '') : 0);
@@ -314,7 +320,19 @@ function _triggerStatementSum()
 	$('.totalPayment').change(function(e){
 
 		var totalPayment = 0;
-		$("input[name*='payment[price]']").each(function(){ 
+		//Assign values to price in jamaican
+		let i = $(this).attr('id').split('-')[2];
+		// console.log($('#fc_rate-1-'+i));
+		let rate 	= $('#fc_rate-1-'+i).val();
+		let c_price = $('#c_price-1-'+i).val();
+	
+		rate 		= ( rate !== '' ? parseInt(rate.replace(/,/g, '')) : 0);
+		c_price 	= ( c_price !== '' ? parseInt(c_price.replace(/,/g, '')) : 0);
+
+		$('#c_pricej-1-'+i).val(rate * c_price);
+
+
+		$("input[name*='payment[price_j']").each(function(){ 
 			let other_price = $(this).val();
 			other_price 	= ( other_price !== '' ? parseInt(other_price.replace(/,/g, '')) : 0);
 			// console.log(other_price);
@@ -323,9 +341,29 @@ function _triggerStatementSum()
 
 		$("#total_payment").val(totalPayment);
 
+		let t_expense = $("#total_expense").val();
+
+		totalPayment = isNaN(totalPayment) ? 0 : totalPayment;
+		t_expense = isNaN(t_expense) ? 0 : t_expense;
+
+		let balance = totalPayment - t_expense;
+		$("#balance").val(balance);
+
 		// console.log($("input[name='payment[price_j]']"));
 
 	});
+
+	$('input[name*="monetary[total"').change(function(){
+		let totalPayment = $("#total_payment").val();
+		let totalExpense = $("#total_expense").val();
+
+		totalExpense = isNaN(totalExpense) ? 0 : totalExpense;
+		totalPayment = isNaN(totalPayment) ? 0 : totalPayment;
+
+		let balance = totalPayment - totalExpense;
+		$("#balance").val(balance);
+	});
+
 }
 
 /*Sum Expenses
@@ -366,6 +404,13 @@ function sumExpenses()
 		+ parseInt(misc_expense) + parseInt(other_expenses);
 	
 	$("#total_expense").val(totalExpense);
+
+	let t_payment 	= $("#total_payment").val();
+	totalExpense = isNaN(totalExpense) ? 0 : totalExpense;
+	t_payment = isNaN(t_payment) ? 0 : t_payment;
+
+	let balance 	= t_payment - totalExpense;
+	$("#balance").val(balance);
 }
 
 /*

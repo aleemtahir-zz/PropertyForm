@@ -208,3 +208,9 @@ border-bottom: 0; }
 .ui-autocomplete-loading { 
   background:url('../img/spinner.gif') no-repeat right center 
 }
+
+
+/*Add section part*/
+.hide-remove-button{
+  display: none !important;
+}

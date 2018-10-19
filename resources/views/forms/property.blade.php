@@ -487,7 +487,7 @@
                                       <div id="vendor" class="c-repeating-section-group">
                                           <div class="c-repeating-section-container">
                                               <div class="c-repeating-section-item-title">
-                                                  <div class="c-action-col"><a class="c-remove-item" title="Remove Vendor"><i class="icon-remove-sign"></i></a></div>
+                                                  <div class="c-action-col hide-remove-button"><a class="c-remove-item" title="Remove Vendor"><i class="icon-remove-sign"></i></a></div>
                                                   <h5>Vendor <span>1</span></h5>
                                               </div>
                                               <div class="c-repeating-section-item">
@@ -1038,7 +1038,7 @@
                               <div id='buyer' class="c-repeating-section-group">
                                   <div class="c-repeating-section-container">
                                       <div class="c-repeating-section-item-title">
-                                          <div class="c-action-col"><a class="c-remove-item" title="Remove Item"><i class="icon-remove-sign"></i></a></div>
+                                          <div class="c-action-col hide-remove-button"><a class="c-remove-item" title="Remove Item"><i class="icon-remove-sign"></i></a></div>
                                           <h4>Purchaser <span>1</span></h4>
                                       </div>
                                       <div class="c-repeating-section-item">

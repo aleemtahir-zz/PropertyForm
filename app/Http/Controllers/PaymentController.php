@@ -38,18 +38,20 @@ class PaymentController extends Controller
      */
     public function store(Request $request)
     {
-
         $data = $request->All();
         $record_id = $data['monetary']['record_id'];
-        $total_expense = !empty($data['monetary']['total_expense']) ? str_replace(',', '', $data['monetary']['total_expense']) : 0;
-        $total_payment = !empty($data['monetary']['total_payment']) ? str_replace(',', '', $data['monetary']['total_payment']) : 0;
-        $rate          = !empty($data['payment']['rate']) ? str_replace(',', '', $data['payment']['rate']) : 0;
-        $data['monetary']['balance'] = $total_payment - $total_expense;
-        $data['monetary']['total_payment_j'] = $total_payment * $rate[0] ;
-        // pre($data); die;
 
         if(empty($record_id))
             return back()->withErrors("* Record # is empty!")->withInput();
+
+
+        $total_expense      = !empty($data['monetary']['total_expense']) ? str_replace(',', '', $data['monetary']['total_expense']) : 0;
+        $total_payment_j    = !empty($data['monetary']['total_payment_j']) ? str_replace(',', '', $data['monetary']['total_payment_j']) : 0;
+        $rate               = !empty($data['payment']['rate']) ? str_replace(',', '', $data['payment']['rate']) : 0;
+        // $data['monetary']['balance'] = $total_payment - $total_expense;
+        $data['monetary']['total_payment'] = $total_payment_j / $rate[0] ;
+        // pre($data); die;
+
 
         //Set Data
         $expense = array();

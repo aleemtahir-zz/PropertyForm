@@ -108,7 +108,7 @@
                                     <div class="c-repeating-section-group">
                                         <div class="c-repeating-section-container">
                                             <div class="c-repeating-section-item-title">
-                                                <div class="c-action-col"><a class="c-remove-item" title="Remove Expense"><i class="icon-remove-sign"></i></a></div>
+                                                <div class="c-action-col hide-remove-button"><a class="c-remove-item" title="Remove Expense"><i class="icon-remove-sign"></i></a></div>
                                                 <h5>Expense <span>1</span></h5>
                                             </div>
                                             <div class="c-repeating-section-item">
@@ -128,8 +128,8 @@
                                     <div class="c-validation" style="display: block;"></div>
                                     <div class="c-repeating-section-add"><a class="c-add-item" title="Add" tabindex="0">Add Expense</a></div>
                                     <div class="c-currency c-field c-col-9 c-sml-col-5 c-span-6 c-sml-span-6">
-                                        <div class="c-label  "><label for="total_expense">Total Expense</label></div>
-                                        <div class="c-editor"><input type="text" id="total_expense" name="monetary[total_expense]" placeholder="1,234,567.89" class="currency "></div>
+                                        <div class="c-label  "><label for="total_expense"><strong>Total Expense</strong></label></div>
+                                        <div class="c-editor"><input style="font-weight: bold" type="text" id="total_expense" name="monetary[total_expense]" placeholder="1,234,567.89" class="currency "></div>
                                         <div class="c-validation"></div>
                                     </div>
                                 </div>
@@ -148,7 +148,7 @@
                                     <div class="c-repeating-section-group">
                                         <div class="c-repeating-section-container">
                                             <div class="c-repeating-section-item-title">
-                                                <div class="c-action-col"><a class="c-remove-item" title="Remove Payment"><i class="icon-remove-sign"></i></a></div>
+                                                <div class="c-action-col hide-remove-button"><a class="c-remove-item" title="Remove Payment"><i class="icon-remove-sign"></i></a></div>
                                                 <h5>Payment <span>1</span></h5>
                                             </div>
                                             <div class="c-repeating-section-item">
@@ -173,18 +173,18 @@
                                                 </div>
                                                 <div class="c-currency c-field c-col-7 c-sml-col-7 c-span-6 c-sml-span-6">
                                                   <div class="c-label  "><label for="c-57-1894">FX Rate</label></div>
-                                                  <div class="c-editor"><input name="payment[rate][]" type="text" id="fc_rate" placeholder="1,234,567.89" class="currency totalPayment"></div>
+                                                  <div class="c-editor"><input name="payment[rate][]" type="text" id="fc_rate-1-1" placeholder="1,234,567.89" class="currency totalPayment"></div>
                                                   <div class="c-validation"></div>
                                               </div>
                                                 <div class="c-currency c-field c-col-7 c-sml-col-7 c-span-6 c-sml-span-6">
                                                     <div class="c-label  "><label for="c-16-8">Amount </label></div>
-                                                    <div class="c-editor"><input type="text" id="c_price" name="payment[price][]" placeholder="1,234,567.89" class="currency totalPayment"></div>
+                                                    <div class="c-editor"><input type="text" id="c_price-1-1" name="payment[price][]" placeholder="1,234,567.89" class="currency totalPayment"></div>
                                                     <div class="c-validation"></div>
                                                 </div>
 
                                                 <div class="c-currency c-field c-col-5 c-sml-col-5 c-span-6 c-sml-span-6">
                                                     <div class="c-label  "><label for="c-18-6">Amount J$</label></div>
-                                                    <div class="c-editor"><input type="text" id="c_pricej" name="payment[price_j][]" placeholder="1,234,567.89" class="currency"></div>
+                                                    <div class="c-editor"><input type="text" id="c_pricej-1-1" name="payment[price_j][]" placeholder="1,234,567.89" class="currency totalPayment"></div>
                                                     <div class="c-validation"></div>
                                                 </div>
                                                 <div class="c-date-date c-field c-col-1 c-sml-col-1 c-span-6 c-sml-span-6">
@@ -203,8 +203,27 @@
                                     <div class="c-validation" style="display: block;"></div>
                                     <div class="c-repeating-section-add"><a class="c-add-item" title="Add" tabindex="0">Add Payment</a></div>
                                     <div class="c-currency c-field c-col-9 c-sml-col-5 c-span-6 c-sml-span-6">
-                                        <div class="c-label  "><label for="total_payment">Total Payment</label></div>
-                                        <div class="c-editor"><input type="text" id="total_payment" name="monetary[total_payment]" placeholder="1,234,567.89" class="currency"></div>
+                                        <div class="c-label  "><label for="total_payment"><strong>Total Payment</strong></label></div>
+                                        <div class="c-editor"><input style="font-weight: bold" type="text" id="total_payment" name="monetary[total_payment_j]" placeholder="1,234,567.89" class="currency"></div>
+                                        <div class="c-validation"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="c-validation"></div>
+                        </div><br>
+                        <div class="c-section c-col-13 c-sml-col-1 c-span-12 c-sml-span-12">
+                            <div class="c-title">
+                                <h3>Balance</h3>
+                            </div>
+                            <div class="">
+                                <div class="c-section c-col-1 c-sml-col-1 c-span-12 c-sml-span-12">
+{{--                                     <div class="c-title c-repeating-section-title">
+                                        <h4>Payment Received</h4>
+                                    </div>
+ --}}
+                                    <div class="c-currency c-field c-col-9 c-sml-col-5 c-span-6 c-sml-span-6">
+                                        {{-- <div class="c-label  "><label for="total_payment"><strong>Total Payment</strong></label></div> --}}
+                                        <div class="c-editor"><input style="font-weight: bold" type="text" id="balance" name="monetary[balance]" placeholder="1,234,567.89" class="currency"></div>
                                         <div class="c-validation"></div>
                                     </div>
                                 </div>
