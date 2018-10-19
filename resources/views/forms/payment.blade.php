@@ -163,9 +163,9 @@
                                                       <div class="c-dropdown ">
                                                           <select value="{!!old('monetary.fc.name')!!}" name="payment[fc_name][]" id="fc_name">
                                                               <option></option>
-                                                              <option selected="selected" value="United States Dollar">United States Dollar</option>
-                                                              <option value="Canadian Dollar">Canadian Dollar</option>
-                                                              <option value="Pound Sterling">Pound Sterling</option>
+                                                              <option selected="selected" value="USD">United States Dollar</option>
+                                                              <option value="CAD">Canadian Dollar</option>
+                                                              <option value="GBP">Pound Sterling</option>
                                                           </select>
                                                       </div>
                                                     </div>

@@ -48,8 +48,10 @@ class PaymentController extends Controller
         $total_expense      = !empty($data['monetary']['total_expense']) ? str_replace(',', '', $data['monetary']['total_expense']) : 0;
         $total_payment_j    = !empty($data['monetary']['total_payment_j']) ? str_replace(',', '', $data['monetary']['total_payment_j']) : 0;
         $rate               = !empty($data['payment']['rate']) ? str_replace(',', '', $data['payment']['rate']) : 0;
+        $fc_name            = $data['payment']['fc_name'];
         // $data['monetary']['balance'] = $total_payment - $total_expense;
-        $data['monetary']['total_payment'] = $total_payment_j / $rate[0] ;
+        $data['monetary']['total_payment']  = $total_payment_j / $rate[0] ;
+        $data['monetary']['fc_name']        = $fc_name[0];
         // pre($data); die;
 
 

@@ -341,7 +341,8 @@ function _triggerStatementSum()
 
 		$("#total_payment").val(totalPayment);
 
-		let t_expense = $("#total_expense").val();
+		let t_expense 	= $("#total_expense").val();
+		t_expense 		= ( t_expense !== '' ? parseInt(t_expense.replace(/,/g, '')) : 0);
 
 		totalPayment = isNaN(totalPayment) ? 0 : totalPayment;
 		t_expense = isNaN(t_expense) ? 0 : t_expense;
@@ -356,6 +357,10 @@ function _triggerStatementSum()
 	$('input[name*="monetary[total"').change(function(){
 		let totalPayment = $("#total_payment").val();
 		let totalExpense = $("#total_expense").val();
+
+		totalPayment 		= ( totalPayment !== '' ? parseInt(totalPayment.replace(/,/g, '')) : 0);
+		totalExpense 		= ( totalExpense !== '' ? parseInt(totalExpense.replace(/,/g, '')) : 0);
+
 
 		totalExpense = isNaN(totalExpense) ? 0 : totalExpense;
 		totalPayment = isNaN(totalPayment) ? 0 : totalPayment;
@@ -406,6 +411,8 @@ function sumExpenses()
 	$("#total_expense").val(totalExpense);
 
 	let t_payment 	= $("#total_payment").val();
+	t_payment 		= ( t_payment !== '' ? parseInt(t_payment.replace(/,/g, '')) : 0);
+
 	totalExpense = isNaN(totalExpense) ? 0 : totalExpense;
 	t_payment = isNaN(t_payment) ? 0 : t_payment;
 
