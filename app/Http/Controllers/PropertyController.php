@@ -106,8 +106,7 @@ class PropertyController extends Controller
             'developer_name_maintenance_agreement',
             'insrtument_of_transfer',
             'letter_of_title_issuance',
-            'memorandum_of_sale',
-            'statement_of_account'
+            'memorandum_of_sale'
           );
 
           return view('forms.response',compact('templates'));
@@ -151,8 +150,7 @@ class PropertyController extends Controller
           'developer_name_maintenance_agreement',
           'insrtument_of_transfer',
           'letter_of_title_issuance',
-          'memorandum_of_sale',
-          'statement_of_account'             
+          'memorandum_of_sale'
       );
 
       return view('forms.response',compact('templates'));
@@ -250,7 +248,7 @@ class PropertyController extends Controller
           return Redirect::to('property/show')->with('message', 'Please Select Any Record ID.');
         else
         {
-          $PropObj->mergeIntoTemplates($request->autocomplete, $request->filename, $template_name);
+          $PropObj->mergeIntoTemplates($request->autocomplete, $template_name, $request->filename);
         } 
 
         //Show Word Templates
@@ -260,8 +258,7 @@ class PropertyController extends Controller
             'developer_name_maintenance_agreement',
             'insrtument_of_transfer',
             'letter_of_title_issuance',
-            'memorandum_of_sale',
-            'statement_of_account'
+            'memorandum_of_sale'
 
 
         );
