@@ -5,13 +5,21 @@
 	{!! Form::open(array('id' => 'form', 'route' => 'sendemail', 'method' => 'post')); !!}
 		<div class="c-forms-form" tabindex="0">
 			<div class="c-forms-confirmation" style="display: block;">
-				<div class="c-forms-heading">
+				<!-- <div class="c-forms-heading">
 					<div class="c-forms-form-title">
 						<h2>HMF Property</h2>
 					</div>
+				</div> -->
+				<div class="c-forms-confirmation-message c-html">
+					<span>Dear Sir/Madam,</span>
+					<span>The Development Data Form has been completed for the following:</span>
+					<ul>
+						<li><span>Developer Name: {!! $company_name !!}</span></li>
+						<li><span>Development Name: {!! $name !!}</span></li>
+						<li><span>Volume No.: {!! $volume_str !!}</span></li>
+						<li><span>Folio No.: {!! $folio_str !!}</span></li>
+					</ul>	
 				</div>
-				<div class="c-forms-confirmation-message c-html"><span>Thank you for filling out the form. Your response has been recorded.</span></div>
-				<div class="c-forms-confirmation-message c-html"><span>Your Volume/Folio No. is {!! $volume_str !!}/{!! $folio_str !!}.</span></div>
 			</div>
 			
 			<div class="c-footer-terms" >

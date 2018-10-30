@@ -1383,7 +1383,7 @@
                                   </div>
                               </div>
                               <div class="c-validation" style="display: block;"></div>
-                              <div class="c-repeating-section-add"><a class="c-add-item" title="Add" tabindex="0">Add Item</a></div>
+                              <div class="c-repeating-section-add"><a class="c-add-item" title="Add" tabindex="0">Add Purchaser</a></div>
                           </div>
                           <div class="c-button-section">
                               <div class="c-action"><button type="button" class="c-page-nav c-page-previous-page c-button">Back</button><button type="button" class="c-page-nav c-page-next-page c-button">Next</button></div>
