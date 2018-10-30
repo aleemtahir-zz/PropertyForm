@@ -11,7 +11,7 @@
 					</div>
 				</div> -->
 				<div class="c-forms-confirmation-message c-html">
-					<span>Dear Sir/Madam,</span>
+					<span>Dear Sir/Madam,</span><br>
 					<span>The Development Data Form has been completed for the following:</span>
 					<ul>
 						<li><span>Developer Name: {!! $company_name !!}</span></li>
