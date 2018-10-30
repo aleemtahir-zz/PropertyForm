@@ -168,7 +168,7 @@ class DevController extends Controller
     {
         $to_address = $request->input('email');
         $data = $request->session()->get('devRequest');
-        pre($data); die;
+        
         Mail::send('layouts.email',$data, function ($message) use ($to_address) /*variable innheriting*/{
             $message->from('hmf@williamswebs.com','HMF Property');
             $message->to($to_address);
