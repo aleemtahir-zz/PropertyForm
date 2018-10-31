@@ -295,27 +295,54 @@ function saveDoc($template='', $file, $data='')
 
 
           //For Statment of Account
-          $TBS->MergeField('st', $data['monetary']);
-          $TBS->MergeBlock('exp1,exp2','array', $data['expense']);
-          $TBS->MergeBlock('pay','array', $data['payment']);
+          if(!isset($data['monetary'])){
+            $temp = array();
+            $temp2 = array();
+            $temp = $data['m'];
+            $temp['upgrade'] = '';
+            $temp['total_payment'] = '';
+            $temp['balance'] = '';
+            $temp['misc_expense'] = '';
+            $temp['total_payment_j'] = '';
+
+            $TBS->MergeField('st', $temp);
+            $TBS->MergeBlock('exp1,exp2','array', $temp2);
+            // $TBS->SetOption('noerr','true');
+            
+          }else{
+            
+            $TBS->MergeField('st', $data['monetary']);
+            $TBS->MergeBlock('exp1,exp2','array', $data['expense']);
+            // $TBS->MergeBlock('pay','array', $data['payment']);
+          }
 
       }
       catch(\Exception $e)
       {
         pre($e->getMessage());
+        die;
         //$property_info = '';  
         //return $property_info;
       }
       
       /*If template is Statemenet Of Account then save document on server then remove after downloading*/
-      if($template == 'statement_of_account'){
+      /*if($template == 'statement_of_account'){
         $filePath = storage_path() . '/app/public/docs/' . $file.'.docx';
-      // pre($filePath); die;
         $TBS->Show(OPENTBS_FILE, $filePath);
+      // pre($filePath); die;
       }
       // Download the file
       else
-        $TBS->Show(OPENTBS_DOWNLOAD, $file.'.docx');  
+        $TBS->Show(OPENTBS_DOWNLOAD, $file.'.docx');  */
+      $dirname = storage_path() . "/app/public/docs";
+        
+      //Delete all existing files
+      $files = glob("$dirname/*");
+      array_map('unlink', $files);
+
+      $filePath = $dirname.'/' . $file.'.docx';
+
+      $TBS->Show(OPENTBS_FILE, $filePath);  
   }
 
 

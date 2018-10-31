@@ -48,13 +48,13 @@
                         <legend class="c-label  ">Merge Data into Documents</legend>
                         {{-- <div class="c-helptext">Choose documents</div> --}}
                         <br>
-                        @foreach ($templates as $name)
+                        @foreach ($templates as $name => $capsName)
                         <div class="row">
 							<div class="col-md-6">
 								<div class="c-forms-document-links">
 								<a class="c-forms-document-link" href="#">
 								<span class="ms-word-file-icon-32x32"></span>
-								<span>{!! Form::label('service' . $name, $name) !!} </span>
+								<span>{!! Form::label('service' . $name, $capsName) !!} </span>
 								</a>
 							</div>
 					        	

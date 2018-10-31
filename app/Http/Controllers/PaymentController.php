@@ -47,12 +47,12 @@ class PaymentController extends Controller
 
         $total_expense      = !empty($data['monetary']['total_expense']) ? str_replace(',', '', $data['monetary']['total_expense']) : 0;
         $total_payment_j    = !empty($data['monetary']['total_payment_j']) ? str_replace(',', '', $data['monetary']['total_payment_j']) : 0;
-        $rate               = !empty($data['payment']['rate']) ? str_replace(',', '', $data['payment']['rate']) : 0;
+        $rate               = !empty($data['payment']['rate'][0]) ? str_replace(',', '', $data['payment']['rate'][0]) : 1;
         $fc_name            = $data['payment']['fc_name'];
         // $data['monetary']['balance'] = $total_payment - $total_expense;
-        $data['monetary']['total_payment']  = $total_payment_j / $rate[0] ;
+        $data['monetary']['total_payment']  = $total_payment_j / $rate;
         $data['monetary']['fc_name']        = $fc_name[0];
-        // pre($data); die;
+        // pre($rate); die;
 
 
         //Set Data
@@ -160,23 +160,13 @@ class PaymentController extends Controller
 
     public function download($filename='')
     {
-        $path = storage_path() . '/app/public/docs/' . $filename;
-
+        $dirname = storage_path() . "/app/public/docs";
+    
+        $path = $dirname .'/'. $filename;
         if(!File::exists($path)) abort(404);
 
         $file = File::get($path);
-        // unlink($path);
-        // $type = File::mimeType($path);
-
-        // $response = Response::make($file, 200);
-        // // using this will allow you to do some checks on it (if pdf/docx/doc/xls/xlsx)
-        // $response->header('Pragma', ' no-cache');
-        // $response->header('Cache-Control', 'must-revalidate, post-check=0, pre-check=0');
-        // $response->header('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
-        // $response->header('Content-Disposition', 'attachment; filename='.$filename.';');
-        // $response->header('Content-Transfer-Encoding', 'binary');
-        // $response->header('Content-Length', .filesize($file));
-        // readfile('GIE.docx');
+        
         $name = "filename=".$filename.";";
         header('Pragma: no-cache');
         header('Expires: 0');
@@ -186,7 +176,7 @@ class PaymentController extends Controller
         header('Content-Transfer-Encoding: binary');
         header('Content-Length: '.filesize($path));
         readfile($path);
-        unlink($path);
+        // unlink($path);
         // return $response;
 
     }

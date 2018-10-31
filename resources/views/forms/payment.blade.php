@@ -41,7 +41,7 @@
                             <div class="c-validation"></div>
                         </div>
                         <div class="c-text-singleline c-field c-col-9 c-sml-col-1 c-span-7 c-sml-span-12">
-                            <button type="button" class="c-button margin-auto" onclick="lookUpProperty()">LOOKUP
+                            <button type="button" class="c-button margin-auto" onclick="lookUpProperty('soa')">LOOKUP
                                   <i id="gear-folio" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>
                             </button>
                         </div>
@@ -260,7 +260,7 @@
                             </strong>
                             <div class="c-button-section st-down">
                                 @if(isset($filename))
-                                    <div class="c-action"><a href="payment/download/{{$filename}}.docx" target="_blank" class="c-button" id="btn-download" >View</a></div>
+                                    <div class="c-action"><a href="{{env('VIEW_DOC').$filename}}.docx" target="_blank" class="c-button" id="btn-download" >Download</a></div>
                                 @endif
                             </div>
                         </div>

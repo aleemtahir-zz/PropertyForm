@@ -101,12 +101,13 @@ class PropertyController extends Controller
 
           //Show Word Templates
           $templates = array(
-            'application_for_membership',
-            'building_agreement',
-            'developer_name_maintenance_agreement',
-            'insrtument_of_transfer',
-            'letter_of_title_issuance',
-            'memorandum_of_sale'
+            'application_for_membership' => 'Application For Membership',
+            'building_agreement' => 'Building Agreement',
+            'developer_name_maintenance_agreement' => 'Developer Name Maintenance Agreement',
+            'instrument_of_transfer' => 'Instrument Of Transfer',
+            'letter_of_title_issuance' => 'Letter Of Title Issuance',
+            'memorandum_of_sale' => 'Memorandum Of Sale',
+            'statement_of_account' => 'Statement Of Account'
           );
 
           return view('forms.response',compact('templates'));
@@ -145,13 +146,14 @@ class PropertyController extends Controller
       
       //Show Word Templates
       $templates = array(
-          'application_for_membership',
-          'building_agreement',
-          'developer_name_maintenance_agreement',
-          'insrtument_of_transfer',
-          'letter_of_title_issuance',
-          'memorandum_of_sale'
-      );
+            'application_for_membership' => 'Application For Membership',
+            'building_agreement' => 'Building Agreement',
+            'developer_name_maintenance_agreement' => 'Developer Name Maintenance Agreement',
+            'instrument_of_transfer' => 'Instrument Of Transfer',
+            'letter_of_title_issuance' => 'Letter Of Title Issuance',
+            'memorandum_of_sale' => 'Memorandum Of Sale',
+            'statement_of_account' => 'Statement Of Account'
+          );
 
       return view('forms.response',compact('templates'));
       //return view('forms.property');
@@ -248,20 +250,20 @@ class PropertyController extends Controller
           return Redirect::to('property/show')->with('message', 'Please Select Any Record ID.');
         else
         {
-          $PropObj->mergeIntoTemplates($request->autocomplete, $template_name, $request->filename);
+          $filename = $PropObj->mergeIntoTemplates($request->autocomplete, $template_name, $request->filename);
+          return Redirect::to(env('VIEW_DOC').$filename.'.docx');
         } 
-
+        // dd($filename);
         //Show Word Templates
         $templates = array(
-            'application_for_membership',
-            'building_agreement',
-            'developer_name_maintenance_agreement',
-            'insrtument_of_transfer',
-            'letter_of_title_issuance',
-            'memorandum_of_sale'
-
-
-        );
+            'application_for_membership' => 'Application For Membership',
+            'building_agreement' => 'Building Agreement',
+            'developer_name_maintenance_agreement' => 'Developer Name Maintenance Agreement',
+            'instrument_of_transfer' => 'Instrument Of Transfer',
+            'letter_of_title_issuance' => 'Letter Of Title Issuance',
+            'memorandum_of_sale' => 'Memorandum Of Sale',
+            'statement_of_account' => 'Statement Of Account'
+          );
 
         return view('forms.response',compact('templates'));
 

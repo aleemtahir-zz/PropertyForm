@@ -1256,7 +1256,7 @@ class Property extends Model
           $vendor = (isset($array['v'][0]['middle'])) ? $array['v'][0]['middle'] : $array['v'][0]['last'];
 
           if(empty($filename)){
-            $filename = $buyer.'_'.$vendor.'_'.$array['p']['volume_no'].'/'.$array['p']['folio_no'].'_'.$var;
+            $filename = $buyer.'_'.$vendor.'_'.$array['p']['volume_no'].'_'.$array['p']['folio_no'].'_'.$var;
             $filename = str_replace('__', '_', $filename);
           }
         }

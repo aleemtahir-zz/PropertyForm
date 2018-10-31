@@ -759,7 +759,7 @@ function lookUpProperty(flag='')
 		            			}	
 	            			}	
 	            			checkDropDownStatus();
-	            			if(flag !== 1)
+	            			if(flag == 'soa')
 								sumExpenses();
 	            		});
 	            	}
