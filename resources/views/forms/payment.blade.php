@@ -260,7 +260,7 @@
                             </strong>
                             <div class="c-button-section st-down">
                                 @if(isset($filename))
-                                    <div class="c-action"><a href="payment/download/{{$filename}}.docx" target="_blank" class="c-button" id="btn-download" >Download</a></div>
+                                    <div class="c-action"><a href="payment/download/{{$filename}}.docx" target="_blank" class="c-button" id="btn-download" >View</a></div>
                                 @endif
                             </div>
                         </div>

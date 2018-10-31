@@ -156,6 +156,9 @@ $(document).ready(function(){
 				num++;
 			}
 		});
+
+		sumExpenses();
+		sumPayment();
 	});
 
 
@@ -317,9 +320,8 @@ function _triggerStatementSum()
 
 	});
 
-	$('.totalPayment').change(function(e){
+	$('.totalPayment').change(function(){
 
-		var totalPayment = 0;
 		//Assign values to price in jamaican
 		let i = $(this).attr('id').split('-')[2];
 		// console.log($('#fc_rate-1-'+i));
@@ -329,26 +331,11 @@ function _triggerStatementSum()
 		rate 		= ( rate !== '' ? parseInt(rate.replace(/,/g, '')) : 0);
 		c_price 	= ( c_price !== '' ? parseInt(c_price.replace(/,/g, '')) : 0);
 
-		$('#c_pricej-1-'+i).val(rate * c_price);
+		if(rate > 0 && c_price > 0)
+			$('#c_pricej-1-'+i).val(rate * c_price);
 
 
-		$("input[name*='payment[price_j']").each(function(){ 
-			let other_price = $(this).val();
-			other_price 	= ( other_price !== '' ? parseInt(other_price.replace(/,/g, '')) : 0);
-			// console.log(other_price);
-			totalPayment += other_price;
-		});
-
-		$("#total_payment").val(totalPayment);
-
-		let t_expense 	= $("#total_expense").val();
-		t_expense 		= ( t_expense !== '' ? parseInt(t_expense.replace(/,/g, '')) : 0);
-
-		totalPayment = isNaN(totalPayment) ? 0 : totalPayment;
-		t_expense = isNaN(t_expense) ? 0 : t_expense;
-
-		let balance = totalPayment - t_expense;
-		$("#balance").val(balance);
+		sumPayment();
 
 		// console.log($("input[name='payment[price_j]']"));
 
@@ -419,6 +406,31 @@ function sumExpenses()
 	let balance 	= t_payment - totalExpense;
 	$("#balance").val(balance);
 }
+
+/*Sum payment
+=======================================*/
+function sumPayment()
+{
+	var totalPayment = 0;
+	$("input[name*='payment[price_j']").each(function(){ 
+		let other_price = $(this).val();
+		other_price 	= ( other_price !== '' ? parseInt(other_price.replace(/,/g, '')) : 0);
+		// console.log(other_price);
+		totalPayment += other_price;
+	});
+
+	$("#total_payment").val(totalPayment);
+
+	let t_expense 	= $("#total_expense").val();
+	t_expense 		= ( t_expense !== '' ? parseInt(t_expense.replace(/,/g, '')) : 0);
+
+	totalPayment = isNaN(totalPayment) ? 0 : totalPayment;
+	t_expense = isNaN(t_expense) ? 0 : t_expense;
+
+	let balance = totalPayment - t_expense;
+	$("#balance").val(balance);
+}
+
 
 /*
 Account Statement Form END

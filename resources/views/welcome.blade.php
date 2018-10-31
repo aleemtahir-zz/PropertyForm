@@ -11,22 +11,49 @@
                 </div>
             </div>
         </div>
+        <br>
+        <br>
         <div class="c-forms-form-main c-span-24 c-sml-span-12">
-            <div class="row">
-                <div class="col-sm-4">
-                    <!-- List -->
-                    <div class="single category">
-                        <h3 class="side-title">List of Pages</h3>
-                        <ul class="list-unstyled">
-                            <li><a href="{{url('DeveloperDataFormA')}}" title="">Developer Data A <!-- <span class="pull-right">13</span> --></a></li>
-                            <li><a href="{{url('DeveloperDataFormB')}}" title="">Developer Data B</a></li>
-                            <li><a href="{{url('property')}}" title="">Property Data</a></li>
-                            <li><a href="{{url('payment')}}" title="">Account Statement</a></li>
-                            <li><a href="{{url('property/show')}}" title="">Downloads</a></li>
-                            <li><a href="{{url('upload')}}" title="">Upload Data</a></li>
-                        </ul>
-                   </div>
-            </div> 
+            <div class="row category">
+                <div class="col-sm-4 single ">
+                    <a href="{{url('DeveloperDataFormA')}}" title="">
+                        <img width="120" height="100" src="{{asset('img/hmf_development.png')}}">
+                        <span>Developer Data A</span> <!-- <span class="pull-right">13</span> -->
+                    </a>
+                </div> 
+                <div class="col-sm-4 single">
+                    <a href="{{url('DeveloperDataFormB')}}" title="">
+                        <img width="120" height="100" src="{{asset('img/hmf_development.png')}}">
+                        <span>Developer Data B</span>
+                    </a>
+                </div>
+                <div class="col-sm-4 single">
+                    <a href="{{url('property')}}" title="">
+                        <img width="120" height="100" src="{{asset('img/hmf_property_data.png')}}">
+                        <span>Property Data</span>
+                    </a>
+                </div>
+            </div>
+            <br>
+            <div class="row category">
+                <div class="col-sm-4 single">
+                    <a href="{{url('payment')}}" title="">
+                        <img width="120" height="100" src="{{asset('img/hmf_account_statement.png')}}">
+                        <span>Account Statement</span>
+                    </a>
+                </div> 
+                <div class="col-sm-4 single">
+                    <a href="{{url('property/show')}}" title="">
+                        <img width="120" height="100" src="{{asset('img/hmf_merge.png')}}">
+                        <span>Downloads</span> 
+                    </a>
+                </div>
+                <div class="col-sm-4 single">
+                    <a href="{{url('upload')}}" title="">
+                        <img width="120" height="100" src="{{asset('img/hmf_upload.png')}}">
+                        <span>Upload Data</span> 
+                    </a>
+                </div>
             </div>
         </div>
 

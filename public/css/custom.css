@@ -86,7 +86,7 @@ input#c-2-768:invalid {
 /*Index List
 =================================================*/
 
-.single {
+/*.single {
 padding: 30px 15px;
 margin-top: 10px;
 background: #fcfcfc;
@@ -104,23 +104,26 @@ width: 150px;
 height: 1px;
 background: #ff173c;
 display: block;
-margin-top: 6px; }
-
-.single ul {
-margin-bottom: 0; }
-.single li a {
-color: #666;
+margin-top: 6px; }*/
+.category{
+  text-align: center;
+}
+.single img {
+  margin: auto;
+display: block; }
+.single a {
+color: #666 !important;
 font-size: 14px !important;
 text-transform: uppercase;
 border-bottom: 1px solid #f0f0f0;
 line-height: 40px;
 display: block;
 text-decoration: none; }
-.single li a:hover {
+/*.single li a:hover {
 color: #ff173c; }
 .single li:last-child a {
 border-bottom: 0; }
-
+*/
 
 #uploadMerge{
   margin-right: 10px;
