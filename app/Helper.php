@@ -9,10 +9,13 @@ function arrangeMultiArray($array){
 
   foreach ($array as $key => $value) {
     $i=0;
+
+    if(!is_array($value))
+    return array(0 => $array); //setting for bulk upload feature  
+
     foreach ($value as $sub_key => $sub_value) {
 
       if(is_array($sub_value)){
-
         $sub_array = arrangeMultiArray($array[$key]);
 
         for ($i=0; $i < count($sub_array); $i++) { 
@@ -456,7 +459,7 @@ function csvToArray($filename = '')
   //$url = Storage::temporaryUrl(
   //  'sheets/'.$filename, now()->addMinutes(5)
   //);
-  $url = __DIR__.'/../storage/app/public/sheets/'.$filename;
+  $url = storage_path() . '/app/public/sheets/'.$filename;
   //$url = Storage::url('/public/'.$filename); 
   //$url = asset('storage/sheets/'.$filename); 
   //pre($url); die; 

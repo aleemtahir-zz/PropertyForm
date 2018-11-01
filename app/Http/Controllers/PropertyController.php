@@ -71,15 +71,15 @@ class PropertyController extends Controller
     {
         
         //print_r($req['property']); die;
-        //echo "<pre>"; print_r($request->all()); echo "</pre>";
-        //$flattener = new Flattener();
-        //$flattener->setArrayData($request->all());
-        //$flattener->writeCsv();
-        //$flat = $flattener->getFlatData();
-        //$csv = array_map('str_getcsv', file('file_88426349.csv'));
-        //$a = csvToArray('file_88426349');
-        //pre($a); 
-        //die;
+        // echo "<pre>"; print_r($request->all()); echo "</pre>";
+        // $flattener = new Flattener();
+        // $flattener->setArrayData($request->all());
+        // $flattener->writeCsv();
+        // $flat = $flattener->getFlatData();
+        // pre($flat); 
+        // die;
+        // $csv = array_map('str_getcsv', file('file_88426349.csv'));
+        // $a = csvToArray('file_88426349');
 
         $error = false;
         $req = $request->all();
@@ -128,22 +128,28 @@ class PropertyController extends Controller
       pre($url); die;*/
 
       if(!empty($id) && $id != 'show')
-      {
+      { 
         $data = csvToArray($id);
       
-        for ($i=0; $i < count($data) ; $i++) { 
+        foreach ($data as $key => $value) {
+          // pre($value); die;
           $PropertyObj = new Property();
           //Transaction
           DB::beginTransaction();
 
-          $error = $PropertyObj->initialize($data[$i]);
+          $error = $PropertyObj->initialize($value);
           
           DB::commit();
           if(!empty($error))
             return $error->getMessage()."<br>File: ".__FILE__."<br>Line: ".__LINE__;
         }
+
+        //Delete File
+        $url = storage_path() . '/app/public/sheets/'.$id;
+        unlink($url);
       }
       
+
       //Show Word Templates
       $templates = array(
             'application_for_membership' => 'Application For Membership',
