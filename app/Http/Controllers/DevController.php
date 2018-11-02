@@ -156,7 +156,7 @@ class DevController extends Controller
     public function updateView(Request $request)
     {   
         $id     = $request->input('key');
-        $flag   = !empty($request->input('vfFlag')) ? $request->input('vfFlag') : 0;
+        $flag   = !empty($request->input('flag')) ? $request->input('flag') : 0;
 
         $DevObj = new Development();
         $response = $DevObj->get_development($id, $flag);

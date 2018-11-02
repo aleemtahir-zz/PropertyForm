@@ -61,7 +61,8 @@
                                           
                                           <div class="c-field  c-span-12 c-sml-span-12">
                                               <div class="c-label "><label for="c-24-1629">Name of Development</label></div>
-                                              <div class="c-editor "><input value="{!!old('developement.name')!!}" name="developement[name]" type="text" id="c-24-1629" placeholder="eg  City View Villas" style="font-size: 1.3em;"></div>
+                                              <div class="c-editor "><input 
+                                              id="devDropDown" value="{!!old('developement.name')!!}" name="developement[name]" type="text" id="c-24-1629" placeholder="eg  City View Villas" style="font-size: 1.3em;"></div>
                                               <div class="c-validation"></div>
                                           </div>
                                           <div class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-9 c-sml-span-12 ">

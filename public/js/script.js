@@ -274,6 +274,26 @@ $( "#dev_name" ).autocomplete({
     }
 });
 
+$( "#devDropDown" ).autocomplete({
+	source: baseurl+"/property/autoDevName",
+	minLength: 1,
+	select: function(event, ui) {
+		// console.log(ui);
+		// $('#dev_name').val(ui.item.id);
+		$('#dev_id').val(ui.item.id);
+		var params = {
+			'key' : ui.item.id
+		};
+		ajaxGetDevelopment(params);	
+	},   //HERE - make sure to add the comma after your select
+    response: function(event, ui) {
+        if (!ui.content.length) {
+            var noResult = { value:"",label:"No results found" };
+            ui.content.push(noResult);
+        }
+    }
+});
+
 // var states = [
 //       "Clarendon",
 //       "Hanover",
@@ -586,61 +606,11 @@ function vfRepeatButtons(){
 				    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
 				  }
 				});*/
-				
-				$.ajax({
-		            /* the route pointing to the post function */
-		            url: 'updateDevelopmentView',
-		            type: 'POST',
-		            data: { key : folio_key, vfFlag : 1 },
-		            dataType: 'JSON',
-		            beforeSend: function () {
-		            	/*Font Awesome
-						====================================*/
-						$('#gear1').css('display','block');
-						
-		            },
-		            success: function (data) { 
-		            	setTimeout(function(){ 
-		            		$('#gear1').css('display','none'); 
-
-		            		var form_data = data;
-
-			            	if(data == '')
-			            	{	
-			            		$('input').val('');
-								$('#showerror').css('display','') ; 
-								$('#showerror ul li').text('*No record found!.') ; 
-								setTimeout(function(){ 
-									$('#showerror').css('display','none') ; 
-								},2000);
-			            	}
-			            	else
-			            	{
-			            		$('#showerror').empty(); 
-			            		$('#showerror').css('display','none'); 
-			            		// console.log(form_data);
-			            		$.each(form_data, function(key, value){
-				            		//console.log(key+'  :'+value.key);
-			            			var i = $("input[name='"+value.key+"']");
-			            			var t = $("textarea[name='"+value.key+"']");
-			            			var s = $("select[name='"+value.key+"']");
-
-			            			if(i.length)
-			            				$("input[name='"+value.key+"']").val(value.value);
-			            			if(t.length)
-			            				$("textarea[name='"+value.key+"']").val(value.value);
-			            			if(s.length){
-			            				$("select[name='"+value.key+"']").val(value.value);
-			            				$("select[name='"+value.key+"']").css('color','black')
-			            			}
-
-				            	});
-			            		checkDropDownStatus();	
-			            	}
-		            	}, 300);         
-
-		            }
-		        }); 
+				var params = {
+					'key' : folio_key, 
+					'flag' : 1
+				};
+				ajaxGetDevelopment(params);
 			}
 			else if(!volume_no)
 			{	
@@ -666,6 +636,67 @@ function vfRepeatButtons(){
 		}); 
 		
 	});
+}
+
+function ajaxGetDevelopment(params)
+{
+	$.ajax({
+        /* the route pointing to the post function */
+        url: 'updateDevelopmentView',
+        type: 'POST',
+        data: params,
+        dataType: 'JSON',
+        beforeSend: function () {
+        	/*Font Awesome
+			====================================*/
+			// console.log(Object.keys(params).length > 1);
+			//when coming from Dev DropDown
+			if(Object.keys(params).length > 1)
+				$('#gear1').css('display','block');
+			
+        },
+        success: function (data) { 
+        	setTimeout(function(){ 
+        		$('#gear1').css('display','none'); 
+
+        		var form_data = data;
+
+            	if(data == '')
+            	{	
+            		$('input').val('');
+					$('#showerror').css('display','') ; 
+					$('#showerror ul li').text('*No record found!.') ; 
+					setTimeout(function(){ 
+						$('#showerror').css('display','none') ; 
+					},2000);
+            	}
+            	else
+            	{
+            		$('#showerror').empty(); 
+            		$('#showerror').css('display','none'); 
+
+            		$.each(form_data, function(key, value){
+	            		//console.log(key+'  :'+value.key);
+            			var i = $("input[name*='"+value.key+"']");
+            			var t = $("textarea[name='"+value.key+"']");
+            			var s = $("select[name='"+value.key+"']");
+
+            			if(i.length)
+            				$("input[name*='"+value.key+"']").val(value.value);
+            			if(t.length)
+            				$("textarea[name='"+value.key+"']").val(value.value);
+            			if(s.length){
+            				$("select[name='"+value.key+"']").val(value.value);
+            				$("select[name='"+value.key+"']").css('color','black')
+            			}
+
+	            	});
+            		checkDropDownStatus();	
+            	}
+        	}, 300);         
+
+        }
+    }); 
 }
 
 /*Fetch Property Form Record
