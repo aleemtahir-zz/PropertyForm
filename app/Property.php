@@ -14,6 +14,29 @@ class Property extends Model
     //User Trait
     use InsertOnDuplicateKey;
 
+    public function validateRequest($data)
+    {
+      $error = false;
+      $property_key = '';
+      $property = $data['property'];
+      if(!empty($property['name']) && !empty($property['lot_no'])){
+        $property_key = substr($property['name'], 0, 5).'-'.$property['lot_no'];
+      }
+
+      $key = DB::table('tbl_key_id')
+           ->select('id')
+           ->where('property_key', $property_key)
+           ->orderBy('id', 'desc')
+           ->first();
+
+      if(!empty($key))
+      {
+        $error = true;
+      }
+      
+      return $error;                
+    }
+
     public function initialize($req)
     {   
         
@@ -545,7 +568,7 @@ class Property extends Model
           DB::table('tbl_key_id')->insert(
               [
                   'property_key'  => $property_key, 
-                  'created_at'    => date('Y-m-d')
+                  'created_at'    => date('Y-m-d h:i:s')
               ]
           );
           /*GET DEV ID */

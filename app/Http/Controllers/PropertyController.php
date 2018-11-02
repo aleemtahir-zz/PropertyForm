@@ -85,6 +85,10 @@ class PropertyController extends Controller
         $req = $request->all();
         $PropertyObj = new Property();
 
+        //Check Duplicate Property Key
+        if($PropertyObj->validateRequest($req))
+            return back()->withErrors("*Record Already Exist with same Developer Name and Lot No.")->withInput();  
+
         //Transaction
         DB::beginTransaction();
 
