@@ -2,7 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PropFromRequest;
+use Illuminate\Support\Facades\Redirect;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use NestedJsonFlattener\Flattener\Flattener;
 use Exception;
 use App\Property;
 use Carbon\Carbon;
@@ -14,9 +20,35 @@ class PropertyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
-        return view('forms.property');
+    public function index(Request $request)
+    { 
+        //Getting Session data and render it to Property Form
+
+        if(!empty($request->session()->get('devForm')))
+        {
+          $data['property'] = $request->session()->get('devForm')['developement'];
+          $data['vendor']   = $request->session()->get('devForm')['developer'];
+          $data['monetary'] = $request->session()->get('devForm')['payment'];
+          $data['developement'] = $request->session()->get('devForm')['developement'];
+          
+          $data['property']['dev_id']     = $data['developement']['id'];
+          
+          $data['property']['volume_str'] = implode(',', $data['property']['volume_no']);
+          $data['property']['folio_str']  = implode(',', $data['property']['folio_no']);
+          $data['property']['volume_no']  = $data['property']['volume_no'][0] ? $data['property']['volume_no'][0] : '';
+          $data['property']['folio_no']   = $data['property']['folio_no'][0]  ? $data['property']['folio_no'][0]  : ''; 
+
+          $data['monetary']['half_title']          = !empty($data['monetary']['title_cost']) ? 
+                                                      (int)str_replace(',', '', $data['monetary']['title_cost']) / 2 : '';
+          $data['monetary']['half_land_agreement'] = !empty($data['monetary']['land_agreement_cost']) ? 
+                                                      str_replace(',', '', $data['monetary']['land_agreement_cost']) / 2 : '';
+          $data['monetary']['half_build_agreement']= !empty($data['monetary']['build_agreement_cost']) ? 
+                                                      str_replace(',', '', $data['monetary']['build_agreement_cost']) / 2 : '';
+          $data['monetary']['identification_fee']  = !empty($data['monetary']['identification_fee']) ? 
+                                                      str_replace(',', '', $data['monetary']['identification_fee']) : '';
+        }
+        //pre($data); die;
+        return view('forms.property',compact('data'));
     }
 
     /**
@@ -26,7 +58,7 @@ class PropertyController extends Controller
      */
     public function create()
     {
-        return view('welcome');
+        //return view('welcome');
     }
 
     /**
@@ -35,37 +67,57 @@ class PropertyController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(PropFromRequest $request)
     {
-        //echo "<pre>"; print_r($request->all()); echo "</pre>";
+        
+        //print_r($req['property']); die;
+        // echo "<pre>"; print_r($request->all()); echo "</pre>";
+        // $flattener = new Flattener();
+        // $flattener->setArrayData($request->all());
+        // $flattener->writeCsv();
+        // $flat = $flattener->getFlatData();
+        // pre($flat); 
+        // die;
+        // $csv = array_map('str_getcsv', file('file_88426349.csv'));
+        // $a = csvToArray('file_88426349');
+
+        $error = false;
+        $req = $request->all();
         $PropertyObj = new Property();
 
-        $vendor             = $request->input('vendor');
-        $ids['vendor']      = $PropertyObj->add_developer($vendor);
+        //Check Duplicate Property Key
+        if($PropertyObj->validateRequest($req))
+            return back()->withErrors("*Record Already Exist with same Developer Name and Lot No.")->withInput();  
 
-        $payment            = $request->input('monetary');
-        $ids['payment']     = $PropertyObj->add_payment($payment);
+        //Transaction
+        DB::beginTransaction();
 
-        $buyer              = $request->input('buyer');
-        $ids['buyer']       = $PropertyObj->add_purchaser($buyer);
-
-        $attorney           = $request->input('attorney');
-        $ids['attorney']    = $PropertyObj->add_attorney($attorney);
-
+        $error = $PropertyObj->initialize($req);
         
-        $property           = $request->input('property');
-        $PropertyObj->add_property($property, $ids);
+        DB::commit();
 
-        // Store all input
-        $request->session()->put('request', $request->all());
+        if($error)
+            return back()->withErrors($error)->withInput();
+        else
+        {
+          // Store all input
+          $request->session()->put('propRequest', $request->all());
 
-        //Show Word Templates
-        $templates = array(
-            'developer_name_maintenance_agreement'/*,
-            'membership' */
-        );
+          //Show Word Templates
+          $templates = array(
+            'application_for_membership' => 'Application For Membership',
+            'building_agreement' => 'Building Agreement',
+            'developer_name_maintenance_agreement' => 'Developer Name Maintenance Agreement',
+            'instrument_of_transfer' => 'Instrument Of Transfer',
+            'letter_of_title_issuance' => 'Letter Of Title Issuance',
+            'memorandum_of_sale' => 'Memorandum Of Sale',
+            'statement_of_account' => 'Statement Of Account'
+          );
 
-        return view('forms.response',compact('templates'));
+          return view('forms.response',compact('templates'));
+          
+        }
+
     }
 
     /**
@@ -76,14 +128,45 @@ class PropertyController extends Controller
      */
     public function show($id)
     {
-        //Show Word Templates
-        /*$templates = array(
-            'developer_name_maintenance_agreement',
-            'membership' 
-        );
+      /*$url = Storage::url('tara.jpg'); 
+      pre($url); die;*/
 
-        return view('forms.response',compact('templates'));*/
-        //return view('forms.property');
+      if(!empty($id) && $id != 'show')
+      { 
+        $data = csvToArray($id);
+      
+        foreach ($data as $key => $value) {
+          // pre($value); die;
+          $PropertyObj = new Property();
+          //Transaction
+          DB::beginTransaction();
+
+          $error = $PropertyObj->initialize($value);
+          
+          DB::commit();
+          if(!empty($error))
+            return $error->getMessage()."<br>File: ".__FILE__."<br>Line: ".__LINE__;
+        }
+
+        //Delete File
+        $url = storage_path() . '/app/public/sheets/'.$id;
+        unlink($url);
+      }
+      
+
+      //Show Word Templates
+      $templates = array(
+            'application_for_membership' => 'Application For Membership',
+            'building_agreement' => 'Building Agreement',
+            'developer_name_maintenance_agreement' => 'Developer Name Maintenance Agreement',
+            'instrument_of_transfer' => 'Instrument Of Transfer',
+            'letter_of_title_issuance' => 'Letter Of Title Issuance',
+            'memorandum_of_sale' => 'Memorandum Of Sale',
+            'statement_of_account' => 'Statement Of Account'
+          );
+
+      return view('forms.response',compact('templates'));
+      //return view('forms.property');
     }
 
     /**
@@ -122,107 +205,117 @@ class PropertyController extends Controller
 
     public function updateProperty(Request $request)
     {   
-
+        $id         = $request->input('id');
+        $flag       = $request->input('devFlag');
+        $PropObj    = new Property();
         $response   = '';
-        $lot        = $request->input('lot');
-        $folio      = $request->input('folio');
 
-        if(!empty($folio) && !empty($lot))
+        if(!empty($id) && $flag != 1)
         {
-            $values['folio'] = $folio;
-            $values['lot'] = $lot;
-            $PropObj    = new Property();
+            $values['id'] = $PropObj->get_id('tbl_key_id','property_key',$id);
             $response   = $PropObj->get_property($values);
+
+            $vcount = 0;
+            $bcount = 0;
+            //pre($response); die;
+            //If Record found
+            if(isset($response['p-id']['value']))
+            {
+              $id = $response['p-id']['value']; 
+              $vendors = $PropObj->getAllVendors($id, $vcount);
+              $buyers = $PropObj->getAllBuyers($id, $bcount);
+              $response['vcount'] = $vcount;
+              $response['bcount'] = $bcount;
+              $response = array_merge($response,$vendors, $buyers);
+
+            }
         }
-        else if(!empty($folio))
+        else
         {
             $PropObj    = new Property();
-            $response   = $PropObj->get_development($folio);
+            $response   = $PropObj->get_development($id);
         }
-
 
         return json_encode($response);
     }
 
     public function mergeDownload(Request $request)
     {   
-        $file_name = '';
-        switch($request->mergeBtn) {
-
-            case 'developer_name_maintenance_agreement': 
-                $file_name = 'developer_name_maintenance_agreement';
-            break;
-
-            case 'membership': 
-                $file_name = 'membership';
-            break;
-        }
-        $req = $request->session()->get('request');
-        $values['folio']    = $req['property']['folio_no']; 
-        $values['lot']      = $req['property']['lot_no'];
-
-        $PropertyObj = new Property(); 
-        $data = $PropertyObj->get_all($values);
-
-        //Date
-        $date['day']    = date('l');
-        $date['month']  = date('F');
-        $date['year']   = date('Y');
-
-        // Include classes 
-        // Load the TinyButStrong template engine 
-        require_once base_path('vendor/mbence/opentbs-bundle/MBence/OpenTBSBundle/lib/tbs_class.php'); 
-        // Load the OpenTBS plugin 
-        require_once base_path('vendor/mbence/opentbs-bundle/MBence/OpenTBSBundle/lib/tbs_plugin_opentbs.php'); 
-
-        // Initialize the TBS instance 
-        $TBS = new \clsTinyButStrong; // new instance of TBS 
-        $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN); // load the OpenTBS plugin
-
-        // load your template
-        $TBS->LoadTemplate('templates/'.$file_name.'.docx');
-
-        //pre($data); die;
-        if(!empty($data)){
-            foreach ($data as $key => $value) {
-
-            $array[$value['prefix']][$value['key']] = $value['value'];
-    
-            }
-            //pre($array); die;
-            try{
-                // replace variables
-                $TBS->MergeField('date', $date);
-                $TBS->MergeField('v', $array['v']);
-                $TBS->MergeField('p', $array['p']);
-                $TBS->MergeField('b', $array['b']);
-            }
-            catch(\Exception $e)
-            {
-              pre($e->getMessage());
-              //$property_info = '';  
-              //return $property_info;
-            }
-
-            // send the file
-            $var = file_get_contents('counter.txt');
-            $var++;
-            file_put_contents('counter.txt', $var);
-            $file = $array['v']['middle'].'_'.$array['b']['middle'].$var;
-            $TBS->Show(OPENTBS_DOWNLOAD, $file.'.docx');    
-        }
+        $PropObj    = new Property();
         
-
+	      if($request->mergeBtn)
+          $template_name = $request->mergeBtn;
+        /*else
+          return Redirect::to('property/show')->with('message', 'Please Select Any Template.');*/
+        
+        // if(!empty($request->session()->get('propRequest')))
+        // {
+        //   $req = $request->session()->get('propRequest'); 
+        //   $values['volume']   = $req['property']['volume_no']; 
+        //   $values['folio']    = $req['property']['folio_no']; 
+        //   $values['lot']      = $req['property']['lot_no'];
+        // }
+        
+        if(empty($request->autocomplete))
+          return Redirect::to('property/show')->with('message', 'Please Select Any Record ID.');
+        else
+        {
+          $filename = $PropObj->mergeIntoTemplates($request->autocomplete, $template_name, $request->filename);
+          return Redirect::to(env('VIEW_DOC').$filename.'.docx');
+        } 
+        // dd($filename);
         //Show Word Templates
         $templates = array(
-            'developer_name_maintenance_agreement'/*,
-            'membership' */
-        );
+            'application_for_membership' => 'Application For Membership',
+            'building_agreement' => 'Building Agreement',
+            'developer_name_maintenance_agreement' => 'Developer Name Maintenance Agreement',
+            'instrument_of_transfer' => 'Instrument Of Transfer',
+            'letter_of_title_issuance' => 'Letter Of Title Issuance',
+            'memorandum_of_sale' => 'Memorandum Of Sale',
+            'statement_of_account' => 'Statement Of Account'
+          );
 
         return view('forms.response',compact('templates'));
 
         //pre($file_name); die;
 
+    }
+
+    public function autocomplete(){
+      
+      //pre($_GET['term']); die;
+      $search = $_GET['term'];
+      $results = array();
+      
+      $queries = DB::table('tbl_key_id')
+        ->where('property_key', 'LIKE', '%'.$search.'%');
+ 
+        
+      $queries = $queries->take(5)->get();
+      
+      foreach ($queries as $query)
+      {
+          $results[] = [ 'id' => $query->id, 'value' => $query->property_key ];
+      }
+      return Response::json($results);
+    }
+
+    public function autoDevName(){
+      
+      //pre($_GET['term']); die;
+      $search = $_GET['term'];
+      $results = array();
+      
+      $queries = DB::table('tbl_developement_detail')
+        ->where('name', 'LIKE', '%'.$search.'%');  
+        
+      $queries = $queries->take(5)->get();
+      
+      foreach ($queries as $query)
+      {
+          $results[] = [ 'id' => $query->id, 'value' => $query->name ];
+      }
+      return Response::json($results);
     }
 
 }

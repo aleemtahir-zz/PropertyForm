@@ -3,7 +3,6 @@
 <div id="c-forms-container" class="cognito c-safari c-lrg">
 
 <form id="form" method="post" action="{{url('property')}}">
-  {{ csrf_field() }}
   <div class="c-forms-form" tabindex="0">
     <div class="c-editor" style="display:none;">
       <input type="text" class="c-forms-form-style">
@@ -12,7 +11,8 @@
         <div class="c-forms-heading">
             <div class="c-forms-logo" style="display:none;"></div>
             <div class="c-forms-form-title">
-                <h2>HMF Property Transfer Data Collection Form</h2>
+                <a href="{{url('')}}"><span class="float-right"><i class="fa fa-home"></i>Home</span></a>
+                <h2 >HMF Property Transfer Data Collection Form</h2>
             </div>
         </div>
         <div class="c-forms-form-main c-span-24 c-sml-span-12">
@@ -27,6 +27,20 @@
                     </ol>
                 </div>
             </div>
+            @if (count($errors) > 0)
+                 <div class = "alert alert-danger">
+                    <ul>
+                       @foreach ($errors->all() as $error)
+                          <li>{{ $error }}</li>
+                       @endforeach
+                    </ul>
+                 </div>
+              @endif
+            <div id="showerror" class = "alert alert-danger" style="display: none">
+                <ul>
+                    <li></li>
+                </ul>
+             </div>  
             <div class="c-forms-pages" style="">
                 <div class="c-page-page1" style="">
                     <div class="c-forms-template">
@@ -36,69 +50,163 @@
                                     <h3>Property Details</h3>
                                 </div>
                                 <div class="">
-                                    <div class="c-text-singleline c-field c-col-12 c-sml-col-1 c-span-7 c-sml-span-12">
-                                        <div class="c-label  "><label for="c-2-768">Volume/Folio No</label></div>
-                                        <div class="c-editor"><input name="property[folio_no]" type="text" id="c-2-768" placeholder=""></div>
+                                    <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-7 c-sml-span-12">
+                                        <div class="c-label  "><label for="c-2-768">Record #</label></div>
+                                        <div class="c-editor float-right" style="width: 150px"> 
+                                            <input class="font-m" id="autocomplete" name="" type="text"  placeholder="CITY-47">
+                                        </div>
                                         <div class="c-validation"></div>
                                     </div>
-
-                                    <div style="margin-top: 13px;" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-5 c-sml-span-6">
-                                    <button type="button" class="c-button" onclick="onClickFolio()">Fetch Record
-                                          <i id="gear-folio" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>
-                                    </button>
+                                    <div class="c-text-singleline c-field c-col-9 c-sml-col-1 c-span-7 c-sml-span-12">
+                                        <button type="button" class="c-button margin-auto" onclick="lookUpProperty()">LOOKUP
+                                              <i id="gear-folio" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>
+                                        </button>
                                     </div>
-
-                                    <div  id="c-message-folio" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-8 c-sml-span-6">
-
-                                    </div>
-
-                                    <div class="c-text c-field c-col-1 c-sml-col-1 c-span-7 c-sml-span-12">
-                                        <div class="c-label  "><label for="c-0-770">Lot No</label></div>
-                                        <div class="c-editor"><input name="property[lot_no]" type="text" id="c-0-770" placeholder=""></div>
+                                    <div class="c-field  c-span-12 c-sml-span-12">
+                                        <div class="c-label "><label for="c-24-1629">Development Name</label></div>
+                                        <div class="c-editor ">
+                                            <input 
+                                            id="dev_name" 
+                                            value="{!! !empty($data['property']['name']) ? $data['property']['name'] : old('property.name') !!}" 
+                                            name="property[name]" type="text" id="c-24-1629" placeholder="eg  City View Villas" style="font-size: 1.3em;">
+                                        </div>
                                         <div class="c-validation"></div>
                                     </div>
                                     
-                                    <div style="margin-top: 13px;" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-5 c-sml-span-6">
+                                    <div class="c-text c-field c-col-1 c-sml-col-1 c-span-4 c-sml-span-12">
+                                        <div class="c-label  "><label for="c-0-770">*Lot No</label></div>
+                                        <div class="c-editor"><input name="property[lot_no]" value="{!!old('property.lot_no')!!}" type="text" id="c-0-770" placeholder=""></div>
+                                        <div class="c-validation"></div>
+                                    </div>
+
+                                    <div class="c-text-singleline c-field c-col-9 c-sml-col-1 c-span-4 c-sml-span-12">
+                                        <div class="c-label  "><label for="c-3-767">Plan No</label></div>
+                                        <div class="c-editor">
+                                            <input 
+                                            name="property[plan_no]" 
+                                            value="{!! !empty($data['property']['plan_no']) ? $data['property']['plan_no'] : old('property.plan_no') !!}" 
+                                            type="text" 
+                                            id="c-3-767" 
+                                            placeholder="">
+                                        </div>
+                                        <div class="c-validation"></div>
+                                    </div>
+                                    
+                                    <div class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-12 c-sml-span-12 ">
+                                        <div class="c-label  ">
+                                          <label for="c-25-1627">Child Volume / Folio</label>
+                                        </div>
+                                        
+                                        <div>
+                                            <div class="c-editor float-left width-60">
+                                                <input 
+                                                    name="property[volume_no]" type="text" id="c-25-1627"  
+                                                    value="{!! !empty($data['property']['volume_no']) ? $data['property']['volume_no'] : old('property.volume_no') !!}" 
+                                                    placeholder="1234" 
+                                                    maxlength="4" 
+                                                    pattern="\d{4}"">
+                                            </div>
+
+                                            <span class="float-left" style="font-weight: bold;">/</span>
+                                            
+                                            <div class="c-editor float-left width-60">
+                                                <input 
+                                                    name="property[folio_no]" 
+                                                    value="{!! !empty($data['property']['folio_no']) ? $data['property']['folio_no'] : old('property.folio_no') !!}" 
+                                                    type="text" 
+                                                    id="c-2-768" 
+                                                    placeholder="1234" 
+                                                    maxlength="4" 
+                                                    pattern="\d{4}">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- <div  id="c-message-folio" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-8 c-sml-span-6">
+
+                                    </div> -->
+                                    <!-- <div style="margin-top: 13px;" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-5 c-sml-span-6">
                                     <button type="button" class="c-button" onclick="onClickLot()">Fetch Record
                                           <i id="gear-lot" style="display: none;" class="fa fa-gear fa-spin" style="font-size:15px"></i>
                                     </button>
-                                    </div>
+                                    </div> -->
 
-                                    <div  id="c-message-lot" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-8 c-sml-span-6">
+                                    <!-- <div  id="c-message-lot" class="c-text-singleline c-field c-col-21 c-sml-col-5 c-span-8 c-sml-span-6">
 
-                                    </div>
+                                    </div> -->
 
-
-                                    {{-- <div class="c-text-singleline c-field c-col-6 c-sml-col-6 c-span-6 c-sml-span-7">
-                                        <div class="c-label  "><label for="c-1-769">Volume No</label></div>
-                                        <div class="c-editor"><input name="property[volume_no]" type="text" id="c-1-769" placeholder=""></div>
-                                        <div class="c-validation"></div>
-                                    </div> --}}
                                     
-                                    <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-6 c-sml-span-12">
-                                        <div class="c-label  "><label for="c-3-767">Plan No</label></div>
-                                        <div class="c-editor"><input name="property[plan_no]" type="text" id="c-3-767" placeholder=""></div>
-                                        <div class="c-validation"></div>
-                                    </div>
+                                    
 
 
-                                    <div class="c-address c-address-international c-field c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
+                                    <div class="c-address c-address-international c-field c-col-1 c-sml-col-1 c-span-14 c-sml-span-12">
                                         <div class="c-label "><label>Property Address</label></div>
                                         <div>
                                             <div class="c-offscreen"><label for="c-4-528">Address Line 1</label></div>
-                                            <div class="c-editor" style="float: left;"><input name="property[address][line1]" type="text" id="c-4-528" placeholder="Address Line 1"></div>
+                                            <div class="c-editor" style="float: left;">
+                                                <input 
+                                                value="{!! !empty($data['property']['address']['line1']) ? 
+                                                        $data['property']['address']['line1'] : old('property.address.line1') !!}" 
+                                                name="property[address][line1]" 
+                                                type="text" 
+                                                id="c-4-528" 
+                                                placeholder="Address Line 1">
+                                            </div>
                                             <div class="c-offscreen"><label for="c-5-528">Address Line 2</label></div>
-                                            <div class="c-editor" style="float: left;"><input name="property[address][line2]" type="text" id="c-5-528" placeholder="Address Line 2"></div>
+                                            <div class="c-editor" style="float: left;">
+                                                <input 
+                                                value="{!! !empty($data['property']['address']['line2']) ? 
+                                                        $data['property']['address']['line2'] : old('property.address.line2') !!}" 
+                                                name="property[address][line2]" 
+                                                type="text" 
+                                                id="c-5-528" 
+                                                placeholder="Address Line 2">
+                                            </div>
                                             <div class="c-offscreen"><label for="c-6-528">City</label></div>
-                                            <div class="c-editor c-partial-line" style="float: left;"><input name="property[address][city]" type="text" id="c-6-528" placeholder="City"></div>
-                                            <div class="c-offscreen"><label for="c-7-528">State / Province / Region</label></div>
-                                            <div class="c-editor c-partial-line" style="float: left;"><input name="property[address][state]" type="text" id="c-7-528" placeholder="State / Province / Region"></div>
+                                            <div class="c-editor c-partial-line" style="float: left;">
+                                                <input 
+                                                value="{!! !empty($data['property']['address']['city']) ? 
+                                                        $data['property']['address']['city'] : old('property.address.city') !!}"
+                                                name="property[address][city]" 
+                                                type="text" 
+                                                id="c-6-528" 
+                                                placeholder="City">
+                                            </div>
+                                            {{-- <div class="c-offscreen"><label for="c-7-528">State / Province / Region</label></div>
+                                            <div class="c-editor c-partial-line" style="float: left;"><input value="{!!old('property.address.state')!!}" name="property[address][state]" type="text" id="c-7-528" placeholder="State / Province / Region"></div> --}}
+                                            <div class="c-offscreen"><label for="c-30-1626">Paris</label></div>
+                                            <div class="c-editor c-partial-line" style="float: left;">
+                                                <div class="c-dropdown">
+                                                    <select 
+                                                    value="{!! !empty($data['property']['address']['state']) ? 
+                                                        $data['property']['address']['state'] : old('property.address.state') !!}" 
+                                                    name="property[address][state]" 
+                                                    id="c-7-528" 
+                                                    class="c-placeholder-text-styled ">
+                                                        <option value="">Parish</option>
+                                                          <option value="Clarendon">Clarendon</option>
+                                                          <option value="Hanover">Hanover</option>
+                                                          <option value="Kingston">Kingston</option>
+                                                          <option value="Manchester">Manchester</option>
+                                                          <option value="Portland">Portland</option>
+                                                          <option value="Saint Andrew">Saint Andrew</option>
+                                                          <option value="Saint Ann">Saint Ann</option>
+                                                          <option value="Saint Catherine">Saint Catherine</option>
+                                                          <option value="Saint Elizabeth">Saint Elizabeth</option>
+                                                          <option value="Saint James">Saint James</option>
+                                                          <option value="Saint Mary">Saint Mary</option>
+                                                          <option value="Saint Thomas">Saint Thomas</option>
+                                                          <option value="Trelawny">Trelawny</option>
+                                                          <option value="Westmoreland">Westmoreland</option>
+                                                    </select>
+                                                </div>
+                                            </div>
                                             <div class="c-offscreen"><label for="c-8-528">Postal / Zip Code</label></div>
-                                            <div class="c-editor c-partial-line" style="float: left;"><input name="property[address][postal]" type="text" id="c-8-528" placeholder="Postal / Zip Code"></div>
+                                            <div class="c-editor c-partial-line" style="float: left;"><input value="{!!old('property.address.postal')!!}" name="property[address][postal]" type="text" id="c-8-528" placeholder="Postal / Zip Code"></div>
                                             <div class="c-offscreen"><label for="c-9-528">Country</label></div>
                                             <div class="c-editor c-partial-line" style="float: left;">
                                                 <div class="c-dropdown">
-                                                    <select name="property[address][country]" id="c-9-528" class="c-placeholder-text-styled">
+                                                    <select value="{!!old('property.address.country')!!}" name="property[address][country]" id="c-9-528" class="c-placeholder-text-styled">
                                                         <option value="">Country</option>
                                                         <option value="Afghanistan">Afghanistan</option>
                                                         <option value="Albania">Albania</option>
@@ -204,7 +312,7 @@
                                                         <option value="Israel">Israel</option>
                                                         <option value="Italy">Italy</option>
                                                         <option value="Ivory Coast">Ivory Coast</option>
-                                                        <option value="Jamaica">Jamaica</option>
+                                                        <option selected="selected"     >Jamaica</option>
                                                         <option value="Japan">Japan</option>
                                                         <option value="Jordan">Jordan</option>
                                                         <option value="Kazakhstan">Kazakhstan</option>
@@ -363,17 +471,23 @@
                               <div class="">
                                   <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
                                       <div class="c-label  "><label for="c-11-1027">Company Name</label></div>
-                                      <div class="c-editor"><input name="vendor[company_name]" type="text" id="c-11-1027" placeholder=""></div>
+                                      <div class="c-editor">
+                                        <input 
+                                        value="{!! !empty($data['vendor']['company_name']) ? $data['vendor']['company_name'] : old('vendor.company_name') !!}" 
+                                        name="vendor[company_name]" 
+                                        type="text" 
+                                        id="c-11-1027">
+                                      </div>
                                       <div class="c-validation"></div>
                                   </div>
                                   <div class="c-section c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
                                       <div class="c-title c-repeating-section-title">
                                           <h4>Individual Vendor Details</h4>
                                       </div>
-                                      <div class="c-repeating-section-group">
+                                      <div id="vendor" class="c-repeating-section-group">
                                           <div class="c-repeating-section-container">
                                               <div class="c-repeating-section-item-title">
-                                                  <div class="c-action-col"><a class="c-remove-item" title="Remove Vendor"><i class="icon-remove-sign"></i></a></div>
+                                                  <div class="c-action-col hide-remove-button"><a class="c-remove-item" title="Remove Vendor"><i class="icon-remove-sign"></i></a></div>
                                                   <h5>Vendor <span>1</span></h5>
                                               </div>
                                               <div class="c-repeating-section-item">
@@ -381,26 +495,26 @@
                                                       <div class="c-label "><label>Name</label></div>
                                                       <div>
                                                           <div class="c-offscreen"><label for="c-12-1026">First</label></div>
-                                                          <div class="c-editor c-span-1" style="width: 28.5714%; float: left;"><input name="vendor[first][]" na type="text" id="c-12-1026" placeholder="First"></div>
+                                                          <div class="c-editor c-span-1" style="width: 28.5714%; float: left;"><input value="{!!old('vendor.first.0')!!}" name="vendor[first][]" type="text" id="c-12-1026" placeholder="First"></div>
                                                           <div class="c-offscreen"><label for="c-13-1026">Middle</label></div>
-                                                          <div class="c-editor c-span-1" style="width: 28.5714%; float: left;"><input name="vendor[middle][]" type="text" id="c-13-1026" placeholder="Middle"></div>
+                                                          <div class="c-editor c-span-1" style="width: 28.5714%; float: left;"><input value="{!!old('vendor.middle.0')!!}" name="vendor[middle][]" type="text" id="c-13-1026" placeholder="Middle"></div>
                                                           <div class="c-offscreen"><label for="c-14-1026">Last</label></div>
-                                                          <div class="c-editor c-span-1" style="width: 28.5714%; float: left;"><input name="vendor[last][]" type="text" id="c-14-1026" placeholder="Last"></div>
+                                                          <div class="c-editor c-span-1" style="width: 28.5714%; float: left;"><input value="{!!old('vendor.last.0')!!}" name="vendor[last][]" type="text" id="c-14-1026" placeholder="Last"></div>
                                                           <div class="c-offscreen"><label for="c-15-1026">Suffix</label></div>
-                                                          <div class="c-editor c-span-1" style="width: 14.2857%; float: left;"><input name="vendor[suffix][]" type="text" id="c-15-1026" placeholder="Suffix"></div>
+                                                          <div class="c-editor c-span-1" style="width: 14.2857%; float: left;"><input value="{!!old('vendor.suffix.0')!!}" name="vendor[suffix][]" type="text" id="c-15-1026" placeholder="Suffix"></div>
                                                       </div>
                                                       <div class="c-validation"></div>
                                                   </div>
                                                   <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-6 c-sml-span-7">
                                                       <div class="c-label  "><label for="c-17-1025">TRN No.</label></div>
-                                                      <div class="c-editor"><input name="vendor[trn_no][]" type="text" id="c-17-1025" placeholder=""></div>
+                                                      <div class="c-editor"><input value="{!!old('vendor.trn_no.0')!!}" name="vendor[trn_no][]" type="text" id="c-17-1025" placeholder="123-456-789" class="trn-mask"></div>
                                                       <div class="c-validation"></div>
                                                   </div>
                                                   <div class="c-date-date c-field c-col-7 c-sml-col-7 c-span-6 c-sml-span-5">
                                                       <div class="c-label  "><label for="c-18-1024">Date of Birth</label></div>
                                                       <div class="c-editor">
                                                         <div class="input-group date c-editor-date c-datepicker" >
-                                                          <input class="datepicker" name="vendor[dob][]" type="text" id="c-6-252"placeholder="" >
+                                                          <input class="datepicker" value="{!!old('vendor.dob.0')!!}" name="vendor[dob][]" type="text" id="c-6-252"placeholder="" >
                                                         </div>
                                                         <div class="c-editor-date-icon input-group-addon"><i class="icon-calendar"></i></div>
                                                       </div>
@@ -408,41 +522,108 @@
                                                   </div>
                                                   <div class="c-text-singleline c-field c-col-11 c-sml-col-1 c-span-12 c-sml-span-12">
                                                       <div class="c-label  "><label for="c-19-1023">Occupation</label></div>
-                                                      <div class="c-editor"><input name="vendor[occupation][]" type="text" id="c-19-1023" placeholder=""></div>
+                                                      <div class="c-editor"><input value="{!!old('vendor.occupation.0')!!}" name="vendor[occupation][]" type="text" id="c-19-1023" placeholder=""></div>
                                                       <div class="c-validation"></div>
                                                   </div>
                                                   <div class="c-phone c-phone-international c-field c-col-1 c-sml-col-1 c-span-6 c-sml-span-6">
                                                       <div class="c-label  "><label for="c-20-1022">Office Phone</label></div>
-                                                      <div class="c-editor"><input name="vendor[phone][]" type="text" id="c-20-1022" placeholder=""></div>
+                                                      <div class="c-editor"><input value="{!!old('vendor.phone.0')!!}" name="vendor[phone][]" type="text" id="c-20-1022" placeholder="(876) 123-4567" class="phone-mask"></div>
                                                       <div class="c-validation"></div>
                                                   </div>
                                                   <div class="c-phone c-phone-international c-field c-col-7 c-sml-col-7 c-span-6 c-sml-span-6">
                                                       <div class="c-label  "><label for="c-21-1021">Mobile Phone</label></div>
-                                                      <div class="c-editor"><input name="vendor[mobile][]" type="text" id="c-21-1021" placeholder=""></div>
+                                                      <div class="c-editor">
+                                                        <input 
+                                                        value="{!! !empty($data['vendor']['mobile']) ? $data['vendor']['mobile'] : old('vendor.mobile.0') !!}"  
+                                                        name="vendor[mobile][]" 
+                                                        placeholder="(876) 123-4567" class="phone-mask"
+                                                        type="text" 
+                                                        id="c-21-1021" >
+                                                    </div>
                                                       <div class="c-validation"></div>
                                                   </div>
                                                   <div class="c-phone c-phone-international c-field c-col-13 c-sml-col-1 c-span-12 c-sml-span-12">
                                                       <div class="c-label  "><label for="c-22-1020">Email</label></div>
-                                                      <div class="c-editor"><input name="vendor[email][]" type="text" id="c-22-1020" placeholder=""></div>
+                                                      <div class="c-editor">
+                                                        <input 
+                                                        value="{!! !empty($data['vendor']['email']) ? $data['vendor']['email'] : old('vendor.email.0') !!}"  
+                                                        name="vendor[email][]" 
+                                                        type="text" 
+                                                        id="c-22-1020">
+                                                    </div>
                                                       <div class="c-validation"></div>
                                                   </div>
                                                   <div class="c-address c-address-international c-field c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
                                                       <div class="c-label "><label>Address</label></div>
                                                       <div>
                                                           <div class="c-offscreen"><label for="c-23-781">Address Line 1</label></div>
-                                                          <div class="c-editor" style="float: left;"><input name="vendor[address][line1][]" type="text" id="c-23-781" placeholder="Address Line 1"></div>
+                                                          <div class="c-editor" style="float: left;">
+                                                            <input 
+                                                            value="{!! !empty($data['vendor']['address']['line1']) ?
+                                                                    $data['vendor']['address']['line1'] : old('vendor.address.line1.0') !!}" 
+                                                            name="vendor[address][line1][]" 
+                                                            type="text" 
+                                                            id="c-23-781" 
+                                                            placeholder="Address Line 1">
+                                                        </div>
                                                           <div class="c-offscreen"><label for="c-24-781">Address Line 2</label></div>
-                                                          <div class="c-editor" style="float: left;"><input name="vendor[address][line2][]" type="text" id="c-24-781" placeholder="Address Line 2"></div>
+                                                          <div class="c-editor" style="float: left;">
+                                                            <input 
+                                                            value="{!! !empty($data['vendor']['address']['line2']) ?
+                                                                    $data['vendor']['address']['line2'] : old('vendor.address.line2.0') !!}" 
+                                                            name="vendor[address][line2][]" 
+                                                            type="text" 
+                                                            id="c-24-781" 
+                                                            placeholder="Address Line 2">
+                                                        </div>
                                                           <div class="c-offscreen"><label for="c-25-781">City</label></div>
-                                                          <div class="c-editor c-partial-line" style="float: left;"><input name="vendor[address][city][]" type="text" id="c-25-781" placeholder="City"></div>
-                                                          <div class="c-offscreen"><label for="c-26-781">State / Province / Region</label></div>
-                                                          <div class="c-editor c-partial-line" style="float: left;"><input name="vendor[address][state][]" type="text" id="c-26-781" placeholder="State / Province / Region"></div>
+                                                          <div class="c-editor c-partial-line" style="float: left;">
+                                                            <input 
+                                                            value="{!! !empty($data['vendor']['address']['city']) ?
+                                                                    $data['vendor']['address']['city'] : old('vendor.address.city.0') !!}" 
+                                                            name="vendor[address][city][]" 
+                                                            type="text" 
+                                                            id="c-25-781" 
+                                                            placeholder="City">
+                                                        </div>
+                                                          {{-- <div class="c-offscreen"><label for="c-26-781">State / Province / Region</label></div>
+                                                          <div class="c-editor c-partial-line" style="float: left;"><input value="{!!old('vendor.address.state.0')!!}" name="vendor[address][state][]" type="text" id="c-26-781" placeholder="State / Province / Region"></div> --}}
+                                                          <div class="c-offscreen"><label for="c-30-1626">Paris</label></div>
+                                                            <div class="c-editor c-partial-line" style="float: left;">
+                                                                <div class="c-dropdown">
+                                                                    <select 
+                                                                    value="{!! !empty($data['vendor']['address']['state']) ?
+                                                                    $data['vendor']['address']['state'] : old('vendor.address.state.0') !!}" 
+                                                                    name="vendor[address][state][]" 
+                                                                    id="c-26-781" 
+                                                                    class="c-placeholder-text-styled ">
+                                                                        <option value="">Parish</option>
+                                                                          <option value="Clarendon">Clarendon</option>
+                                                                          <option value="Hanover">Hanover</option>
+                                                                          <option value="Kingston">Kingston</option>
+                                                                          <option value="Manchester">Manchester</option>
+                                                                          <option value="Portland">Portland</option>
+                                                                          <option value="Saint Andrew">Saint Andrew</option>
+                                                                          <option value="Saint Ann">Saint Ann</option>
+                                                                          <option value="Saint Catherine">Saint Catherine</option>
+                                                                          <option value="Saint Elizabeth">Saint Elizabeth</option>
+                                                                          <option value="Saint James">Saint James</option>
+                                                                          <option value="Saint Mary">Saint Mary</option>
+                                                                          <option value="Saint Thomas">Saint Thomas</option>
+                                                                          <option value="Trelawny">Trelawny</option>
+                                                                          <option value="Westmoreland">Westmoreland</option>
+                                                                    </select>
+                                                                </div>
+                                                            </div>
                                                           <div class="c-offscreen"><label for="c-27-781">Postal / Zip Code</label></div>
-                                                          <div class="c-editor c-partial-line" style="float: left;"><input name="vendor[address][postal][]" type="text" id="c-27-781" placeholder="Postal / Zip Code"></div>
+                                                          <div class="c-editor c-partial-line" style="float: left;"><input value="{!!old('vendor.address.postal.0')!!}" name="vendor[address][postal][]" type="text" id="c-27-781" placeholder="Postal / Zip Code"></div>
                                                           <div class="c-offscreen"><label for="c-28-781">Country</label></div>
                                                           <div class="c-editor c-partial-line" style="float: left;">
                                                               <div class="c-dropdown">
-                                                                  <select name="vendor[address][country][]" id="c-28-781" class="c-placeholder-text-styled">
+                                                                  <select 
+                                                                  value="{!! !empty($data['vendor']['address']['country']) ?
+                                                                    $data['vendor']['address']['country'] : old('vendor.address.country.0') !!}" 
+                                                                  name="vendor[address][country][]" id="c-28-781" class="c-placeholder-text-styled">
                                                                       <option value="">Country</option>
                                                                       <option value="Afghanistan">Afghanistan</option>
                                                                       <option value="Albania">Albania</option>
@@ -548,7 +729,7 @@
                                                                       <option value="Israel">Israel</option>
                                                                       <option value="Italy">Italy</option>
                                                                       <option value="Ivory Coast">Ivory Coast</option>
-                                                                      <option value="Jamaica">Jamaica</option>
+                                                                      <option selected="selected" value="Jamaica">Jamaica</option>
                                                                       <option value="Japan">Japan</option>
                                                                       <option value="Jordan">Jordan</option>
                                                                       <option value="Kazakhstan">Kazakhstan</option>
@@ -708,14 +889,14 @@
                       <div class="c-page toggle-off">
                           <div class="c-section c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
                               <div class="c-title">
-                                  <h3>Monetary Details</h3>
+                                  <h3>Transfer Fees & Payments Schedule</h3>
                               </div>
                               <div class="">
-                                  <div class="c-choice-dropdown c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12">
-                                      <div class="c-label  "><label for="c-30-1052">Foreign Currency</label></div>
-                                      <div class="c-editor">
+                                  <div class="c-choice-dropdown c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
+                                      <div class="c-label"><label for="c-30-1052">Foreign Currency</label></div>
+                                      <div class="c-editor float-right">
                                           <div class="c-dropdown ">
-                                              <select name="monetary[fc][name]" id="c-30-1052">
+                                              <select value="{!!old('monetary.fc.name')!!}" name="monetary[fc][name]" id="fc_name">
                                                   <option></option>
                                                   <option selected="selected" value="United States Dollar">United States Dollar</option>
                                                   <option value="Canadian Dollar">Canadian Dollar</option>
@@ -725,84 +906,116 @@
                                       </div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  <div class="c-text-singleline c-field c-col-13 c-sml-col-1 c-span-4 c-sml-span-4">
-                                      <div class="c-label  "><label for="c-31-1051">Symbol</label></div>
-                                      <div class="c-editor"><input name="monetary[fc][symbol]" type="text" id="c-31-1051" placeholder=""></div>
+                                  <div class="c-text-singleline c-field c-col-17 c-sml-col-5 c-span-10 c-sml-span-8">
+                                      <div class="c-label  "><label for="fc_rate">Exchange Rate</label></div>
+                                      <div class="c-editor float-right"><input value="{!!old('monetary.fc.rate')!!} "name="monetary[fc][rate]" type="text" id="fc_rate" placeholder="$119.45" class="currency"></div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  <div class="c-text-singleline c-field c-col-17 c-sml-col-5 c-span-8 c-sml-span-8">
-                                      <div class="c-label  "><label for="c-32-1050">Exchange Rate</label></div>
-                                      <div class="c-editor"><input name="monetary[fc][rate]" type="text" id="c-32-1050" placeholder="$119.45"></div>
+                                  <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
+                                      <div class="c-label float-left"><label for="c_price">Sale Price</label></div>
+                                      
+                                      <div class="c-editor float-left" style="width: 60px"><input value="{!!old('monetary.fc.symbol')!!}" name="monetary[fc][symbol]" type="text" id="fc_symbol" placeholder="symbol"></div>
+                                      <div class="c-validation"></div>
+
+                                      <div class="c-editor float-right" style="width: 165px"><input value="{!!old('monetary.price_i')!!}" name="monetary[price_i]" type="text" id="c_price" placeholder="1,234,567.89" class="currency"></div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-8 c-sml-span-12">
-                                      <div class="c-label  "><label for="c-33-1049">Sale Price</label></div>
-                                      <div class="c-editor"><input name="monetary[price_i]" type="text" id="c-33-1049" placeholder=""></div>
+
+                                  <div class="c-currency c-field c-col-17 c-sml-col-1 c-span-10 c-sml-span-12">
+                                      <div class="c-label  "><label for="cp_deposit">Deposit</label></div>
+                                      <div class="c-editor float-right" ><input value="{!!old('monetary.deposit')!!}" name="monetary[deposit]" type="text" id="cp_deposit" placeholder="1,234,567.89" class="currency"></div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  {{-- <div class="c-text-singleline c-field c-col-7 c-sml-col-1 c-span-18 c-sml-span-12">
-                                      <div class="c-label  "><label for="c-34-1048">Sale Price in words</label></div>
-                                      <div class="c-editor"><input name="monetary[price_w]" type="text" id="c-34-1048" placeholder=""></div>
-                                      <div class="c-validation"></div>
-                                  </div> --}}
-                                  <div class="c-currency c-field c-col-9 c-sml-col-1 c-span-8 c-sml-span-12">
-                                      <div class="c-label  "><label for="c-35-1047">Sale Price JAMAICAN</label></div>
-                                      <div class="c-editor"><input name="monetary[jprice_i]" type="text" id="c-35-1047" placeholder="j$"></div>
+                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
+                                      <div class="c-label  "><label for="c_pricej">Sale Price JAMAICAN</label></div>
+                                      <div class="c-editor float-right" style="width: 165px"><input value="{!!old('monetary.jprice_i')!!}" name="monetary[jprice_i]" type="text" id="c_pricej" placeholder="1,234,567.89" class="currency"></div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  {{-- <div class="c-text-singleline c-field c-col-7 c-sml-col-1 c-span-18 c-sml-span-12">
-                                      <div class="c-label  "><label for="c-36-1046">Sale Price jamaican in words</label></div>
-                                      <div class="c-editor"><input name="monetary[jprice_w]" type="text" id="c-36-1046" placeholder=""></div>
-                                      <div class="c-validation"></div>
-                                  </div> --}}
-                                  <div class="c-currency c-field c-col-17 c-sml-col-1 c-span-8 c-sml-span-12">
-                                      <div class="c-label  "><label for="c-37-1045">Deposit</label></div>
-                                      <div class="c-editor"><input name="monetary[deposit]" type="text" id="c-37-1045" placeholder=""></div>
+
+                                  
+                                  <div class="c-currency c-field c-col-13 c-sml-col-1 c-span-10 c-sml-span-12">
+                                      <div class="c-label  "><label for="cp_second">Second Payment</label></div>
+                                      <div class="c-editor float-right"><input value="{!!old('monetary.second_pay')!!}" name="monetary[second_pay]" type="text" id="cp_second" placeholder="1,234,567.89" class="currency"></div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-8 c-sml-span-12">
-                                      <div class="c-label  "><label for="c-38-1044">Second Payment</label></div>
-                                      <div class="c-editor"><input name="monetary[second_pay]" type="text" id="c-38-1044" placeholder=""></div>
+                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
+                                      <div class="c-label  "><label for="cp_title">Half Title Cost</label></div>
+                                      <div class="c-editor float-right" style="width: 165px">
+                                        <input 
+                                            value="{!! !empty($data['monetary']['half_title']) ? $data['monetary']['half_title'] :
+                                                old('monetary.half_title') !!}" 
+                                            name="monetary[half_title]" 
+                                            type="text" placeholder="1,234,567.89" class="currency"
+                                            id="cp_title">
+                                        </div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  <div class="c-currency c-field c-col-9 c-sml-col-1 c-span-8 c-sml-span-12">
-                                      <div class="c-label  "><label for="c-39-1043">Final Payment</label></div>
-                                      <div class="c-editor"><input name="monetary[final_pay]" type="text" id="c-39-1043" placeholder=""></div>
+                                  <div class="c-currency c-field c-col-13 c-sml-col-1 c-span-10 c-sml-span-12">
+                                      <div class="c-label  "><label for="final_pay">Final Payment</label></div>
+                                      <div class="c-editor float-right">
+                                        <input 
+                                            value="{!!old('monetary.final_pay')!!}" 
+                                            name="monetary[final_pay]" 
+                                            type="text" placeholder="1,234,567.89" class="currency"
+                                            id="final_pay">
+                                        </div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  <div class="c-currency c-field c-col-17 c-sml-col-1 c-span-8 c-sml-span-12">
-                                      <div class="c-label  "><label for="c-40-1042">Half Title Cost</label></div>
-                                      <div class="c-editor"><input name="monetary[half_title]" type="text" id="c-40-1042" placeholder=""></div>
+
+                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
+                                      <div class="c-label  "><label for="c-41-1041">½ Land Agreement Cost</label></div>
+                                      <div class="c-editor float-right" style="width: 130px">
+                                        <input 
+                                            value="{!! !empty($data['monetary']['half_land_agreement']) ? $data['monetary']['half_land_agreement'] :
+                                                old('monetary.half_land_agreement') !!}" 
+                                            name="monetary[half_land_agreement]" 
+                                            type="text" placeholder="1,234,567.89" class="currency"
+                                            id="cp_agreement" >
+                                        </div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-8 c-sml-span-12">
-                                      <div class="c-label  "><label for="c-41-1041">Half Agreement Cost</label></div>
-                                      <div class="c-editor"><input name="monetary[half_agreement]" type="text" id="c-41-1041" placeholder=""></div>
+                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
+                                      <div class="c-label  "><label for="c-41-1041">½ Building Agreement Cost</label></div>
+                                      <div class="c-editor float-right" style="width: 130px">
+                                        <input 
+                                            value="{!! !empty($data['monetary']['half_build_agreement']) ? $data['monetary']['half_build_agreement'] :
+                                                old('monetary.half_build_agreement') !!}" 
+                                            name="monetary[half_build_agreement]" 
+                                            type="text" placeholder="1,234,567.89" class="currency"
+                                            id="cp_agreement" >
+                                        </div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  <div class="c-currency c-field c-col-9 c-sml-col-1 c-span-8 c-sml-span-12">
+                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
                                       <div class="c-label  "><label for="c-42-1040">Half Stamp Duty</label></div>
-                                      <div class="c-editor"><input name="monetary[half_stamp_duty]" type="text" id="c-42-1040" placeholder=""></div>
+                                      <div class="c-editor float-right" style="width: 165px"><input value="{!!old('monetary.half_stamp_duty')!!}" name="monetary[half_stamp_duty]" type="text" id="cp_stamp" placeholder="1,234,567.89" class="currency"></div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  <div class="c-currency c-field c-col-17 c-sml-col-1 c-span-8 c-sml-span-12">
+                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
                                       <div class="c-label  "><label for="c-43-1039">Half Registration Fee</label></div>
-                                      <div class="c-editor"><input name="monetary[half_reg_fee]" type="text" id="c-43-1039" placeholder=""></div>
+                                      <div class="c-editor float-right" style="width: 165px"><input value="{!!old('monetary.half_reg_fee')!!}" name="monetary[half_reg_fee]" type="text" id="cp_reg_fee" placeholder="1,234,567.89" class="currency"></div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-8 c-sml-span-12">
+                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
                                       <div class="c-label  "><label for="c-44-1038">Incorporation Costs</label></div>
-                                      <div class="c-editor"><input max="monetary[inc_cost]" type="text" id="c-44-1038" placeholder=""></div>
+                                      <div class="c-editor float-right" style="width: 165px"><input value="{!!old('monetary.inc_cost')!!}" name="monetary[inc_cost]" type="text" id="cp_inc" placeholder="1,234,567.89" class="currency"></div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  <div class="c-currency c-field c-col-9 c-sml-col-1 c-span-8 c-sml-span-12">
+                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
                                       <div class="c-label  "><label for="c-45-1037">Maintenance Expenses</label></div>
-                                      <div class="c-editor"><input name="monetary[maintenance_expense]" type="text" id="c-45-1037" placeholder=""></div>
+                                      <div class="c-editor float-right" style="width: 163px"><input value="{!!old('monetary.maintenance_expense')!!}" name="monetary[maintenance_expense]" type="text" id="cp_maintenance" placeholder="1,234,567.89" class="currency"></div>
                                       <div class="c-validation"></div>
                                   </div>
-                                  <div class="c-currency c-field c-col-17 c-sml-col-1 c-span-8 c-sml-span-12">
+                                  <div class="c-currency c-field c-col-1 c-sml-col-1 c-span-10 c-sml-span-12">
                                       <div class="c-label  "><label for="c-46-1036">Identification Fee</label></div>
-                                      <div class="c-editor"><input name="monetary[identification_fee]" type="text" id="c-46-1036" placeholder=""></div>
+                                      <div class="c-editor float-right" style="width: 165px">
+                                        <input 
+                                            value="{!! !empty($data['monetary']['identification_fee']) ? $data['monetary']['identification_fee'] :
+                                                old('monetary.identification_fee') !!}" 
+                                            name="monetary[identification_fee]" 
+                                            type="text" placeholder="1,234,567.89" class="currency"
+                                            id="cp_identification">
+                                        </div>
                                       <div class="c-validation"></div>
                                   </div>
                               </div>
@@ -822,37 +1035,37 @@
                               <div class="c-title c-repeating-section-title">
                                   <h3>Purchasers Details</h3>
                               </div>
-                              <div class="c-repeating-section-group">
+                              <div id='buyer' class="c-repeating-section-group">
                                   <div class="c-repeating-section-container">
                                       <div class="c-repeating-section-item-title">
-                                          <div class="c-action-col"><a class="c-remove-item" title="Remove Item"><i class="icon-remove-sign"></i></a></div>
-                                          <h4>Item <span>1</span></h4>
+                                          <div class="c-action-col hide-remove-button"><a class="c-remove-item" title="Remove Item"><i class="icon-remove-sign"></i></a></div>
+                                          <h4>Purchaser <span>1</span></h4>
                                       </div>
                                       <div class="c-repeating-section-item">
                                           <div class="c-name c-field c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
                                               <div class="c-label "><label>Name</label></div>
                                               <div>
                                                   <div class="c-offscreen"><label for="c-47-1307">First</label></div>
-                                                  <div class="c-editor c-span-1" style="width: 28.5714%; float: left;"><input name="buyer[first][]" type="text" id="c-47-1307" placeholder="First"></div>
+                                                  <div class="c-editor c-span-1" style="width: 28.5714%; float: left;"><input name="buyer[first][]" type="text" id="c-47-1307" placeholder="First" value="{!!old('buyer.first.0')!!}"></div>
                                                   <div class="c-offscreen"><label for="c-48-1307">Middle</label></div>
-                                                  <div class="c-editor c-span-1" style="width: 28.5714%; float: left;"><input name="buyer[middle][]" type="text" id="c-48-1307" placeholder="Middle"></div>
+                                                  <div class="c-editor c-span-1" style="width: 28.5714%; float: left;"><input name="buyer[middle][]" type="text" id="c-48-1307" placeholder="Middle" value="{!!old('buyer.middle.0')!!}"></div>
                                                   <div class="c-offscreen"><label for="c-49-1307">Last</label></div>
-                                                  <div class="c-editor c-span-1" style="width: 28.5714%; float: left;"><input name="buyer[last][]" type="text" id="c-49-1307" placeholder="Last"></div>
+                                                  <div class="c-editor c-span-1" style="width: 28.5714%; float: left;"><input name="buyer[last][]" type="text" id="c-49-1307" placeholder="Last" value="{!!old('buyer.last.0')!!}"></div>
                                                   <div class="c-offscreen"><label for="c-50-1307">Suffix</label></div>
-                                                  <div class="c-editor c-span-1" style="width: 14.2857%; float: left;"><input name="buyer[suffix][]" type="text" id="c-50-1307" placeholder="Suffix"></div>
+                                                  <div class="c-editor c-span-1" style="width: 14.2857%; float: left;"><input name="buyer[suffix][]" type="text" id="c-50-1307" placeholder="Suffix" value="{!!old('buyer.suffix.0')!!}"></div>
                                               </div>
                                               <div class="c-validation"></div>
                                           </div>
                                           <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-4 c-sml-span-5">
                                               <div class="c-label  "><label for="c-52-1306">TRN</label></div>
-                                              <div class="c-editor"><input name="buyer[trn_no][]" type="text" id="c-52-1306" placeholder=""></div>
+                                              <div class="c-editor"><input name="buyer[trn_no][]" type="text" id="c-52-1306" placeholder="123-456-789" class="trn-mask" value="{!!old('buyer.trn_no.0')!!}"></div>
                                               <div class="c-validation"></div>
                                           </div>
                                           <div class="c-date-date c-field c-col-5 c-sml-col-5 c-span-5 c-sml-span-7">
                                               <div class="c-label  "><label for="c-53-1305">Date of Birth</label></div>
                                               <div class="c-editor">
                                                 <div class="input-group date c-editor-date c-datepicker" >
-                                                  <input name="buyer[dob][]" class="datepicker" type="text" id="c-6-252"placeholder="" >
+                                                  <input name="buyer[dob][]" value="{!!old('buyer.dob.0')!!}" class="datepicker" type="text" id="c-6-252"placeholder="" >
                                                 </div>
                                                 <div class="c-editor-date-icon input-group-addon"><i class="icon-calendar"></i></div>
                                               </div>
@@ -860,46 +1073,68 @@
                                           </div>
                                           <div class="c-text-singleline c-field c-col-10 c-sml-col-1 c-span-5 c-sml-span-12">
                                               <div class="c-label  "><label for="c-54-1304">Occupation</label></div>
-                                              <div class="c-editor"><input name="buyer[occupation][]" type="text" id="c-54-1304" placeholder=""></div>
+                                              <div class="c-editor"><input name="buyer[occupation][]" value="{!!old('buyer.occupation.0')!!}" type="text" id="c-54-1304" placeholder=""></div>
                                               <div class="c-validation"></div>
                                           </div>
                                           <div class="c-text-singleline c-field c-col-15 c-sml-col-1 c-span-10 c-sml-span-12">
                                               <div class="c-label  "><label for="c-55-1303">Place of Business</label></div>
-                                              <div class="c-editor"><input name="buyer[bussiness_place][]" type="text" id="c-55-1303" placeholder=""></div>
+                                              <div class="c-editor"><input name="buyer[bussiness_place][]" value="{!!old('buyer.bussiness_place.0')!!}" type="text" id="c-55-1303" placeholder=""></div>
                                               <div class="c-validation"></div>
                                           </div>
                                           <div class="c-phone c-phone-international c-field c-col-1 c-sml-col-1 c-span-7 c-sml-span-12">
                                               <div class="c-label  "><label for="c-56-1302">Office Phone</label></div>
-                                              <div class="c-editor"><input name="buyer[phone][]" type="text" id="c-56-1302" placeholder=""></div>
+                                              <div class="c-editor"><input name="buyer[phone][]" value="{!!old('buyer.phone.0')!!}" type="text" id="c-56-1302" placeholder="(876) 123-4567" class="phone-mask"></div>
                                               <div class="c-validation"></div>
                                           </div>
                                           <div class="c-phone c-phone-international c-field c-col-8 c-sml-col-1 c-span-6 c-sml-span-12">
                                               <div class="c-label  "><label for="c-57-1301">Mobile Phone</label></div>
-                                              <div class="c-editor"><input name="buyer[mobile][]" type="text" id="c-57-1301" placeholder=""></div>
+                                              <div class="c-editor"><input name="buyer[mobile][]" value="{!!old('buyer.mobile.0')!!}" type="text" id="c-57-1301" placeholder="(876) 123-4567" class="phone-mask"></div>
                                               <div class="c-validation"></div>
                                           </div>
                                           <div class="c-email c-field c-col-14 c-sml-col-1 c-span-11 c-sml-span-12">
                                               <div class="c-label  "><label for="c-58-1300">Email</label></div>
-                                              <div class="c-editor"><input name="buyer[email][]" type="text" id="c-58-1300" placeholder=""></div>
+                                              <div class="c-editor"><input name="buyer[email][]" value="{!!old('buyer.email.0')!!}" type="text" id="c-58-1300" placeholder=""></div>
                                               <div class="c-validation"></div>
                                           </div>
                                           <div class="c-address c-address-international c-field c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
                                               <div class="c-label "><label>Home Address</label></div>
                                               <div>
                                                   <div class="c-offscreen"><label for="c-59-1061">Address Line 1</label></div>
-                                                  <div class="c-editor" style="float: left;"><input name="buyer[address][line1][]" type="text" id="c-59-1061" placeholder="Address Line 1"></div>
+                                                  <div class="c-editor" style="float: left;"><input name="buyer[address][line1][]" value="{!!old('buyer.address.line1.0')!!}" type="text" id="c-59-1061" placeholder="Address Line 1"></div>
                                                   <div class="c-offscreen"><label for="c-60-1061">Address Line 2</label></div>
-                                                  <div class="c-editor" style="float: left;"><input name="buyer[address][line2][]" type="text" id="c-60-1061" placeholder="Address Line 2"></div>
+                                                  <div class="c-editor" style="float: left;"><input name="buyer[address][line2][]" value="{!!old('buyer.address.line2.0')!!}" type="text" id="c-60-1061" placeholder="Address Line 2"></div>
                                                   <div class="c-offscreen"><label for="c-61-1061">City</label></div>
-                                                  <div class="c-editor c-partial-line" style="float: left;"><input name="buyer[address][city][]" type="text" id="c-61-1061" placeholder="City"></div>
-                                                  <div class="c-offscreen"><label for="c-62-1061">State / Province / Region</label></div>
-                                                  <div class="c-editor c-partial-line" style="float: left;"><input name="buyer[address][state][]" type="text" id="c-62-1061" placeholder="State / Province / Region"></div>
+                                                  <div class="c-editor c-partial-line" style="float: left;"><input name="buyer[address][city][]" value="{!!old('buyer.address.city.0')!!}" type="text" id="c-61-1061" placeholder="City"></div>
+                                                  {{-- <div class="c-offscreen"><label for="c-62-1061">State / Province / Region</label></div>
+                                                  <div class="c-editor c-partial-line" style="float: left;"><input name="buyer[address][state][]" type="text" id="c-62-1061" placeholder="State / Province / Region"></div> --}}
+                                                  <div class="c-offscreen"><label for="c-30-1626">Paris</label></div>
+                                                    <div class="c-editor c-partial-line" style="float: left;">
+                                                        <div class="c-dropdown">
+                                                            <select name="buyer[address][state][]" value="{!!old('buyer.address.state.0')!!}" id="c-6-1061" class="c-placeholder-text-styled ">
+                                                                <option value="">Parish</option>
+                                                              <option value="Clarendon">Clarendon</option>
+                                                              <option value="Hanover">Hanover</option>
+                                                              <option value="Kingston">Kingston</option>
+                                                              <option value="Manchester">Manchester</option>
+                                                              <option value="Portland">Portland</option>
+                                                              <option value="Saint Andrew">Saint Andrew</option>
+                                                              <option value="Saint Ann">Saint Ann</option>
+                                                              <option value="Saint Catherine">Saint Catherine</option>
+                                                              <option value="Saint Elizabeth">Saint Elizabeth</option>
+                                                              <option value="Saint James">Saint James</option>
+                                                              <option value="Saint Mary">Saint Mary</option>
+                                                              <option value="Saint Thomas">Saint Thomas</option>
+                                                              <option value="Trelawny">Trelawny</option>
+                                                              <option value="Westmoreland">Westmoreland</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                                   <div class="c-offscreen"><label for="c-63-1061">Postal / Zip Code</label></div>
-                                                  <div class="c-editor c-partial-line" style="float: left;"><input name="buyer[address][postal][]" type="text" id="c-63-1061" placeholder="Postal / Zip Code"></div>
+                                                  <div class="c-editor c-partial-line" style="float: left;"><input name="buyer[address][postal][]" value="{!!old('buyer.address.postal.0')!!}" type="text" id="c-63-1061" placeholder="Postal / Zip Code"></div>
                                                   <div class="c-offscreen"><label for="c-64-1061">Country</label></div>
                                                   <div class="c-editor c-partial-line" style="float: left;">
                                                       <div class="c-dropdown">
-                                                          <select name="buyer[address][country][]" id="c-64-1061" class="c-placeholder-text-styled">
+                                                          <select name="buyer[address][country][]" value="{!!old('buyer.address.country.0')!!}" id="c-64-1061" class="c-placeholder-text-styled">
                                                               <option value="">Country</option>
                                                               <option value="Afghanistan">Afghanistan</option>
                                                               <option value="Albania">Albania</option>
@@ -1005,7 +1240,7 @@
                                                               <option value="Israel">Israel</option>
                                                               <option value="Italy">Italy</option>
                                                               <option value="Ivory Coast">Ivory Coast</option>
-                                                              <option value="Jamaica">Jamaica</option>
+                                                              <option selected="selected" value="Jamaica">Jamaica</option>
                                                               <option value="Japan">Japan</option>
                                                               <option value="Jordan">Jordan</option>
                                                               <option value="Kazakhstan">Kazakhstan</option>
@@ -1148,7 +1383,7 @@
                                   </div>
                               </div>
                               <div class="c-validation" style="display: block;"></div>
-                              <div class="c-repeating-section-add"><a class="c-add-item" title="Add" tabindex="0">Add Item</a></div>
+                              <div class="c-repeating-section-add"><a class="c-add-item" title="Add" tabindex="0">Add Purchaser</a></div>
                           </div>
                           <div class="c-button-section">
                               <div class="c-action"><button type="button" class="c-page-nav c-page-previous-page c-button">Back</button><button type="button" class="c-page-nav c-page-next-page c-button">Next</button></div>
@@ -1167,18 +1402,18 @@
                               <div class="">
                                   <div class="c-text-singleline c-field c-col-1 c-sml-col-1 c-span-12 c-sml-span-12">
                                       <div class="c-label  "><label for="c-66-1556">Attorney Firm Name</label></div>
-                                      <div class="c-editor"><input name="attorney[firm_name]" type="text" id="c-66-1556" placeholder=""></div>
+                                      <div class="c-editor"><input value="{!!old('attorney.firm_name')!!}" name="attorney[firm_name]" type="text" id="c-66-1556" placeholder=""></div>
                                       <div class="c-validation"></div>
                                   </div>
                                   <div class="c-name c-field c-col-1 c-sml-col-1 c-span-24 c-sml-span-12">
                                       <div class="c-label "><label>Name of Principal Attorney Assigned </label></div>
                                       <div>
                                           <div class="c-offscreen"><label for="c-67-1555">Title</label></div>
-                                          <div class="c-editor c-span-1" style="width: 20%; float: left;"><input name="attorney[pa][title]" type="text" id="c-67-1555" placeholder="Title"></div>
+                                          <div class="c-editor c-span-1" style="width: 20%; float: left;"><input value="{!!old('attorney.pa.title')!!}" name="attorney[pa][title]" type="text" id="c-67-1555" placeholder="Title"></div>
                                           <div class="c-offscreen"><label for="c-68-1555">First</label></div>
-                                          <div class="c-editor c-span-1" style="width: 40%; float: left;"><input name="attorney[pa][first]" type="text" id="c-68-1555" placeholder="First"></div>
+                                          <div class="c-editor c-span-1" style="width: 40%; float: left;"><input value="{!!old('attorney.pa.first')!!}" name="attorney[pa][first]" type="text" id="c-68-1555" placeholder="First"></div>
                                           <div class="c-offscreen"><label for="c-69-1555">Last</label></div>
-                                          <div class="c-editor c-span-1" style="width: 40%; float: left;"><input name="attorney[pa][last]" type="text" id="c-69-1555" placeholder="Last"></div>
+                                          <div class="c-editor c-span-1" style="width: 40%; float: left;"><input value="{!!old('attorney.pa.last')!!}" name="attorney[pa][last]" type="text" id="c-69-1555" placeholder="Last"></div>
                                       </div>
                                       <div class="c-validation"></div>
                                   </div>
@@ -1186,19 +1421,41 @@
                                       <div class="c-label "><label>Address</label></div>
                                       <div>
                                           <div class="c-offscreen"><label for="c-71-1316">Address Line 1</label></div>
-                                          <div class="c-editor" style="float: left;"><input name="attorney[address][line1]" type="text" id="c-71-1316" placeholder="Address Line 1"></div>
+                                          <div class="c-editor" style="float: left;"><input value="{!!old('attorney.address.line1')!!}" name="attorney[address][line1]" type="text" id="c-71-1316" placeholder="Address Line 1"></div>
                                           <div class="c-offscreen"><label for="c-72-1316">Address Line 2</label></div>
-                                          <div class="c-editor" style="float: left;"><input name="attorney[address][line2]" type="text" id="c-72-1316" placeholder="Address Line 2"></div>
+                                          <div class="c-editor" style="float: left;"><input value="{!!old('attorney.address.line2')!!}" name="attorney[address][line2]" type="text" id="c-72-1316" placeholder="Address Line 2"></div>
                                           <div class="c-offscreen"><label for="c-73-1316">City</label></div>
-                                          <div class="c-editor c-partial-line" style="float: left;"><input name="attorney[address][city]" type="text" id="c-73-1316" placeholder="City"></div>
-                                          <div class="c-offscreen"><label for="c-74-1316">State / Province / Region</label></div>
-                                          <div class="c-editor c-partial-line" style="float: left;"><input name="attorney[address][state]" type="text" id="c-74-1316" placeholder="State / Province / Region"></div>
+                                          <div class="c-editor c-partial-line" style="float: left;"><input value="{!!old('attorney.address.city')!!}" name="attorney[address][city]" type="text" id="c-73-1316" placeholder="City"></div>
+                                          {{-- <div class="c-offscreen"><label for="c-74-1316">State / Province / Region</label></div>
+                                          <div class="c-editor c-partial-line" style="float: left;"><input value="{!!old('attorney.address.state')!!}" name="attorney[address][state]" type="text" id="c-74-1316" placeholder="State / Province / Region"></div> --}}
+                                          <div class="c-offscreen"><label for="c-30-1626">Paris</label></div>
+                                            <div class="c-editor c-partial-line" style="float: left;">
+                                                <div class="c-dropdown">
+                                                    <select value="{!!old('attorney.address.state')!!}" name="attorney[address][state]" id="c-74-1316" class="c-placeholder-text-styled ">
+                                                        <option value="">Parish</option>
+                                                              <option value="Clarendon">Clarendon</option>
+                                                              <option value="Hanover">Hanover</option>
+                                                              <option value="Kingston">Kingston</option>
+                                                              <option value="Manchester">Manchester</option>
+                                                              <option value="Portland">Portland</option>
+                                                              <option value="Saint Andrew">Saint Andrew</option>
+                                                              <option value="Saint Ann">Saint Ann</option>
+                                                              <option value="Saint Catherine">Saint Catherine</option>
+                                                              <option value="Saint Elizabeth">Saint Elizabeth</option>
+                                                              <option value="Saint James">Saint James</option>
+                                                              <option value="Saint Mary">Saint Mary</option>
+                                                              <option value="Saint Thomas">Saint Thomas</option>
+                                                              <option value="Trelawny">Trelawny</option>
+                                                              <option value="Westmoreland">Westmoreland</option>
+                                                    </select>
+                                                </div>
+                                            </div>
                                           <div class="c-offscreen"><label for="c-75-1316">Postal / Zip Code</label></div>
-                                          <div class="c-editor c-partial-line" style="float: left;"><input name="attorney[address][postal]" type="text" id="c-75-1316" placeholder="Postal / Zip Code"></div>
+                                          <div class="c-editor c-partial-line" style="float: left;"><input value="{!!old('attorney.address.postal')!!}" name="attorney[address][postal]" type="text" id="c-75-1316" placeholder="Postal / Zip Code"></div>
                                           <div class="c-offscreen"><label for="c-76-1316">Country</label></div>
                                           <div class="c-editor c-partial-line" style="float: left;">
                                               <div class="c-dropdown">
-                                                  <select name="attorney[address][country]" id="c-76-1316" class="c-placeholder-text-styled">
+                                                  <select value="{!!old('attorney.address.country')!!}" name="attorney[address][country]" id="c-76-1316" class="c-placeholder-text-styled">
                                                       <option value="">Country</option>
                                                       <option value="Afghanistan">Afghanistan</option>
                                                       <option value="Albania">Albania</option>
@@ -1304,7 +1561,7 @@
                                                       <option value="Israel">Israel</option>
                                                       <option value="Italy">Italy</option>
                                                       <option value="Ivory Coast">Ivory Coast</option>
-                                                      <option value="Jamaica">Jamaica</option>
+                                                      <option selected="selected" value="Jamaica">Jamaica</option>
                                                       <option value="Japan">Japan</option>
                                                       <option value="Jordan">Jordan</option>
                                                       <option value="Kazakhstan">Kazakhstan</option>
@@ -1463,7 +1720,7 @@
         </div>
     </div>
   </div>
-  <input type="hidden" name="NoBots" id="c-nobots" value="Cpy9xdA3AeD6VuOZlzI7hF0cp+PxKQSFxbZWuPsDiNw=|8d3d2b1992a1961cb6d21eeaaf4a761b">
+  <input type="hidden" name="property[dev_id]" value="{!! !empty($data['property']['dev_id']) ? $data['property']['dev_id'] : old('property.dev_id') !!}" >
 </form>
 </div>
 @stop

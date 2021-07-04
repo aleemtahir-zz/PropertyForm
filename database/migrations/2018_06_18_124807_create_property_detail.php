@@ -14,21 +14,21 @@ class CreatePropertyDetail extends Migration
     public function up()
     {
         Schema::create('tbl_property_detail', function (Blueprint $table) {
-            $table->string('id')->primary();
-            $table->string('lot_no')->nullable();
-            $table->string('folio_no')->nullable();
-            $table->string('plan_no')->nullable();
-            $table->integer('developer_id')->unsigned()->nullable(); 
-            $table->foreign('developer_id')->references('id')->on('tbl_developer_detail');
-            $table->integer('purchaser_id')->unsigned()->nullable(); 
-            $table->foreign('purchaser_id')->references('id')->on('tbl_purchaser_detail');
+            // $table->engine = 'MyISAM';
+            $table->increments('id');
+            $table->integer('volume_no')->unsigned()->nullable();
+            $table->integer('folio_no')->unsigned()->nullable();
+            $table->integer('lot_no')->unsigned();
+            $table->string('dev_name');
+            $table->integer('plan_no')->nullable();
+            $table->integer('dev_id')->unsigned()->nullable(); 
             $table->integer('attorney_id')->unsigned()->nullable(); 
             $table->foreign('attorney_id')->references('id')->on('tbl_attorney_detail');
             $table->integer('payment_id')->unsigned()->nullable(); 
-            $table->foreign('payment_id')->references('id')->on('tbl_dev_contract_payment');
+            $table->foreign('payment_id')->references('id')->on('tbl_monetary_detail');
             $table->integer('address_id')->unsigned()->nullable();
             $table->foreign('address_id')->references('id')->on('tbl_address');
-            //$table->primary(array('id', 'lot_no')); 
+            // $table->primary(['volume_no','folio_no','lot_no']); 
         });
     }
 

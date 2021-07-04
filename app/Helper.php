@@ -7,12 +7,15 @@
 
 function arrangeMultiArray($array){
 
-	foreach ($array as $key => $value) {
+  foreach ($array as $key => $value) {
     $i=0;
+
+    if(!is_array($value))
+    return array(0 => $array); //setting for bulk upload feature  
+
     foreach ($value as $sub_key => $sub_value) {
 
       if(is_array($sub_value)){
-
         $sub_array = arrangeMultiArray($array[$key]);
 
         for ($i=0; $i < count($sub_array); $i++) { 
@@ -29,7 +32,7 @@ function arrangeMultiArray($array){
 
       $i++;
     }
-	}
+  }
 
   return $array;
 }
@@ -117,7 +120,7 @@ function convertNumberToWord($num = false)
     return $words;
 }
 
-function get_address($address)
+function get_address($address, &$error=false)
 {
 
   $mapper = array(
@@ -150,8 +153,10 @@ function get_address($address)
 
   if( empty($result) ){
 
-    /*INSERT ADDRESS*/
-    DB::table('tbl_address')->insert(
+
+    try {
+      /*INSERT ADDRESS*/
+      DB::table('tbl_address')->insert(
           [
               'line1'     => $address['line1'], 
               'line2'     => $address['line2'], 
@@ -161,8 +166,13 @@ function get_address($address)
               'country'   => $address['country']
           ]
       );
-      /*GET ADDRESS ID */
-      $address_id = DB::getPdo()->lastInsertId();
+    } catch (Exception $e) {
+        DB::rollBack();
+        $error = $e;
+    }
+    
+    /*GET ADDRESS ID */
+    $address_id = DB::getPdo()->lastInsertId();
   } 
   else
   {
@@ -173,7 +183,7 @@ function get_address($address)
   return $address_id;
 }
 
-function get_officer($officer, $source='', $postfix='')
+function get_officer($officer, &$error=false, $source='', $postfix='')
 {
 
   $mapper = array(
@@ -191,24 +201,30 @@ function get_officer($officer, $source='', $postfix='')
       $officer[$key] = '';
   }
 
-  /*CHECK DEVELOPER OFFICER IF EXIST ALREADY*/
-  $result = DB::table('tbl_person_info')
-                 ->select('id')
-                 ->where('title', '=', $officer['title'.$postfix]) 
-                 ->where('first_name', '=', $officer['first'.$postfix])
-                 ->where('last_name', '=', $officer['last'.$postfix])
-                 ->where('suffix', '=', $officer['suffix'.$postfix])
-                 ->where('capacity', '=', $officer['capacity'.$postfix])
-                 ->where('landline', '=', $officer['landline'.$postfix])
-                 ->where('source', '=', $source)
-                 ->orderBy('id', 'desc')
-                 ->first();
+  try{
+    /*CHECK DEVELOPER OFFICER IF EXIST ALREADY*/
+    $result = DB::table('tbl_person_info')
+                   ->select('id')
+                   ->where('title', '=', $officer['title'.$postfix]) 
+                   ->where('first_name', '=', $officer['first'.$postfix])
+                   ->where('last_name', '=', $officer['last'.$postfix])
+                   ->where('suffix', '=', $officer['suffix'.$postfix])
+                   ->where('capacity', '=', $officer['capacity'.$postfix])
+                   ->where('landline', '=', $officer['landline'.$postfix])
+                   ->where('source', '=', $source)
+                   ->orderBy('id', 'desc')
+                   ->first();
+    
+  }
+  catch(\Exception $e){
+    $error = $e;
+  }
 
 
   if( empty($result) ){
-
-    /*INSERT DEV OFFICER */
-    DB::table('tbl_person_info')->insert(
+    try {
+      /*INSERT DEV OFFICER */
+      DB::table('tbl_person_info')->insert(
           [
               'title'     => $officer['title'.$postfix], 
               'first_name'=> $officer['first'.$postfix], 
@@ -219,8 +235,14 @@ function get_officer($officer, $source='', $postfix='')
               'source'      => $source
           ]
       );
-      /*GET DEV OFFICER ID */
-      $officer_id = DB::getPdo()->lastInsertId();
+    } catch (Exception $e) {
+        DB::rollBack();
+        $error = $e;
+        //return back()->withErrors($e->getMessage())->withInput();
+    }
+    
+    /*GET DEV OFFICER ID */
+    $officer_id = DB::getPdo()->lastInsertId();
   } 
   else
   {
@@ -231,99 +253,102 @@ function get_officer($officer, $source='', $postfix='')
 
 }
 
-function save_doc($filename='', $vendor='', $buyer='', $property='')
-{	
-	
-	if(empty($filename))
-		return false;
-	if(empty($vendor))
-		return false;
+function saveDoc($template='', $file, $data='')
+{ 
+
+  $date['day']    = date('l');
+  $date['month']  = date('F');
+  $date['year']   = date('Y');
+
+  // Include classes 
+  // Load the TinyButStrong template engine 
+  require_once base_path('vendor/mbence/opentbs-bundle/MBence/OpenTBSBundle/lib/tbs_class.php'); 
+  // Load the OpenTBS plugin 
+  require_once base_path('vendor/mbence/opentbs-bundle/MBence/OpenTBSBundle/lib/tbs_plugin_opentbs.php'); 
 
 
-	// Include classes 
-    // Load the TinyButStrong template engine 
-    require_once base_path('vendor/mbence/opentbs-bundle/MBence/OpenTBSBundle/lib/tbs_class.php'); 
-    // Load the OpenTBS plugin 
-    require_once base_path('vendor/mbence/opentbs-bundle/MBence/OpenTBSBundle/lib/tbs_plugin_opentbs.php'); 
+  // Initialize the TBS instance 
+  $TBS = new \clsTinyButStrong; // new instance of TBS 
+  $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN); // load the OpenTBS plugin
+  // load your template
+  $TBS->LoadTemplate('templates/'.$template.'.docx');
+  //$TBS->SetOption('noerr','true');
+  
+  if(isset($data['v'][0]['logo']) && !empty($data['v'][0]['logo'])){
+    $prms = array('unique' => true);
+    $TBS->Plugin(OPENTBS_CHANGE_PICTURE, 'dev_logo',$data['v'][0]['logo'] , $prms);        
+  }
 
-    // Initialize the TBS instance 
-    $TBS = new \clsTinyButStrong; // new instance of TBS 
-    $TBS->Plugin(TBS_INSTALL, OPENTBS_PLUGIN); // load the OpenTBS plugin
+  if(!empty($data)){
+    
+      // pre($data); die;
+      try{
+          // replace variables
+          $TBS->MergeField('date', $date);
+          $TBS->MergeBlock('v', 'array',$data['v']);
+          $TBS->MergeField('p', $data['p']);
+          $TBS->MergeBlock('b,b1,b2,b3,b4,b5,b6,b7,b8,b9','array', $data['b']);
+          $TBS->MergeField('dcp', $data['dcp']);
+          $TBS->MergeField('c', $data['c']);
+          $TBS->MergeField('da1', $data['da1']);
+          $TBS->MergeField('da2', $data['da2']);
+          $TBS->MergeField('a', $data['a']);
+          $TBS->MergeField('m', $data['m']);
+          $TBS->MergeField('ds', $data['ds']);
 
-	
-	// ----------------- 
-	// Load the template 
-	// ----------------- 
-	$template = 'templates/'.$filename.'.docx'; 
 
-	$TBS->LoadTemplate($template/*, OPENTBS_ALREADY_UTF8*/); // Also merge some [onload] automatic fields (depends of the type of document). 
+          //For Statment of Account
+          if(!isset($data['monetary'])){
+            $temp = array();
+            $temp2 = array();
+            $temp = $data['m'];
+            $temp['upgrade'] = '';
+            $temp['total_payment'] = '';
+            $temp['balance'] = '';
+            $temp['misc_expense'] = '';
+            $temp['total_payment_j'] = '';
 
-	// ---------------------- 
-	// Debug mode of the demo 
-	// ---------------------- 
-	if (isset($_POST['debug']) && ($_POST['debug']=='current')) $TBS->Plugin(OPENTBS_DEBUG_XML_CURRENT, true); // Display the intented XML of the current sub-file, and exit. 
-	if (isset($_POST['debug']) && ($_POST['debug']=='info'))    $TBS->Plugin(OPENTBS_DEBUG_INFO, true); // Display information about the document, and exit. 
-	if (isset($_POST['debug']) && ($_POST['debug']=='show'))    $TBS->Plugin(OPENTBS_DEBUG_XML_SHOW); // Tells TBS to display information when the document is merged. No exit. 
+            $TBS->MergeField('st', $temp);
+            $TBS->MergeBlock('exp1,exp2','array', $temp2);
+            // $TBS->SetOption('noerr','true');
+            
+          }else{
+            
+            $TBS->MergeField('st', $data['monetary']);
+            $TBS->MergeBlock('exp1,exp2','array', $data['expense']);
+            // $TBS->MergeBlock('pay','array', $data['payment']);
+          }
 
-	// -------------------------------------------- 
-	// Merging and other operations on the template 
-	// -------------------------------------------- 
-	echo "<pre>";print_r($property);echo "</pre>";
-	// Merge data in the body of the document 
-	$TBS->MergeBlock('a', $vendor); 
-	//$TBS->MergeBlock('b', $property); 
-	//$TBS->MergeField('block1',$property);
-	// Merge data in colmuns 
-	
-	// ----------------- 
-	// Output the result 
-	// ----------------- 
-	$var = file_get_contents('counter.txt');
-	$var++;
-	file_put_contents('counter.txt', $var);
+      }
+      catch(\Exception $e)
+      {
+        pre($e->getMessage());
+        die;
+        //$property_info = '';  
+        //return $property_info;
+      }
+      
+      /*If template is Statemenet Of Account then save document on server then remove after downloading*/
+      /*if($template == 'statement_of_account'){
+        $filePath = storage_path() . '/app/public/docs/' . $file.'.docx';
+        $TBS->Show(OPENTBS_FILE, $filePath);
+      // pre($filePath); die;
+      }
+      // Download the file
+      else
+        $TBS->Show(OPENTBS_DOWNLOAD, $file.'.docx');  */
+      $dirname = storage_path() . "/app/public/docs";
+        
+      //Delete all existing files
+      $files = glob("$dirname/*");
+      array_map('unlink', $files);
 
-	if($var < 10)
-		$var = "0".$var;
+      $filePath = $dirname.'/' . $file.'.docx';
 
-	// Define the name of the output file 
-	$save_as	= 	'new1'.$var;
+      $TBS->Show(OPENTBS_FILE, $filePath);  
+  }
 
-	if(!empty($data[0][v_last]))
-		$vendor = $data[0][v_last];
-	else
-		$vendor = 'vendor';
-	if(!empty($data[0][v_last]))
-		$buyer = $data[0][v_last];
-	else
-		$buyer = 'buyer';
 
-	$output_file_name = $vendor."_".$buyer."_".$var.".docx"; 
-	if ($save_as==='') { 
-	    // Output the result as a downloadable file (only streaming, no data saved in the server) 
-	    $TBS->Show(OPENTBS_DOWNLOAD, $output_file_name); // Also merges all [onshow] automatic fields. 
-	    // Be sure that no more output is done, otherwise the download file is corrupted with extra data. 
-	    exit(); 
-	} else { 
-	    // Output the result as a file on the server. 
-	    $TBS->Show(OPENTBS_DOWNLOAD, $output_file_name);
-	    //$TBS->Show(OPENTBS_FILE, $output_file_name); // Also merges all [onshow] automatic fields. 
-	    // The script can continue.
-
-	    /*include_once('vendor/phpoffice/phpword/bootstrap.php');
-	    $phpWord = new \PhpOffice\PhpWord\PhpWord();
-
-		//Open template and save it as docx
-		$document = $phpWord->loadTemplate($template);
-		$document->saveAs('temp.docx');
-
-		//Load temp file
-		$phpWord = \PhpOffice\PhpWord\IOFactory::load('temp.docx'); 
-
-		//Save it
-		$xmlWriter = \PhpOffice\PhpWord\IOFactory::createWriter($phpWord , 'PDF');
-		$xmlWriter->save('result.pdf'); */  
-	    exit("File [$output_file_name] has been created."); 
-	}
 }
 
 function pre($data)
@@ -379,10 +404,10 @@ function get_foriegn_currency($currency)
 
 function upload_logo( $filename='')
 {
-  $target_dir = realpath(dirname(getcwd())).'\uploads\\';
-  $target_file = $target_dir . basename($_FILES[$filename]["name"]);
-  $uploadOk = 1;
-  $msg = array();
+  $uploadOk      = 1;
+  $msg           = array();
+  $target_file   = $_FILES[$filename]["name"];
+  $file_content  = file_get_contents($_FILES[$filename]["tmp_name"]);
   $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
   // Check if image file is a actual image or fake image
   /*if(isset($_POST["submit"])) {
@@ -411,14 +436,77 @@ function upload_logo( $filename='')
   {
       /*pre($target_file);
       pre($_FILES[$filename]["tmp_name"]); die;*/
-      if (move_uploaded_file($_FILES[$filename]["tmp_name"], $target_file)) {
-          $msg = "The file ". basename( $_FILES[$filename]["name"]). " has been uploaded.";
-      } 
-  }
+      // if (move_uploaded_file($_FILES[$filename]["tmp_name"], $target_file)) {
+      //     $msg = "The file ". basename( $_FILES[$filename]["name"]). " has been uploaded.";
+      // }
+      Storage::put('dev_logo/'.$target_file,$file_content);  //Storage::put($fileName, $path);
+      $url = storage_path() . '/app/public/dev_logo/' . $target_file;
 
+  }
+  
   $result['status']   = $uploadOk;
   $result['message']  = $msg;
-  $result['path']     = $target_file;
+  $result['path']     = $url;
 
   return $result;
+}
+
+
+/*CSV TO PHP ARRAYS
+================================================*/
+function csvToArray($filename = '')
+{
+  //$url = Storage::temporaryUrl(
+  //  'sheets/'.$filename, now()->addMinutes(5)
+  //);
+  $url = storage_path() . '/app/public/sheets/'.$filename;
+  //$url = Storage::url('/public/'.$filename); 
+  //$url = asset('storage/sheets/'.$filename); 
+  //pre($url); die; 
+  try{
+    //pre($url); die;
+    $file = fopen($url, 'r');
+  }
+  catch(\Exception $e)
+  {
+    pre($e->getMessage());
+  }
+
+  $header = fgetcsv($file);
+  //array_shift($header);
+
+  $i=0;
+  $data = array();
+  $new_data = array();
+  while ($row = fgetcsv($file))
+  {
+    //$key = array_shift($row);
+
+    $data[$i++] = array_combine($header, $row);
+  }
+
+  foreach ($data as $index => $array) {
+    foreach ($array as $key => $value) {
+      
+      $indices = explode('.', $key);
+      $values  = explode(',', $value);
+
+      if(count($values) > 1)
+        $value = $values;             
+
+      $ind_count = count($indices);
+
+      if($ind_count == 1)
+        $new_data[$index][$indices[0]] = $value;  
+      if($ind_count == 2)
+        $new_data[$index][$indices[0]][$indices[1]] = $value;  
+      if($ind_count == 3)
+        $new_data[$index][$indices[0]][$indices[1]][$indices[2]] = $value;
+
+    }
+  }
+
+  fclose($file);
+
+  return $new_data;
 }

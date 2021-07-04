@@ -14,9 +14,12 @@ class CreateDevelopementDetail extends Migration
     public function up()
     {
         Schema::create('tbl_developement_detail', function (Blueprint $table) {
-            $table->string('id')->primary();
+            $table->increments('id');
             $table->string('name')->nullable();
+            $table->string('volume_no')->nullable();
             $table->string('folio_no')->nullable();
+            $table->string('volume_str')->nullable();
+            $table->string('folio_str')->nullable();
             $table->string('plan_no')->nullable();
             $table->integer('address_id')->unsigned()->nullable();
             $table->foreign('address_id')->references('id')->on('tbl_address'); 

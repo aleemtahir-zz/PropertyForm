@@ -14,9 +14,17 @@
 Route::get('/', function () {
     return view('welcome');
 });
-
+Route::get('property/autocomplete',[
+    'as' => 'autocomplete',
+    'uses' => 'PropertyController@autocomplete'
+]);
+Route::get('property/autoDevName',[
+    'as' => 'autoDevName',
+    'uses' => 'PropertyController@autoDevName'
+]);
 Route::resource('property','PropertyController');
 Route::post('updateDevelopmentView', 'DevController@updateView');
+Route::get('getDevId', 'DevController@getDevId');
 Route::post('updatePropertyView', 'PropertyController@updateProperty');
 Route::post('merge',[
     'as' => 'merge',
@@ -26,6 +34,27 @@ Route::post('sendemail',[
     'as' => 'sendemail',
     'uses' => 'DevController@sendEmail'
 ]);
-Route::resource('development','DevController');
+Route::resource('DeveloperDataFormA','DevController');
+Route::resource('DeveloperDataFormB','DevController');
+Route::get('payment/download/{filename}', 'PaymentController@download');
 Route::resource('payment','PaymentController');
 Route::resource('upload','UploadController');
+Route::post('upload/show',[
+    'as' => 'upload/show',
+    'uses' => 'UploadController@postShow'
+]);
+
+Route::get('images/{filename}', function ($filename)
+{
+    $path = storage_path() . '/app/public/dev_logo/' . $filename;
+
+    if(!File::exists($path)) abort(404);
+
+    $file = File::get($path);
+    $type = File::mimeType($path);
+
+    $response = Response::make($file, 200);
+    $response->header("Content-Type", $type);
+
+    return $response;
+});

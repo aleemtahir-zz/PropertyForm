@@ -12,7 +12,33 @@ class Development extends Model
     //User Trait
     use InsertOnDuplicateKey;
 
-    public function add_developer($developer)
+    public function validateRequest($data)
+    {
+      $dev_info = DB::table('tbl_developement_detail')
+                         ->select('id')
+                         ->where('volume_no', $data['volume_no'])
+                         ->where('folio_no', $data['folio_no'])
+                         ->first();
+      $error = false;
+      if(!empty($dev_info))
+        $error = true;                
+      
+      return $error;                
+    }
+    public function check_developer($id)
+    {
+      $dev_info = DB::table('tbl_developement_detail')
+                         ->select('developer_id')
+                         ->where('id', $id)
+                         ->first();
+      $dev_id = '';                   
+      if(!empty($dev_info))
+        $dev_id = $dev_info->developer_id;
+      
+      return $dev_id;                    
+    }
+
+    public function add_developer($developer, $devId='', &$error = false)
     { 
         $address_id   = null;
         $dev_officer1 = null;
@@ -27,7 +53,7 @@ class Development extends Model
           $address_obj = $developer['address'];
           nullToString($address_obj);
 
-          $address_id = get_address($address_obj);
+          $address_id = get_address($address_obj, $error);
 
         }
           
@@ -37,7 +63,7 @@ class Development extends Model
             $do1 = $developer['do1'];
             nullToString($do1);
 
-            $dev_officer1 = get_officer($do1,'developer_officer',1);
+            $dev_officer1 = get_officer($do1, $error,'developer_officer',1);
         }
                     
         //GET DEVELOPER OFFICER 2
@@ -46,7 +72,7 @@ class Development extends Model
             $do2 = $developer['do2'];
             nullToString($do2);
 
-            $dev_officer2 = get_officer($do2,'developer_officer',2);
+            $dev_officer2 = get_officer($do2, $error,'developer_officer',2);
 
         }  
 
@@ -54,7 +80,7 @@ class Development extends Model
         $logo_path = '';
         $filename = 'developer_logo';
         
-        if(isset($_FILES[$filename])){
+        if(!empty($_FILES[$filename]["tmp_name"])){
           $dev_logo = upload_logo($filename);
           //pre($dev_logo);
           $logo_path = "";
@@ -69,49 +95,60 @@ class Development extends Model
         //ADD DEVELOPER INFO
         //******************
 
-        /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
-        $dev_info = DB::table('tbl_developer_detail')
-                       ->select('id')
-                       ->where('company_name', '=', $developer['company_name'])
-                       ->where('officer_id_1', '=', $dev_officer1)
-                       ->where('officer_id_2', '=', $dev_officer2)
-                       ->where('mobile', '=', $developer['mobile'])
-                       ->where('email', '=', $developer['email'])
-                       ->where('address_id', '=', $address_id)
-                       ->where('logo', '=', $logo_path)
-                       ->orderBy('id', 'desc')
-                       ->first();
+        //Transaction
+        DB::beginTransaction();
 
+        try {
+          $developer_data = [
+              'company_name'  => $developer['company_name'], 
+              'officer_id_1'  => $dev_officer1, 
+              'officer_id_2'  => $dev_officer2,
+              'mobile'        => $developer['mobile'],
+              'email'         => $developer['email'],
+              'address_id'    => $address_id,
+              'logo'          => $logo_path
+          ];
+          if(empty($logo_path))
+            unset($developer_data['logo']);
 
-        if( empty($dev_info) ){
+        } catch (Exception $e) {
+            $error = $e;
+            return;
+        }
+        
 
-          /*INSERT DEV INFO */
-          DB::table('tbl_developer_detail')->insert(
-                [
-                    'company_name'  => $developer['company_name'], 
-                    'officer_id_1'  => $dev_officer1, 
-                    'officer_id_2'  => $dev_officer2,
-                    'mobile'        => $developer['mobile'],
-                    'email'         => $developer['email'],
-                    'address_id'    => $address_id,
-                    'logo'          => $logo_path
-                ]
-            );
-            /*GET DEV ID */
-            $dev_id = DB::getPdo()->lastInsertId();
-        } 
+        if( !empty($devId) )
+        {
+          $table_name = 'tbl_developer_detail';
+          //Update Developer
+          DB::table($table_name)
+            ->where('id', $devId)
+            ->update($developer_data);
+
+          $dev_id = $devId;
+        }
         else
         {
-          $dev_id = $dev_info->id;
-
-        }
+          try{
+            /*INSERT DEV INFO */
+            DB::table('tbl_developer_detail')->insert($developer_data);
+            //DB::commit();
+          }
+          catch(\Exception $e)
+          {
+            DB::rollBack();
+            $error = $e;
+          }
+          /*GET DEV ID */
+          $dev_id = DB::getPdo()->lastInsertId();
+        } 
         
         //echo "<pre>"; print_r($dev_id); echo "</pre>";
         
         return $dev_id;
     }
 
-    public function add_developement($developement, $ids)
+    public function add_developement($developement, $ids, &$error = false)
     { 
         $address_id     = null;
         $officer_id     = null;
@@ -119,13 +156,25 @@ class Development extends Model
         $contractor_id  = $ids['contractor'];
         $payment_id     = $ids['payment'];
 
+        $mapper = array(
+            'name','volume_no','folio_no','volume_str','folio_str','plan_no','address_id','surveyor_id','developer_id','contractor_id','payment_id',
+            't_lots_i','r_lots_i','c_lots_i','lot_ids','rsrv_road'
+          );
+
+          foreach ($mapper as $key) {
+
+            if( !array_key_exists($key, $developement) )
+              $developement[$key] = null;
+          }
+
+
         //GET ADDRESS ID
         if(!empty($developement['address'])){
 
           $address_obj = $developement['address'];
           nullToString($address_obj);
 
-          $address_id = get_address($address_obj);
+          $address_id = get_address($address_obj, $error);
 
         }
           
@@ -135,7 +184,7 @@ class Development extends Model
             $surveyor = $developement['surveyor'];
             nullToString($surveyor);
 
-            $officer_id = get_officer($surveyor,'development_surveyor');
+            $officer_id = get_officer($surveyor, $error,'development_surveyor');
         }
 
         //******************
@@ -145,8 +194,10 @@ class Development extends Model
         $common_lots_s      = null;
         $residential_lots_s = null;
         //pre($developement); die;
-        $folio_key = explode(',', $developement['folio_no']);
-        $folio_key = $folio_key[0];
+        /*$folio_key = explode(',', $developement['folio_no']);
+        $folio_key = $folio_key[0];*/
+
+        // $folio_key = $developement['volume_no'].'_'.$developement['folio_no'];
 
         if(!empty($developement['t_lots_i']))
           $total_lots_s = convertNumberToWord($developement['t_lots_i']);
@@ -159,9 +210,11 @@ class Development extends Model
         
         $table_name = 'tbl_developement_detail';
         $data = [
-                    'id'                => $folio_key, 
                     'name'              => $developement['name'], 
+                    'volume_no'         => $developement['volume_no'], 
                     'folio_no'          => $developement['folio_no'], 
+                    'volume_str'        => $developement['volume_str'], 
+                    'folio_str'         => $developement['folio_str'], 
                     'plan_no'           => $developement['plan_no'], 
                     'address_id'        => $address_id, 
                     'surveyor_id'       => $officer_id,
@@ -178,12 +231,23 @@ class Development extends Model
                     'rsrv_road_no'      => $developement['rsrv_road']
                 ];
 
-        //Insert Update Development Data
-        Development::insertOnDuplicateKey($data,$table_name);
+        try{
+          //Insert Update Development Data
+          Development::insertOnDuplicateKey($data,$table_name);
+        }
+        catch(\Exception $e)
+        {
+          DB::rollBack();
+          $error = $e;
+          //return $e;
+          //return back()->withErrors($e->getMessage())->withInput();
+        }
+
+        DB::commit();
 
     }
 
-    public function add_contractor($contractor)
+    public function add_contractor($contractor, &$error = false)
     { 
         $address_id  = null;
         $officer_id  = null;
@@ -197,7 +261,7 @@ class Development extends Model
           $address_obj = $contractor['address'];
           nullToString($address_obj);
 
-          $address_id = get_address($address_obj);
+          $address_id = get_address($address_obj, $error);
 
         }
           
@@ -207,7 +271,7 @@ class Development extends Model
             $co = $contractor['co'];
             nullToString($co);
 
-            $officer_id = get_officer($co,'contractor_officer');
+            $officer_id = get_officer($co, $error,'contractor_officer');
         }
 
 
@@ -227,16 +291,28 @@ class Development extends Model
 
         if( empty($cont_info) ){
 
-          /*INSERT DEV INFO */
-          DB::table('tbl_contractor_detail')->insert(
+          try{
+            /*INSERT DEV INFO */
+            DB::table('tbl_contractor_detail')->insert(
                 [
                     'company_name'  => $contractor['company_name'], 
                     'officer_id'  => $officer_id,
                     'address_id'=> $address_id,
                 ]
             );
-            /*GET DEV ID */
-            $cont_id = DB::getPdo()->lastInsertId();
+            
+            //db::commit();
+          }
+          catch(\Exception $e)
+          {
+            DB::rollBack();
+            $error = $e;
+            return; 
+          }
+
+          /*GET DEV ID */
+          $cont_id = DB::getPdo()->lastInsertId();
+        
         } 
         else
         {
@@ -249,7 +325,7 @@ class Development extends Model
         return $cont_id;
     }
 
-    public function add_payment($payment)
+    public function add_payment($payment , &$error = false)
     { 
         $fc_id       = null;
 
@@ -272,6 +348,7 @@ class Development extends Model
         //******************
         $price_w  = null;
         $jprice_w = null;
+        $deposit_w = null;
 
         if(!empty($payment['price_i']))
           $price_w = convertNumberToWord($payment['price_i']);
@@ -279,42 +356,52 @@ class Development extends Model
         if(!empty($payment['jprice_i']))
           $jprice_w = convertNumberToWord($payment['jprice_i']);
 
+        if(!empty($payment['deposit']))
+          $deposit_w = convertNumberToWord($payment['deposit']);
+
+        $data = [
+                      'fc_id'         => $fc_id, 
+                      'price_i'       => $payment['price_i'],
+                      'price_w'       => $price_w,
+                      'j_price_i'     => $payment['jprice_i'],
+                      'j_price_w'     => $jprice_w,
+                      'deposit'       => $payment['deposit'],
+                      'deposit_w'     => $deposit_w,
+                      'second_payment'=> $payment['second_pay'],
+                      'third_payment' => $payment['third_pay'],
+                      'fourth_payment'=> $payment['fourth_pay'],
+                      'final_payment' => $payment['final_pay'],
+                      'title_cost'            => $payment['title_cost'],
+                      'land_agreement_cost'   => $payment['land_agreement_cost'],
+                      'build_agreement_cost'  => $payment['build_agreement_cost'],
+                      'identification_fee'    => $payment['identification_fee']
+                ];
+
         /*CHECK PAYMENT INFO IF EXIST ALREADY*/
         $payment_info = DB::table('tbl_dev_contract_payment')
                        ->select('id')
-                       ->where('fc_id', '=', $fc_id)
-                       ->where('price_i', '=', $payment['price_i'])
-                       ->where('price_w', '=', $price_w)
-                       ->where('j_price_i', '=', $payment['jprice_i'])
-                       ->where('j_price_w', '=', $jprice_w)
-                       ->where('deposit', '=', $payment['deposit'])
-                       ->where('second_payment', '=', $payment['second_pay'])
-                       ->where('third_payment', '=', $payment['third_pay'])
-                       ->where('fourth_payment', '=', $payment['fourth_pay'])
-                       ->where('final_payment', '=', $payment['final_pay'])
+                       ->where($data)
                        ->orderBy('id', 'desc')
                        ->first();
 
 
         if( empty($payment_info) ){
 
-          /*INSERT CONTRACT PAYMENT DETAIL */
-          DB::table('tbl_dev_contract_payment')->insert(
-                [
-                    'fc_id'         => $fc_id, 
-                    'price_i'       => $payment['price_i'],
-                    'price_w'       => $price_w,
-                    'j_price_i'     => $payment['jprice_i'],
-                    'j_price_w'      => $jprice_w,
-                    'deposit'       => $payment['deposit'],
-                    'second_payment'=> $payment['second_pay'],
-                    'third_payment' => $payment['third_pay'],
-                    'fourth_payment'=> $payment['fourth_pay'],
-                    'final_payment' => $payment['final_pay'],
-                ]
-            );
-            /*GET CONTRACT PAYMENT ID */
-            $payment_id = DB::getPdo()->lastInsertId();
+          try{
+            /*INSERT CONTRACT PAYMENT DETAIL */
+            DB::table('tbl_dev_contract_payment')->insert($data);
+              //DB::commit();
+          }
+          catch(\Exception $e)
+          {
+            DB::rollBack();
+            $error = $e;
+
+          }
+
+          /*GET CONTRACT PAYMENT ID */
+          $payment_id = DB::getPdo()->lastInsertId();
+        
         } 
         else
         {
@@ -327,9 +414,9 @@ class Development extends Model
         return $payment_id;
     }
 
-    function get_development($id='')
+    function get_development($id='',$flag='')
     {
-      /*DB::enableQueryLog();*/
+      DB::enableQueryLog();
       if(empty($id))
         return 0;
       else
@@ -339,7 +426,7 @@ class Development extends Model
 
         /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
         $dev_info = DB::table('tbl_developement_detail as dt')
-                        ->select('dt.name as dt-name','dt.folio_no as dt-folio_no','dt.plan_no as dt-plan_no','dt.total_lots_i as dt-t_lots_i', 'dt.total_lots_s as dt-t_lots_w', 'dt.residential_lots_i as dt-r_lots_i',
+                        ->select('dt.name as dt-name','dt.volume_no as dt-volume_no','dt.folio_no as dt-folio_no','dt.plan_no as dt-plan_no','dt.total_lots_i as dt-t_lots_i', 'dt.total_lots_s as dt-t_lots_w', 'dt.residential_lots_i as dt-r_lots_i',
                           'dt.residential_lots_s as dt-r_lots_w', 'dt.common_lots_i as dt-c_lots_i',
                           'dt.common_lots_s as dt-c_lots_w', 'dt.lot_ids as dt-lot_ids', 'dt.rsrv_road_no as dt-rsrv_road', 
                           //Development Address
@@ -367,23 +454,34 @@ class Development extends Model
                           'do2.title as d-do2-title2','do2.first_name as d-do2-first2','do2.last_name as d-do2-last2','do2.suffix as d-do2-suffix2',
                           'do2.capacity as d-do2-capacity2','do2.landline as d-do2-landline2',
                           //Contract Payment
-                          'cp.price_i as cp-price_i','cp.j_price_i as cp-jprice_i','cp.deposit as cp-deposit','cp.second_payment as cp-second_pay','cp.third_payment as cp-third_pay','cp.fourth_payment as cp-fourth_pay','cp.final_payment as cp-final_pay',
+                          'cp.price_i as cp-price_i','cp.j_price_i as cp-jprice_i','cp.deposit as cp-deposit','cp.second_payment as cp-second_pay','cp.third_payment as cp-third_pay','cp.fourth_payment as cp-fourth_pay','cp.final_payment as cp-final_pay','cp.title_cost as cp-title_cost','cp.land_agreement_cost as cp-land_agreement_cost','cp.build_agreement_cost as cp-build_agreement_cost','cp.identification_fee as cp-identification_fee',
                           //Contract Payment Foriegn Currency
                           'fc.name as cp-fc-name','fc.symbol as cp-fc-symbol','fc.exchange_rate as cp-fc-rate'
                         )
-                        ->join('tbl_address as dta', 'dt.address_id', '=', 'dta.id')
-                        ->join('tbl_developer_detail as d', 'dt.developer_id', '=', 'd.id')
-                        ->join('tbl_address as da', 'd.address_id', '=', 'da.id')
-                        ->join('tbl_person_info as so', 'dt.surveyor_id', '=', 'so.id')
-                        ->join('tbl_person_info as do1', 'd.officer_id_1', '=', 'do1.id')
-                        ->join('tbl_person_info as do2', 'd.officer_id_2', '=', 'do2.id')
-                        ->join('tbl_contractor_detail as c', 'dt.contractor_id', '=', 'c.id')
-                        ->join('tbl_address as ca', 'c.address_id', '=', 'ca.id')
-                        ->join('tbl_person_info as co', 'c.officer_id', '=', 'co.id')
-                        ->join('tbl_dev_contract_payment as cp', 'dt.payment_id', '=', 'cp.id')
-                        ->join('tbl_foriegn_currency as fc', 'cp.fc_id', '=', 'fc.id')
-                        ->where('dt.id', '=', $id)
-                        ->get(); 
+                        ->leftJoin('tbl_address as dta', 'dt.address_id', '=', 'dta.id')
+                        ->leftJoin('tbl_developer_detail as d', 'dt.developer_id', '=', 'd.id')
+                        ->leftJoin('tbl_address as da', 'd.address_id', '=', 'da.id')
+                        ->leftJoin('tbl_person_info as so', 'dt.surveyor_id', '=', 'so.id')
+                        ->leftJoin('tbl_person_info as do1', 'd.officer_id_1', '=', 'do1.id')
+                        ->leftJoin('tbl_person_info as do2', 'd.officer_id_2', '=', 'do2.id')
+                        ->leftJoin('tbl_contractor_detail as c', 'dt.contractor_id', '=', 'c.id')
+                        ->leftJoin('tbl_address as ca', 'c.address_id', '=', 'ca.id')
+                        ->leftJoin('tbl_person_info as co', 'c.officer_id', '=', 'co.id')
+                        ->leftJoin('tbl_dev_contract_payment as cp', 'dt.payment_id', '=', 'cp.id')
+                        ->leftJoin('tbl_foriegn_currency as fc', 'cp.fc_id', '=', 'fc.id');
+
+        if($flag == 1)
+        {
+          list($vol, $fol) = explode("_", $id);
+          $dev_info->where('dt.volume_no', $vol);
+          $dev_info->where('dt.folio_no', $fol);
+        }
+        else
+        {
+          $dev_info->where('dt.id', '=', $id);
+        }
+
+        $dev_info = $dev_info->orderBy('dt.id', 'desc')->get(); 
         /*dd(DB::getQueryLog());*/
 
         $mapper = array(

@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 use App\Traits\InsertOnDuplicateKey;
+use Illuminate\Http\Request;
 use Exception;
 use App\Helper;
 
@@ -13,8 +14,101 @@ class Property extends Model
     //User Trait
     use InsertOnDuplicateKey;
 
-    public function add_developer($developer)
+    public function validateRequest($data)
     {
+      $error = false;
+      $property_key = '';
+      $property = $data['property'];
+      if(!empty($property['name']) && !empty($property['lot_no'])){
+        $property_key = substr($property['name'], 0, 5).'-'.$property['lot_no'];
+      }
+
+      $key = DB::table('tbl_key_id')
+           ->select('id')
+           ->where('property_key', $property_key)
+           ->orderBy('id', 'desc')
+           ->first();
+
+      if(!empty($key))
+      {
+        $error = true;
+      }
+      
+      return $error;                
+    }
+
+    public function initialize($req)
+    {   
+        
+        $data     = $req['property'];
+        $devId    = $this->check_developer($data);
+
+        $purchasserId  = '';//$this->check_purchaser($data);
+
+        $vendor             = $req['vendor'];
+        $ids['vendor']      = $this->add_developer($vendor, $devId, $error);
+
+        if($error)
+            return $error;
+
+        $payment            = $req['monetary'];
+        $ids['payment']     = $this->add_payment($payment, $error);
+
+        if($error)
+            return $error;
+
+        $buyer              = $req['buyer'];
+        $ids['buyer']       = $this->add_purchaser($buyer,$purchasserId,$error);
+
+        if($error)
+            return $error;
+
+        $attorney           = $req['attorney'];
+        $ids['attorney']    = $this->add_attorney($attorney, $error);
+
+        if($error)
+            return $error;  
+
+        $property           = $req['property'];
+        $this->add_property($property, $ids, $error);
+
+        return $error;
+    }
+
+    public function check_developer($data)
+    {
+      $dev_id = $data['dev_id'];
+      $dev_info = DB::table('tbl_developement_detail')
+                         ->select('developer_id')
+                         ->where('id', $dev_id)
+                         ->first();
+      $dev_id = '';                   
+      if(!empty($dev_info))
+        $dev_id = $dev_info->developer_id;
+      
+      return $dev_id;                    
+    }
+
+    public function check_purchaser($data)
+    {
+      //$folio_key = $data['volume_no'].'_'.$data['folio_no'];
+      $rs = DB::table('tbl_key_id as key')
+                         ->select('pba.purchaser_id')
+                         ->join('tbl_property_buyer_assoc as pba','key.id', '=', 'pba.property_id')
+                         ->where('volume_no', $data['volume_no'])
+                         ->where('folio_no', $data['folio_no'])
+                         ->where('lot_no', $data['lot_no'])
+                         ->first();
+      $id = '';                   
+      if(!empty($rs))
+        $id = $rs->purchaser_id;
+      
+      return $id;                    
+    }
+
+    public function add_developer($developer, $devId='', &$error=false)
+    {
+
     	  $address_id   = null;
 
         $company_name = $developer['company_name'];
@@ -22,9 +116,10 @@ class Property extends Model
 
         //UNSET KEYS WHICH ARE EMPTY
         //scanArray($developer);
-        $developer = arrangeMultiArray($developer);
+        $developers = arrangeMultiArray($developer);
 
-        foreach ($developer as $key => $developer) {
+        $i = 0;
+        foreach ($developers as $key => $developer) {
 
         	//GET ADDRESS ID
 	        if(!empty($developer['address'])){
@@ -32,83 +127,117 @@ class Property extends Model
 	          $address_obj = $developer['address'];
 	          nullToString($address_obj);
 
-	          $address_id = get_address($address_obj);
+	          $address_id = get_address($address_obj, $error);
+            $developer['address_id'] = $address_id;
 
 	        }
-	          
+	        $developer['company_name'] = $company_name;
+            
 	        //******************
 	        //ADD DEVELOPER INFO
 	        //******************
 
 	        $mapper = array(
-			    'name','last','middle','suffix','trn_no','dob','occupation',
-			    'phone','mobile','email','logo'
-			);
+  			    'company_name','first','last','middle','suffix','trn_no','dob','occupation',
+  			    'phone','mobile','email'
+    			);
 
-			foreach ($mapper as $key) {
+    			foreach ($mapper as $key) {
 
-				if( !array_key_exists($key, $developer) )
-				  $developer[$key] = null;
-			}
+    				if( !array_key_exists($key, $developer) || empty($developer[$key]))
+    				  $developer[$key] = null;
+    			}
 
-			if( !empty($developer['dob']) ){
-				$developer['dob'] = date('Y-m-d',strtotime($developer['dob']));
-			}
+    			if( !empty($developer['dob']) )
+    				$developer['dob'] = date('Y-m-d',strtotime($developer['dob']));
 
-	        /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
-	        $dev_info = DB::table('tbl_developer_detail')
-	                       ->select('id')
-	                       ->where('company_name', $company_name)
-	                       ->where('fname', $developer['first'])
-	                       ->where('mname', $developer['middle'])
-	                       ->where('lname', $developer['last'])
-	                       ->where('suffix', $developer['suffix'])
-	                       ->where('trn_no', $developer['trn_no'])
-	                       ->where('dob', $developer['dob'])
-	                       ->where('occupation', $developer['occupation'])
-	                       ->where('phone', $developer['phone'])
-	                       ->where('mobile', $developer['mobile'])
-	                       ->where('email', $developer['email'])
-	                       ->where('address_id', $address_id)
-	                       ->where('logo', $developer['logo'])
-	                       ->orderBy('id', 'desc')
-	                       ->first();
+          $dbMapper = array(
+            'company_name' => 'company_name',
+            'fname'     => 'first', 
+            'mname'     => 'middle', 
+            'lname'     => 'last', 
+            'suffix'    => 'suffix', 
+            'trn_no'    => 'trn_no', 
+            'dob'       => 'dob', 
+            'occupation'=> 'occupation', 
+            'phone'     => 'phone', 
+            'mobile'    => 'mobile',
+            'email'     => 'email',
+            'address_id'=> 'address_id'
+          );
 
+          foreach ($dbMapper as $key => $value) {
+            $data[$key] = $developer[$value];
+          }
 
-	        if( empty($dev_info) ){
+          //pre($data); die;
+          if( !empty($devId) && $i == 0 )
+          { 
 
-	          /*INSERT DEV INFO */
-	          DB::table('tbl_developer_detail')->insert(
-	                [
-	                    'company_name'  => $company_name, 
-	                    'fname'  		=> $developer['first'], 
-	                    'mname'  		=> $developer['middle'], 
-	                    'lname'  		=> $developer['last'], 
-	                    'suffix'  		=> $developer['suffix'], 
-	                    'trn_no'  		=> $developer['trn_no'], 
-	                    'dob'  			=> $developer['dob'], 
-	                    'occupation'  	=> $developer['occupation'], 
-	                    'phone'  		=> $developer['phone'], 
-	                    'mobile'        => $developer['mobile'],
-	                    'email'         => $developer['email'],
-	                    'address_id'    => $address_id,
-	                    'logo'          => $developer['logo']
-	                ]
-	            );
-	            /*GET DEV ID */
-	            $dev_id[] = DB::getPdo()->lastInsertId();
-	        } 
-	        else
-	        {
-	          $dev_id[] = $dev_info->id;
+            $table_name = 'tbl_developer_detail';
+            
+            try {
+              //Update Developer
+              DB::table($table_name)
+                ->where('id', $devId)
+                ->update($data);
+ 
+            } catch (Exception $e) {
+              DB::rollback();
+              $error = $e->getMessage()."<br>File: ".__FILE__."<br>Line: ".__LINE__;
+              return;
+            }
 
-	        }
+            $i++;
+            $dev_id[] = $devId;
+          }
+          else
+          {
+
+            /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
+            $dev_info = DB::table('tbl_developer_detail')->select('id');
+
+            //WHERE CLAUSE
+            foreach ($dbMapper as $key => $value) {
+              
+              if($developer[$value] == null)
+                $dev_info->whereRaw($key.' is null');
+              else
+                $dev_info->where($key, $developer[$value]);
+            } 
+
+            $dev_info = $dev_info->orderBy('id', 'desc')->first();
+
+            if( empty($dev_info) ){
+// DB::enableQueryLog();
+//       dd(DB::getQueryLog());
+              try {
+                /*INSERT DEV INFO */
+                DB::table('tbl_developer_detail')->insert($data);    
+              } catch (Exception $e) {
+                DB::rollback();
+                $error = $e->getMessage()."<br>File: ".__FILE__."<br>Line: ".__LINE__;
+                return $error;
+                // pre($e->getMessage());
+              }
+              
+              /*GET DEV ID */
+              $dev_id[] = DB::getPdo()->lastInsertId();
+            } 
+            else
+            {
+              $dev_id[] = $dev_info->id;
+
+            }
+
+          }
         }
-
+        //pre($dev_id);
+//die;
         return $dev_id;
     }
 
-    public function add_payment($payment)
+    public function add_payment($payment, &$error=false)
     { 
         $fc_id       = null;
 
@@ -132,13 +261,13 @@ class Property extends Model
       	//MAPPER
       	$mapper = array(
 		    'price_i','jprice_i','deposit','second_pay','final_pay',
-		    'half_title','half_agreement','half_stamp_duty','half_reg_fee','inc_cost','maintenance_expense',
+		    'half_title','half_land_agreement','half_build_agreement','half_stamp_duty','half_reg_fee','inc_cost','maintenance_expense',
 		    'identification_fee'
 		    );
 
     		foreach ($mapper as $key) {
 
-    			if( !array_key_exists($key, $payment) )
+    			if( !array_key_exists($key, $payment) || empty($payment[$key]) )
     			  $payment[$key] = null;
     		}
 
@@ -151,53 +280,47 @@ class Property extends Model
         if(!empty($payment['jprice_i']))
           $jprice_w = convertNumberToWord($payment['jprice_i']);
 
+        $data = [
+                    'fc_id'            => $fc_id, 
+                    'price_i'          => $payment['price_i'],
+                    'price_w'          => $price_w,
+                    'j_price_i'        => $payment['jprice_i'],
+                    'j_price_w'        => $jprice_w,
+                    'deposit'          => $payment['deposit'],
+                    'second_payment'   => $payment['second_pay'],
+                    'final_payment'    => $payment['final_pay'],
+                    'half_title'       => $payment['half_title'],
+                    'half_land_agreement'     => $payment['half_land_agreement'],
+                    'half_build_agreement'    => $payment['half_build_agreement'],
+                    'half_stamp_duty'  => $payment['half_stamp_duty'],
+                    'half_reg_fee'     => $payment['half_reg_fee'],
+                    'inc_cost'         => $payment['inc_cost'],
+                    'maintenance_expense'   => $payment['maintenance_expense'],
+                    'identification_fee'    => $payment['identification_fee'],
+                ];
 
         /*CHECK PAYMENT INFO IF EXIST ALREADY*/
         $payment_info = DB::table('tbl_monetary_detail')
                        ->select('id')
-                       ->where('fc_id', '=', $fc_id)
-                       ->where('price_i', '=', $payment['price_i'])
-                       ->where('price_w', '=', $price_w)
-                       ->where('j_price_i', '=', $payment['jprice_i'])
-                       ->where('j_price_w', '=', $jprice_w)
-                       ->where('deposit', '=', $payment['deposit'])
-                       ->where('second_payment', '=', $payment['second_pay'])
-                       ->where('final_payment', '=', $payment['final_pay'])
-                       ->where('half_title', '=', $payment['half_title'])
-                       ->where('half_agreement', '=', $payment['half_agreement'])
-                       ->where('half_stamp_duty', '=', $payment['half_stamp_duty'])
-                       ->where('half_reg_fee', '=', $payment['half_reg_fee'])
-                       ->where('inc_cost', '=', $payment['inc_cost'])
-                       ->where('maintenance_expense', '=', $payment['maintenance_expense'])
-                       ->where('identification_fee', '=', $payment['identification_fee'])
+                       ->where($data)
                        ->orderBy('id', 'desc')
                        ->first();
         
         if( empty($payment_info) ){
 
-          /*INSERT CONTRACT PAYMENT DETAIL */
-          DB::table('tbl_monetary_detail')->insert(
-                [
-                    'fc_id'         	 => $fc_id, 
-                    'price_i'       	 => $payment['price_i'],
-                    'price_w'       	 => $price_w,
-                    'j_price_i'     	 => $payment['jprice_i'],
-                    'j_price_w'      	 => $jprice_w,
-                    'deposit'       	 => $payment['deposit'],
-                    'second_payment'	 => $payment['second_pay'],
-                    'final_payment' 	 => $payment['final_pay'],
-                    'half_title' 		   => $payment['half_title'],
-                    'half_agreement' 	 => $payment['half_agreement'],
-                    'half_stamp_duty'  => $payment['half_stamp_duty'],
-                    'half_reg_fee' 		 => $payment['half_reg_fee'],
-                    'inc_cost' 			   => $payment['inc_cost'],
-                    'maintenance_expense' 	=> $payment['maintenance_expense'],
-                    'identification_fee' 	  => $payment['identification_fee'],
-                ]
-            );
-            /*GET CONTRACT PAYMENT ID */
-            $payment_id = DB::getPdo()->lastInsertId();
-            pre($payment_id); die;
+          try {
+            /*INSERT CONTRACT PAYMENT DETAIL */
+            DB::table('tbl_monetary_detail')->insert($data);  
+          } catch (Exception $e) {
+            DB::rollback();
+            $error = $e->getMessage()."<br>File: ".__FILE__."<br>Line: ".__LINE__;
+            return;
+          }
+
+          
+          /*GET CONTRACT PAYMENT ID */
+          $payment_id = DB::getPdo()->lastInsertId();
+          //pre($payment_id); die;
         } 
         else
         {
@@ -208,15 +331,16 @@ class Property extends Model
         return $payment_id;
     }
 
-    public function add_purchaser($purchaser)
+    public function add_purchaser($purchaser,$id ,&$error=false)
     {
     	$address_id   = null;
 
         //UNSET KEYS WHICH ARE EMPTY
         //scanArray($purchaser);
-        $purchaser = arrangeMultiArray($purchaser);
+        $purchasers = arrangeMultiArray($purchaser);
         
-        foreach ($purchaser as $key => $purchaser) {
+        $i=0;
+        foreach ($purchasers as $key => $purchaser) {
 
         	//GET ADDRESS ID
 	        if(!empty($purchaser['address'])){
@@ -224,8 +348,8 @@ class Property extends Model
 	          $address_obj = $purchaser['address'];
 	          nullToString($address_obj);
 
-	          $address_id = get_address($address_obj);
-
+	          $address_id = get_address($address_obj, $error);
+            $purchaser['address_id'] = $address_id;
 	        }
 	          
 	        //******************
@@ -233,71 +357,103 @@ class Property extends Model
 	        //******************
 
 	        $mapper = array(
-			    'first','last','middle','suffix','trn_no','dob','occupation','bussiness_place',
-			    'phone','mobile','email'
-			);
+    			    'first','last','middle','suffix','trn_no','dob','occupation','bussiness_place',
+    			    'phone','mobile','email','address_id'
+    			);
+ 
+    			foreach ($mapper as $key) {
 
-			foreach ($mapper as $key) {
+    				if( !array_key_exists($key, $purchaser) || empty($purchaser[$key]))
+    				  $purchaser[$key] = null;
+    			}
 
-				if( !array_key_exists($key, $purchaser) )
-				  $purchaser[$key] = null;
-			}
+    			if( !empty($purchaser['dob']) )
+            $purchaser['dob'] = date('Y-m-d',strtotime($purchaser['dob']));
 
-			if( !empty($purchaser['dob']) )
-				$purchaser['dob'] = date('Y-m-d',strtotime($purchaser['dob']));
+          $dbMapper = array(
+            'fname'     => 'first', 
+            'mname'     => 'middle', 
+            'lname'     => 'last', 
+            'suffix'    => 'suffix', 
+            'trn_no'    => 'trn_no', 
+            'dob'       => 'dob', 
+            'occupation'=> 'occupation', 
+            'bussiness_place'=> 'bussiness_place', 
+            'phone'     => 'phone', 
+            'mobile'    => 'mobile',
+            'email'     => 'email',
+            'address_id'=> 'address_id'
+          );
 
-	        /*CHECK purchaser INFO IF EXIST ALREADY*/
-	        $dev_info = DB::table('tbl_purchaser_detail')
-	                       ->select('id')
-	                       ->where('fname', $purchaser['first'])
-	                       ->where('mname', $purchaser['middle'])
-	                       ->where('lname', $purchaser['last'])
-	                       ->where('suffix', $purchaser['suffix'])
-	                       ->where('trn_no', $purchaser['trn_no'])
-	                       ->where('dob', $purchaser['dob'])
-	                       ->where('occupation', $purchaser['occupation'])
-	                       ->where('phone', $purchaser['phone'])
-	                       ->where('mobile', $purchaser['mobile'])
-	                       ->where('email', $purchaser['email'])
-	                       ->where('address_id', $address_id)
-	                       ->orderBy('id', 'desc')
-	                       ->first();
+          foreach ($dbMapper as $key => $value) {
+            $data[$key] = $purchaser[$value];
+          }
 
 
-	        if( empty($dev_info) ){
+          if( !empty($id) && $i == 0 )
+          { 
+            $table_name = 'tbl_purchaser_detail';
+            
+            try {
+              //Update Developer
+              DB::table($table_name)
+                ->where('id', $id)
+                ->update($data);
+ 
+            } catch (Exception $e) {
+              DB::rollback();
+              $error = $e->getMessage()."<br>File: ".__FILE__."<br>Line: ".__LINE__;
+              return;
+            }
 
-	          /*INSERT DEV INFO */
-	          DB::table('tbl_purchaser_detail')->insert(
-	                [
-	                    'fname'  		=> $purchaser['first'], 
-	                    'mname'  		=> $purchaser['middle'], 
-	                    'lname'  		=> $purchaser['last'], 
-	                    'suffix'  		=> $purchaser['suffix'], 
-	                    'trn_no'  		=> $purchaser['trn_no'], 
-	                    'dob'  			=> $purchaser['dob'], 
-	                    'occupation'  	=> $purchaser['occupation'], 
-	                    'bussiness_place'=> $purchaser['bussiness_place'], 
-	                    'phone'  		=> $purchaser['phone'], 
-	                    'mobile'        => $purchaser['mobile'],
-	                    'email'         => $purchaser['email'],
-	                    'address_id'    => $address_id
-	                ]
-	            );
-	            /*GET DEV ID */
-	            $dev_id[] = DB::getPdo()->lastInsertId();
-	        } 
-	        else
-	        {
-	          $dev_id[] = $dev_info->id;
+            $i++;
+            $dev_id[] = $id;
+          }
+          else
+          {
 
-	        }
+            /*CHECK purchaser INFO IF EXIST ALREADY*/
+            $dev_info = DB::table('tbl_purchaser_detail')->select('id');
+
+            //WHERE CLAUSE
+            foreach ($dbMapper as $key => $value) {
+              
+              if($purchaser[$value] == null)
+                $dev_info->whereRaw($key.' is null');
+              else
+                $dev_info->where($key, $purchaser[$value]);
+            } 
+
+            $dev_info = $dev_info->orderBy('id', 'desc')->first();
+
+            if( empty($dev_info) ){
+
+              try {
+                /*INSERT DEV INFO */
+                DB::table('tbl_purchaser_detail')->insert($data);    
+              } catch (Exception $e) {
+                DB::rollback();
+                $error = $e->getMessage()."<br>File: ".__FILE__."<br>Line: ".__LINE__;
+                return;
+              }
+              
+              /*GET DEV ID */
+              $dev_id[] = DB::getPdo()->lastInsertId();
+            } 
+            else
+            {
+              $dev_id[] = $dev_info->id;
+
+            }
+
+          }
         }
 
         return $dev_id;
     }
 
 
-    public function add_attorney($attorney)
+    public function add_attorney($attorney, &$error=false)
     {
     	$address_id  = null;
         $officer_id  = null;
@@ -311,7 +467,7 @@ class Property extends Model
           $address_obj = $attorney['address'];
           nullToString($address_obj);
 
-          $address_id = get_address($address_obj);
+          $address_id = get_address($address_obj, $error);
 
         }
           
@@ -321,7 +477,7 @@ class Property extends Model
             $pa = $attorney['pa'];
             nullToString($pa);
 
-            $officer_id = get_officer($pa,'attorney_officer');
+            $officer_id = get_officer($pa, $error,'attorney_officer');
         }
 
 
@@ -341,16 +497,24 @@ class Property extends Model
 
         if( empty($cont_info) ){
 
-          /*INSERT DEV INFO */
-          DB::table('tbl_attorney_detail')->insert(
+
+          try {
+            /*INSERT DEV INFO */
+            DB::table('tbl_attorney_detail')->insert(
                 [
                     'company_name'  => $attorney['firm_name'], 
                     'officer_id'  => $officer_id,
                     'address_id'=> $address_id,
                 ]
-            );
-            /*GET DEV ID */
-            $cont_id = DB::getPdo()->lastInsertId();
+            );    
+          } catch (Exception $e) {
+            DB::rollback();
+            $error = $e->getMessage()."<br>File: ".__FILE__."<br>Line: ".__LINE__;
+            return;
+          }
+          
+          /*GET DEV ID */
+          $cont_id = DB::getPdo()->lastInsertId();
         } 
         else
         {
@@ -362,11 +526,11 @@ class Property extends Model
     }
 
 
-    public function add_property($property, $ids)
+    public function add_property($property, $ids, &$error=false)
     { 
         $address_id     = null;
-        $vendor_id   	= $ids['vendor'];
-        $buyer_id  		= $ids['buyer'];
+        $vendor_id   	  = $ids['vendor'];
+        $buyer_id  		  = $ids['buyer'];
         $payment_id     = $ids['payment'];
         $attorney_id    = $ids['attorney'];
 
@@ -376,89 +540,131 @@ class Property extends Model
           $address_obj = $property['address'];
           nullToString($address_obj);
 
-          $address_id = get_address($address_obj);
+          $address_id = get_address($address_obj, $error);
 
         }
 
-        //Folio Key
-        $folio_key = '';
-        if(!empty($property['folio_no'])){
-          $folio_key = explode(',', $property['folio_no']);
-          $folio_key = $folio_key[0];
+        //Property Key
+        $property_key = '';
+        if(!empty($property['name']) && !empty($property['lot_no'])){
+          $property_key = substr($property['name'], 0, 5).'-'.$property['lot_no'];
         }
-          
-        //PREPARE PROPERTY DATA
-        $count = (count($vendor_id) >= count($buyer_id)) ? count($vendor_id) : count($buyer_id);
-        
-        for ($i=0; $i < $count ; $i++) { 
-          $data[$i]['id']           = $folio_key.'_'.$property['lot_no']; 
-        	$data[$i]['lot_no'] 		  = $property['lot_no']; 
-        	$data[$i]['folio_no'] 		= $property['folio_no']; 
-        	$data[$i]['plan_no'] 		  = $property['plan_no']; 
-        	$data[$i]['address_id'] 	= $address_id; 
-        	$data[$i]['address_id'] 	= $address_id; 
-        	$data[$i]['vendor_id'] 		= (isset($vendor_id[$i])) ? $vendor_id[$i] : null; 
-        	$data[$i]['buyer_id'] 		= (isset($buyer_id[$i])) ? $buyer_id[$i] : null; 
-        	$data[$i]['payment_id'] 	= $payment_id; 
-        	$data[$i]['attorney_id'] 	= $attorney_id; 
-        }
-        
+
+    
         //******************
         //ADD property INFO
         //******************
-        
-        foreach ($data as $key => $property) 
+
+        DB::enableQueryLog();
+        //Get Key ID
+        $key = DB::table('tbl_key_id')
+             ->select('id')
+             ->where('property_key', $property_key)
+             ->orderBy('id', 'desc')
+             ->first();
+
+        if(empty($key))
         {
-        	$table_name    = 'tbl_property_detail';
+          DB::table('tbl_key_id')->insert(
+              [
+                  'property_key'  => $property_key, 
+                  'created_at'    => date('Y-m-d h:i:s')
+              ]
+          );
+          /*GET DEV ID */
+          $key_id = DB::getPdo()->lastInsertId();
+        }
+        else
+        {
+          $key_id = $key->id;
+
+        }
+        //dd(DB::getQueryLog());
+
+
+        try {
+          //Insert Property
+          $table_name    = 'tbl_property_detail';
           $property_data = [
-              'id'                => $folio_key.'_'.$property['lot_no'], 
+              'id'                => $key_id, 
+              'dev_name'          => $property['name'], 
+              'dev_id'            => $property['dev_id'], 
               'lot_no'            => $property['lot_no'], 
+              'volume_no'         => $property['volume_no'], 
               'folio_no'          => $property['folio_no'], 
               'plan_no'           => $property['plan_no'], 
               'address_id'        => $address_id, 
-              'developer_id'      => $property['vendor_id'], 
-              'purchaser_id'      => $property['buyer_id'], 
-              'payment_id'        => $property['payment_id'], 
-              'attorney_id'       => $property['attorney_id'] 
+              'payment_id'        => $payment_id, 
+              'attorney_id'       => $attorney_id
               
           ];
 
-          //Insert Update Development Data
-          Property::insertOnDuplicateKey($property_data,$table_name);
-
-	        // if( empty($property_info) ){
-
-	        //     /*INSERT property DETAIL */
-	        //     DB::table('tbl_property_detail')->insert(
-	                
-	        //     );
-	        //     GET property ID 
-	        //     $property_id[] = DB::getPdo()->lastInsertId();
-	        // } 
-	        // else
-	        // {
-	        //   $property_id[] = $property_info->id;
-
-	        // }	
+          //Insert Update Property Data
+          Property::insertOnDuplicateKey($property_data,$table_name);          
+        } catch (Exception $e) {
+          DB::rollback();
+          $error = $e->getMessage()."<br>File: ".__FILE__."<br>Line: ".__LINE__;
+          return;
         }
 
-        
+        //DELETE PREVIOUS VENDOR ASSOCIATION
+        DB::table('tbl_property_vendor_assoc')->where('property_id',$key_id)->delete();
+
+        //INSERT VENDOR ASSOCIATION
+        foreach ($vendor_id as $key => $value) {
+            $vendorUpdate = array();
+            $table_name   = 'tbl_property_vendor_assoc';
+            $vendorUpdate['property_id']  = $key_id;
+            $vendorUpdate['developer_id'] = $value;
+
+            try {
+              //Insert Ignore Vendor
+              Property::insertIgnore($vendorUpdate,$table_name);
+              
+            } catch (Exception $e) {
+              DB::rollback();
+              $error = $e->getMessage()."<br>File: ".__FILE__."<br>Line: ".__LINE__;
+              return;
+            }
+        }
+
+        //DELETE PREVIOUS BUYER ASSOCIATION
+        DB::table('tbl_property_buyer_assoc')->where('property_id',$key_id)->delete();
+
+        //INSERT BUYER ASSOCIATION
+        foreach ($buyer_id as $key => $value) {
+            $buyerUpdate = array();
+            $table_name   = 'tbl_property_buyer_assoc';
+            $buyerUpdate['property_id']  = $key_id;
+            $buyerUpdate['purchaser_id'] = $value;
+
+            try {
+              //Insert Ignore Vendor
+              Property::insertIgnore($buyerUpdate,$table_name);
+              
+            } catch (Exception $e) {
+              DB::rollback();
+              $error = $e->getMessage()."<br>File: ".__FILE__."<br>Line: ".__LINE__;
+              return;
+            }
+        }
+
         //return $property_id;
     }
 
     public function get_development($id='')
     {
       /*DB::enableQueryLog();*/
+      /*dd(DB::getQueryLog());*/
+
       if(empty($id))
         return 0;
       else
       {
-        $ids  = explode(',', $id);
-        $id   = $ids[0];  //1st part is key
 
         /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
         $dev_info = DB::table('tbl_developement_detail as dt')
-                        ->select('dt.name as dt-name','dt.folio_no as dt-folio_no','dt.plan_no as dt-plan_no','dt.total_lots_i as dt-t_lots_i', 'dt.total_lots_s as dt-t_lots_w', 'dt.residential_lots_i as dt-r_lots_i',
+                        ->select('dt.name as dt-name','dt.volume_no as dt-volume_no','dt.folio_no as dt-folio_no','dt.plan_no as dt-plan_no','dt.total_lots_i as dt-t_lots_i', 'dt.total_lots_s as dt-t_lots_w', 'dt.residential_lots_i as dt-r_lots_i',
                           'dt.residential_lots_s as dt-r_lots_w', 'dt.common_lots_i as dt-c_lots_i',
                           'dt.common_lots_s as dt-c_lots_w', 'dt.lot_ids as dt-lot_ids', 'dt.rsrv_road_no as dt-rsrv_road', 
                           //Development Address
@@ -490,17 +696,17 @@ class Property extends Model
                           //Contract Payment Foriegn Currency
                           'fc.name as cp-fc-name','fc.symbol as cp-fc-symbol','fc.exchange_rate as cp-fc-rate'
                         )
-                        ->join('tbl_address as dta', 'dt.address_id', '=', 'dta.id')
-                        ->join('tbl_developer_detail as d', 'dt.developer_id', '=', 'd.id')
-                        ->join('tbl_address as da', 'd.address_id', '=', 'da.id')
-                        ->join('tbl_person_info as so', 'dt.surveyor_id', '=', 'so.id')
-                        ->join('tbl_person_info as do1', 'd.officer_id_1', '=', 'do1.id')
-                        ->join('tbl_person_info as do2', 'd.officer_id_2', '=', 'do2.id')
-                        ->join('tbl_contractor_detail as c', 'dt.contractor_id', '=', 'c.id')
-                        ->join('tbl_address as ca', 'c.address_id', '=', 'ca.id')
-                        ->join('tbl_person_info as co', 'c.officer_id', '=', 'co.id')
-                        ->join('tbl_dev_contract_payment as cp', 'dt.payment_id', '=', 'cp.id')
-                        ->join('tbl_foriegn_currency as fc', 'cp.fc_id', '=', 'fc.id')
+                        ->leftJoin('tbl_address as dta', 'dt.address_id', '=', 'dta.id')
+                        ->leftJoin('tbl_developer_detail as d', 'dt.developer_id', '=', 'd.id')
+                        ->leftJoin('tbl_address as da', 'd.address_id', '=', 'da.id')
+                        ->leftJoin('tbl_person_info as so', 'dt.surveyor_id', '=', 'so.id')
+                        ->leftJoin('tbl_person_info as do1', 'd.officer_id_1', '=', 'do1.id')
+                        ->leftJoin('tbl_person_info as do2', 'd.officer_id_2', '=', 'do2.id')
+                        ->leftJoin('tbl_contractor_detail as c', 'dt.contractor_id', '=', 'c.id')
+                        ->leftJoin('tbl_address as ca', 'c.address_id', '=', 'ca.id')
+                        ->leftJoin('tbl_person_info as co', 'c.officer_id', '=', 'co.id')
+                        ->leftJoin('tbl_dev_contract_payment as cp', 'dt.payment_id', '=', 'cp.id')
+                        ->leftJoin('tbl_foriegn_currency as fc', 'cp.fc_id', '=', 'fc.id')
                         ->where('dt.id', '=', $id)
                         ->get(); 
         /*dd(DB::getQueryLog());*/
@@ -510,6 +716,7 @@ class Property extends Model
           'd'   => 'vendor',
           'c'   => 'contractor',
           'cp'  => 'payment',
+          'm'   => 'monetary',
         );                
 
         try{
@@ -551,40 +758,157 @@ class Property extends Model
       /*DB::enableQueryLog();*/
       /*dd(DB::getQueryLog());*/
 
-      $folio  = $values['folio'];
-      $lot    = $values['lot'];
+      $id  = $values['id'];
 
-      if(empty($folio) || empty($lot))
+      if(empty($id))
         return 0;
       else
       {
-        $folio  = explode(',', $folio);
-        $folio  = $folio[0];  //1st part is key
-
-        //id
-        $id = $folio.'_'.$lot;
-
-        //pre($folio);
         /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
         $property_info = DB::table('tbl_property_detail as p')
-                        ->select('p.plan_no as p-plan_no', 
+                        ->select('p.id as p-id','p.plan_no as p-plan_no','p.lot_no as p-lot_no'
+                          ,'p.volume_no as p-volume_no','p.folio_no as p-folio_no','p.dev_name as p-name','p.dev_id as p-dev_id', 
                           //Property Address
                           'pa.line1 as p-address-line1','pa.line2 as p-address-line2','pa.city as p-address-city','pa.state as p-address-state', 'pa.postal as p-address-postal',
                           'pa.country as p-address-country',    
                           //Development Surveyor
                           //'so.title as dt-surveyor-title','so.first_name as dt-surveyor-first','so.last_name as dt-surveyor-last',
                           //Development Contractor
-                          //'c.company_name as c-company_name',
+                          'c.company_name as c-company_name',
                           //Contractor Address
-                          //'ca.line1 as c-address-line1','ca.line2 as c-address-line2','ca.city as c-address-city','ca.state as c-address-state', 'ca.country as c-address-country', 
+                          'ca.line1 as c-address-line1','ca.line2 as c-address-line2','ca.city as c-address-city','ca.state as c-address-state', 'ca.country as c-address-country', 
                           //Contractor Officer
-                          //'co.title as c-co-title','co.first_name as c-co-first','co.last_name as c-co-last','co.suffix as c-co-suffix',
-                          //'co.capacity as c-co-capacity','co.landline as c-co-landline',
+                          'co.title as c-co-title','co.first_name as c-co-first','co.last_name as c-co-last','co.suffix as c-co-suffix',
+                          'co.capacity as c-co-capacity','co.landline as c-co-landline',
                           
                           //Vendor                       
-                          'v.company_name as v-company_name','v.fname as v-first','v.mname as v-middle','v.lname as v-last','v.suffix as v-suffix','v.trn_no as v-trn_no','v.dob as v-dob','v.occupation as v-occupation','v.phone as v-phone','v.mobile as v-mobile','v.email as v-email',
+                          'v.company_name as v-company_name',/*'v.fname as v-first','v.mname as v-middle','v.lname as v-last','v.suffix as v-suffix','v.trn_no as v-trn_no','v.dob as v-dob','v.occupation as v-occupation','v.phone as v-phone','v.mobile as v-mobile','v.email as v-email',
+                          //Vendor Address
+                          'va.line1 as v-address-line1','va.line2 as v-address-line2','va.city as v-address-city','va.state as v-address-state', 'va.postal as v-address-postal','va.country as v-address-country',*/
+
+                          // //Buyer                       
+                          // //'b.company_name as b-company_name',
+                          /*'b.fname as b-first','b.mname as b-middle','b.lname as b-last','b.suffix as b-suffix','b.trn_no as b-trn_no','b.dob as b-dob','b.occupation as b-occupation','b.bussiness_place as b-bussiness_place','b.phone as b-phone','b.mobile as b-mobile','b.email as b-email',
+                          //Buyer Address
+                          'ba.line1 as b-address-line1','ba.line2 as b-address-line2','ba.city as b-address-city','ba.state as b-address-state', 'ba.postal as b-address-postal','ba.country as b-address-country',*/
+
+                          //Attorney 
+                          'a.company_name as a-firm_name',
+                          //Attorney Officer
+                          'ao.title as a-pa-title','ao.first_name as a-pa-first','ao.last_name as a-pa-last',
+                          //Attorney Address
+                          'aa.line1 as a-address-line1','aa.line2 as a-address-line2','aa.city as a-address-city','aa.state as a-address-state', 'aa.postal as a-address-postal','aa.country as a-address-country',
+
+                          //Payment
+                          'm.price_i as m-price_i','m.price_w as m-price_w','m.j_price_i as m-jprice_i', 
+                          'm.j_price_w as m-jprice_w','m.deposit as m-deposit', 
+                          'm.second_payment as m-second_pay','m.final_payment as m-final_pay',
+                          'm.half_title as m-half_title','m.half_land_agreement as m-half_land_agreement','m.half_build_agreement as m-half_build_agreement',
+                          'm.half_stamp_duty as m-half_stamp_duty', 'm.half_reg_fee as m-half_reg_fee',
+                          'm.inc_cost as m-inc_cost','m.maintenance_expense as m-maintenance_expense',
+                          'm.identification_fee as m-identification_fee',       
+                          'dcp.price_i as m-cprice_i', //contract price for account statement form 
+                          //Payment Foriegn Currency
+                          'fc.name as m-fc-name','fc.symbol as m-fc-symbol','fc.exchange_rate as m-fc-rate'
+                        )
+                        ->leftJoin('tbl_address as pa', 'p.address_id', '=', 'pa.id')
+                        ->leftJoin('tbl_property_vendor_assoc as pva', 'pva.property_id', '=', 'p.id')
+                        ->leftJoin('tbl_developer_detail as v', 'pva.developer_id', '=', 'v.id')
+                        ->leftJoin('tbl_address as va', 'v.address_id', '=', 'va.id')
+                        ->leftJoin('tbl_property_buyer_assoc as pba', 'pba.property_id', '=', 'p.id')
+                        ->leftJoin('tbl_purchaser_detail as b', 'pba.purchaser_id', '=', 'b.id')
+                        ->leftJoin('tbl_address as ba', 'b.address_id', '=', 'ba.id')
+                        ->leftJoin('tbl_attorney_detail as a', 'p.attorney_id', '=', 'a.id')
+                        ->leftJoin('tbl_person_info as ao', 'a.officer_id', '=', 'ao.id')
+                        ->leftJoin('tbl_address as aa', 'a.address_id', '=', 'aa.id')
+                        ->leftJoin('tbl_monetary_detail as m', 'p.payment_id', '=', 'm.id')
+                        ->leftJoin('tbl_foriegn_currency as fc', 'm.fc_id', '=', 'fc.id')
+
+                        // ->leftJoin('tbl_developement_detail as dt', function($join){
+                        //   $join->on('p.volume_no', '=', 'dt.volume_no');
+                        //   $join->on('p.folio_no','=','dt.folio_no');
+                        // })
+                        ->leftJoin('tbl_developement_detail as dt', 'p.dev_id', '=', 'dt.id')
+                        ->leftJoin('tbl_dev_contract_payment as dcp', 'dt.payment_id', '=', 'dcp.id')
+
+                        ->leftJoin('tbl_contractor_detail as c', 'dt.contractor_id', '=', 'c.id')
+                        ->leftJoin('tbl_address as ca', 'c.address_id', '=', 'ca.id')
+                        ->leftJoin('tbl_person_info as co', 'c.officer_id', '=', 'co.id')
+
+                        ->where('p.id', $id)
+                        ->get(); 
+        /*dd(DB::getQueryLog());*/
+
+        try{
+          $property_info = (array) $property_info[0];
+        }
+        catch(\Exception $e)
+        {
+          //pre($e->getMessage());
+          $property_info = '';  
+          return $property_info;
+        }
+
+        $property_info = $this->custom_mapper($property_info);        
+
+        return $property_info;
+      }
+    }
+
+    public function get_all($values='')
+    {
+      /*DB::enableQueryLog();*/
+      /*dd(DB::getQueryLog());*/
+
+      $id = $values['id'];
+
+      if( empty($id) )
+        return 0;
+      else
+      {
+        /*$folio  = explode(',', $folio);
+        $folio  = $folio[0]; */ //1st part is key
+
+        //id
+        //$id = $folio.'_'.$lot;
+
+        //pre($folio);
+        /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
+        $property_info = DB::table('tbl_property_detail as p')
+                        ->select('p.id as p-id','p.plan_no as p-plan_no','p.lot_no as p-lot_no','p.volume_no as p-volume_no','p.dev_name as p-name',
+                         'p.folio_no as p-folio_no','p.dev_id as p-dev_id',
+                          //Property Address
+                          'pa.line1 as p-address-line1','pa.line2 as p-address-line2','pa.city as p-address-city',
+                          'pa.state as p-address-state', 'pa.postal as p-address-postal',
+                          'pa.country as p-address-country',    
+                          //Development Detail
+                          'dt.name as p-dev_name','dt.total_lots_s as p-total_lots','dt.total_lots_i as p-total_lots_i',
+                          'dt.residential_lots_s as p-residential_lots','dt.residential_lots_i as p-residential_lots_i',
+                          'dt.common_lots_s as p-common_lots','dt.common_lots_i as p-common_lots_i',
+                          'dt.lot_ids as p-lot_ids', 'dt.rsrv_road_no as p-rsrv_road_no',
+                          //Development Contractor
+                          'c.company_name as c-company_name',
+                          //Contractor Address
+                          'ca.line1 as c-address-line1','ca.line2 as c-address-line2','ca.city as c-address-city','ca.state as c-address-state', 'ca.country as c-address-country', 
+                          //Contractor Officer
+                          'co.title as c-co-title','co.first_name as c-co-first','co.last_name as c-co-last','co.suffix as c-co-suffix',
+                          'co.capacity as c-co-capacity','co.landline as c-co-landline',
+                          
+                          //Vendor                       
+                          'v.company_name as v-company_name','v.fname as v-first','v.mname as v-middle',
+                          'v.lname as v-last','v.suffix as v-suffix','v.trn_no as v-trn_no',
+                          'v.dob as v-dob','v.occupation as v-occupation','v.phone as v-phone',
+                          'v.mobile as v-mobile','v.email as v-email','v.logo as v-logo',
+
                           //Vendor Address
                           'va.line1 as v-address-line1','va.line2 as v-address-line2','va.city as v-address-city','va.state as v-address-state', 'va.postal as v-address-postal','va.country as v-address-country',
+
+                          //Developer Authorised 1
+                          'da1.title as da1-title', 'da1.first_name as da1-first_name', 'da1.last_name as da1-last_name', 
+                          'da1.suffix as da1-suffix', 'da1.capacity as da1-capacity', 'da1.landline as da1-landline',
+                          //Developer Authorised 2
+                          'da2.title as da2-title', 'da2.first_name as da2-first_name', 'da2.last_name as da2-last_name', 
+                          'da2.suffix as da2-suffix', 'da2.capacity as da2-capacity', 'da2.landline as da2-landline',
 
                           //Buyer                       
                           //'b.company_name as b-company_name',
@@ -599,39 +923,61 @@ class Property extends Model
                           //Attorney Address
                           'aa.line1 as a-address-line1','aa.line2 as a-address-line2','aa.city as a-address-city','aa.state as a-address-state', 'aa.postal as a-address-postal','aa.country as a-address-country',
 
-                          //Payment
+                          //Monetary
                           'm.price_i as m-price_i','m.price_w as m-price_w','m.j_price_i as m-jprice_i', 
                           'm.j_price_w as m-jprice_w','m.deposit as m-deposit', 
                           'm.second_payment as m-second_pay','m.final_payment as m-final_pay',
-                          'm.half_title as m-half_title','m.half_agreement as m-half_agreement',
+                          'm.half_title as m-half_title','m.half_land_agreement as m-half_land_agreement','m.half_build_agreement as m-half_build_agreement',
                           'm.half_stamp_duty as m-half_stamp_duty', 'm.half_reg_fee as m-half_reg_fee',
                           'm.inc_cost as m-inc_cost','m.maintenance_expense as m-maintenance_expense',
                           'm.identification_fee as m-identification_fee',
                           //Payment Foriegn Currency
-                          'fc.name as m-fc-name','fc.symbol as m-fc-symbol','fc.exchange_rate as m-fc-rate'
+                          'fc.name as m-fc-name','fc.symbol as m-fc-symbol','fc.exchange_rate as m-fc-rate',
+
+                          //Dev Contract Payment
+                          'dcp.price_i as dcp-price_i','dcp.price_i as m-cprice_i','dcp.price_w as dcp-price_w','dcp.j_price_i as dcp-jprice_i', 
+                          'dcp.j_price_w as dcp-jprice_w','dcp.deposit as dcp-deposit','dcp.deposit_w as dcp-deposit_w' , 
+                          'dcp.second_payment as dcp-second_payment', 'dcp.third_payment as dcp-third_payment',
+                          'dcp.fourth_payment as dcp-fourth_payment', 'dcp.final_payment as dcp-final_payment',
+                          //Payment Foriegn Currency
+                          'dfc.name as dcp-fc-name','dfc.symbol as dcp-fc-symbol','dfc.exchange_rate as dcp-fc-rate',
+
+                          //Development Surveyor
+                          'ds.title as ds-title','ds.first_name as ds-first','ds.last_name as ds-last'
                         )
-                        ->join('tbl_address as pa', 'p.address_id', '=', 'pa.id')
-                        ->join('tbl_developer_detail as v', 'p.developer_id', '=', 'v.id')
-                        ->join('tbl_address as va', 'v.address_id', '=', 'va.id')
-                        ->join('tbl_purchaser_detail as b', 'p.purchaser_id', '=', 'b.id')
-                        ->join('tbl_address as ba', 'b.address_id', '=', 'ba.id')
-                        ->join('tbl_attorney_detail as a', 'p.attorney_id', '=', 'a.id')
-                        ->join('tbl_person_info as ao', 'a.officer_id', '=', 'ao.id')
-                        ->join('tbl_address as aa', 'a.address_id', '=', 'aa.id')
-                        ->join('tbl_monetary_detail as m', 'p.payment_id', '=', 'm.id')
-                        ->join('tbl_foriegn_currency as fc', 'm.fc_id', '=', 'fc.id')
+                        ->leftJoin('tbl_address as pa', 'p.address_id', '=', 'pa.id')
+                        ->leftJoin('tbl_property_vendor_assoc as pva', 'pva.property_id', '=', 'p.id')
+                        ->leftJoin('tbl_developer_detail as v', 'pva.developer_id', '=', 'v.id')
+                        ->leftJoin('tbl_person_info as da1', 'v.officer_id_1', '=', 'da1.id')
+                        ->leftJoin('tbl_person_info as da2', 'v.officer_id_2', '=', 'da2.id')
+                        ->leftJoin('tbl_address as va', 'v.address_id', '=', 'va.id')
+                        ->leftJoin('tbl_property_buyer_assoc as pba', 'pba.property_id', '=', 'p.id')
+                        ->leftJoin('tbl_purchaser_detail as b', 'pba.purchaser_id', '=', 'b.id')
+                        ->leftJoin('tbl_address as ba', 'b.address_id', '=', 'ba.id')
+                        ->leftJoin('tbl_attorney_detail as a', 'p.attorney_id', '=', 'a.id')
+                        ->leftJoin('tbl_person_info as ao', 'a.officer_id', '=', 'ao.id')
+                        ->leftJoin('tbl_address as aa', 'a.address_id', '=', 'aa.id')
+
+                        ->leftJoin('tbl_monetary_detail as m', 'p.payment_id', '=', 'm.id')
+                        ->leftJoin('tbl_foriegn_currency as fc', 'm.fc_id', '=', 'fc.id')
+
+                        // ->leftJoin('tbl_developement_detail as dt', function($join){
+                        //   $join->on('p.volume_no', '=', 'dt.volume_no');
+                        //   $join->on('p.folio_no','=','dt.folio_no');
+                        // })
+                        ->leftJoin('tbl_developement_detail as dt', 'p.dev_id', '=', 'dt.id')
+
+                        ->leftJoin('tbl_person_info as ds', 'dt.surveyor_id', '=', 'ds.id')
+                        ->leftJoin('tbl_contractor_detail as c', 'dt.contractor_id', '=', 'c.id')
+                        ->leftJoin('tbl_address as ca', 'c.address_id', '=', 'ca.id')
+                        ->leftJoin('tbl_person_info as co', 'c.officer_id', '=', 'co.id')
+
+                        ->leftJoin('tbl_dev_contract_payment as dcp', 'dt.payment_id', '=', 'dcp.id')
+                        ->leftJoin('tbl_foriegn_currency as dfc', 'dcp.fc_id', '=', 'dfc.id')
+
                         ->where('p.id', '=', $id)
                         ->get(); 
-        /*dd(DB::getQueryLog());*/
-
-        $mapper = array(
-          'p'   => 'property',
-          'v'   => 'vendor',
-          'b'   => 'buyer',
-          'm'   => 'monetary',
-          'a'   => 'attorney',
-          'cp'  => 'payment',
-        );                
+        /*dd(DB::getQueryLog());*/               
 
         try{
           $property_info = (array) $property_info[0];
@@ -641,9 +987,89 @@ class Property extends Model
           //pre($e->getMessage());
           $property_info = '';  
           return $property_info;
-        }
+        }             
+        
+        $property_info = $this->custom_mapper_t($property_info);      
 
-        foreach ($property_info as $key => $value) 
+        return $property_info;
+      }
+    }
+
+    public function getAllVendors($id, &$count=0)
+    {
+      $vendorData = DB::table('tbl_property_vendor_assoc as pva')
+          ->select(
+            /*'v.company_name as v-company_name',*/'v.fname as v-first','v.mname as v-middle',
+            'v.lname as v-last','v.suffix as v-suffix','v.trn_no as v-trn_no',
+            'v.dob as v-dob','v.occupation as v-occupation','v.phone as v-phone',
+            'v.mobile as v-mobile','v.email as v-email','v.logo as v-logo',
+
+            //Vendor Address
+            'va.line1 as v-address-line1','va.line2 as v-address-line2','va.city as v-address-city','va.state as v-address-state', 'va.postal as v-address-postal','va.country as v-address-country')
+          ->leftJoin('tbl_developer_detail as v', 'v.id', '=', 'pva.developer_id')
+          ->leftJoin('tbl_address as va', 'va.id', '=', 'v.address_id')
+          ->where('property_id','=',$id)
+          ->get();
+
+      foreach ($vendorData as $key => $value) {
+        $data[] = $this->custom_mapper($value);    
+      }    
+      // pre($data); die;
+      $count = count($data);
+
+      foreach ($data as $key => &$value) {
+        foreach ($value as $k => $v) {
+          // $new_data[$k.'-'.$key] = $v;
+          $new_data[$k][] = $v;
+        }
+      }
+
+      return $new_data;
+    }
+
+    public function getAllBuyers($id, &$count=0)
+    {
+      $buyerData = DB::table('tbl_property_buyer_assoc as pba')
+          ->select(
+            'b.fname as b-first','b.mname as b-middle','b.lname as b-last','b.suffix as b-suffix','b.trn_no as b-trn_no','b.dob as b-dob','b.occupation as b-occupation','b.bussiness_place as b-bussiness_place','b.phone as b-phone','b.mobile as b-mobile','b.email as b-email',
+            //Buyer Address
+            'ba.line1 as b-address-line1','ba.line2 as b-address-line2','ba.city as b-address-city','ba.state as b-address-state', 'ba.postal as b-address-postal','ba.country as b-address-country')
+          ->leftJoin('tbl_purchaser_detail as b', 'b.id', '=', 'pba.purchaser_id')
+          ->leftJoin('tbl_address as ba', 'ba.id', '=', 'b.address_id')
+          ->where('property_id','=',$id)
+          ->get();
+
+      foreach ($buyerData as $key => $value) {
+        $data[] = $this->custom_mapper($value);    
+      }    
+      $count = count($data);
+
+      foreach ($data as $key => &$value) {
+        foreach ($value as $k => $v) {
+          // $new_data[$k.'-'.$key] = $v;
+          //$new_data[$k]['index'] = $key;
+          $new_data[$k][] = $v;
+        }
+      }
+
+      return $new_data;
+    }
+
+    public function custom_mapper($data){
+
+      $input = '';
+      $data = (array) $data;
+      $mapper = array(
+          'p'   => 'property',
+          'v'   => 'vendor',
+          'b'   => 'buyer',
+          'm'   => 'monetary',
+          'a'   => 'attorney',
+          'cp'  => 'payment',
+          'c'   => 'contractor',
+        );     
+
+        foreach ($data as $key => $value) 
         {
             $pieces = explode('-', $key);
             $i = $pieces[0];
@@ -656,124 +1082,95 @@ class Property extends Model
               $input = $mapper[$i]."[".$pieces[0]."]";
             }
 
-            $property_info[$key]    = array(
+            $data[$key]    = array(
               'key'   => $input,
               'value' => $value
             );          
             
-        }                
-                         
-        return $property_info;
-      }
+        }     
+
+      return $data; 
+
     }
 
-    public function get_all($values='')
+
+    /*DATA FOR TEMPLATES
+    ========================================*/
+    public function getVendors($id, &$count=0)
     {
-      /*DB::enableQueryLog();*/
-      /*dd(DB::getQueryLog());*/
+      $vendorData = DB::table('tbl_property_vendor_assoc as pva')
+          ->select(
+            /*'v.company_name as v-company_name',*/'v.fname as v-first','v.mname as v-middle',
+            'v.lname as v-last','v.suffix as v-suffix','v.trn_no as v-trn_no',
+            'v.dob as v-dob','v.occupation as v-occupation','v.phone as v-phone',
+            'v.mobile as v-mobile','v.email as v-email','v.logo as v-logo',
 
-      $folio  = $values['folio'];
-      $lot    = $values['lot'];
+            //Vendor Address
+            'va.line1 as v-address-line1','va.line2 as v-address-line2','va.city as v-address-city','va.state as v-address-state', 'va.postal as v-address-postal','va.country as v-address-country')
+          ->leftJoin('tbl_developer_detail as v', 'v.id', '=', 'pva.developer_id')
+          ->leftJoin('tbl_address as va', 'va.id', '=', 'v.address_id')
+          ->where('property_id','=',$id)
+          ->get();
 
-      if(empty($folio) || empty($lot))
-        return 0;
-      else
-      {
-        $folio  = explode(',', $folio);
-        $folio  = $folio[0];  //1st part is key
+      foreach ($vendorData as $key => $value) {
+        $data[] = $this->custom_mapper_t($value);    
+      }    
+      //pre($data); die;
+      $count = !empty($data) ? count($data) : 0;
 
-        //id
-        $id = $folio.'_'.$lot;
+      foreach ($data as $key => &$value) {
+        foreach ($value as $k => $v) {
+          $v['index'] = $key; 
+          $new_data[$k."-".$key] = $v; 
+        }
+      }
 
-        //pre($folio);
-        /*CHECK DEVELOPER INFO IF EXIST ALREADY*/
-        $property_info = DB::table('tbl_property_detail as p')
-                        ->select('p.plan_no as p-plan_no','p.lot_no as p-lot_no', 'p.folio_no as p-folio_no', 
-                          //Property Address
-                          'pa.line1 as p-address-line1','pa.line2 as p-address-line2','pa.city as p-address-city',
-                          'pa.state as p-address-state', 'pa.postal as p-address-postal',
-                          'pa.country as p-address-country',    
-                          //Development Detail
-                          'dt.name as p-dev_name','dt.total_lots_s as p-total_lots','dt.total_lots_i as p-total_lots_i',
-                          'dt.residential_lots_s as p-residential_lots','dt.residential_lots_i as p-residential_lots_i',
-                          'dt.common_lots_s as p-common_lots','dt.common_lots_i as p-common_lots_i',
-                          'dt.lot_ids as p-lot_ids', 'dt.rsrv_road_no as p-rsrv_road_no',
-                          //Development Contractor
-                          //'c.company_name as c-company_name',
-                          //Contractor Address
-                          //'ca.line1 as c-address-line1','ca.line2 as c-address-line2','ca.city as c-address-city','ca.state as c-address-state', 'ca.country as c-address-country', 
-                          //Contractor Officer
-                          //'co.title as c-co-title','co.first_name as c-co-first','co.last_name as c-co-last','co.suffix as c-co-suffix',
-                          //'co.capacity as c-co-capacity','co.landline as c-co-landline',
-                          
-                          //Vendor                       
-                          'v.company_name as v-company_name','v.fname as v-first','v.mname as v-middle',
-                          'v.lname as v-last','v.suffix as v-suffix','v.trn_no as v-trn_no',
-                          'v.dob as v-dob','v.occupation as v-occupation','v.phone as v-phone',
-                          'v.mobile as v-mobile','v.email as v-email','v.logo as v-logo',
+      return $new_data;
+    }
 
-                          //Vendor Address
-                          'va.line1 as v-address-line1','va.line2 as v-address-line2','va.city as v-address-city','va.state as v-address-state', 'va.postal as v-address-postal','va.country as v-address-country',
+    public function getBuyers($id, &$count=0)
+    {
+      $buyerData = DB::table('tbl_property_buyer_assoc as pba')
+          ->select(
+            'b.fname as b-first','b.mname as b-middle','b.lname as b-last','b.suffix as b-suffix','b.trn_no as b-trn_no','b.dob as b-dob','b.occupation as b-occupation','b.bussiness_place as b-bussiness_place','b.phone as b-phone','b.mobile as b-mobile','b.email as b-email',
+            //Buyer Address
+            'ba.line1 as b-address-line1','ba.line2 as b-address-line2','ba.city as b-address-city','ba.state as b-address-state', 'ba.postal as b-address-postal','ba.country as b-address-country')
+          ->leftJoin('tbl_purchaser_detail as b', 'b.id', '=', 'pba.purchaser_id')
+          ->leftJoin('tbl_address as ba', 'ba.id', '=', 'b.address_id')
+          ->where('property_id','=',$id)
+          ->get();
 
-                          //Buyer                       
-                          //'b.company_name as b-company_name',
-                          'b.fname as b-first','b.mname as b-middle','b.lname as b-last','b.suffix as b-suffix','b.trn_no as b-trn_no','b.dob as b-dob','b.occupation as b-occupation','b.bussiness_place as b-bussiness_place','b.phone as b-phone','b.mobile as b-mobile','b.email as b-email',
-                          //Buyer Address
-                          'ba.line1 as b-address-line1','ba.line2 as b-address-line2','ba.city as b-address-city','ba.state as b-address-state', 'ba.postal as b-address-postal','ba.country as b-address-country',
+      foreach ($buyerData as $key => $value) {
+        $data[] = $this->custom_mapper_t($value);    
+      }    
+      $count = !empty($data) ? count($data) : 0;
 
-                          //Attorney 
-                          'a.company_name as a-firm_name',
-                          //Attorney Officer
-                          'ao.title as a-pa-title','ao.first_name as a-pa-first','ao.last_name as a-pa-last',
-                          //Attorney Address
-                          'aa.line1 as a-address-line1','aa.line2 as a-address-line2','aa.city as a-address-city','aa.state as a-address-state', 'aa.postal as a-address-postal','aa.country as a-address-country',
+      foreach ($data as $key => &$value) {
+        foreach ($value as $k => $v) {
+          $v['index'] = $key; 
+          $new_data[$k."-".$key] = $v; 
+        }
+      }
 
-                          //Payment
-                          'm.price_i as m-price_i','m.price_w as m-price_w','m.j_price_i as m-jprice_i', 
-                          'm.j_price_w as m-jprice_w','m.deposit as m-deposit', 
-                          'm.second_payment as m-second_pay','m.final_payment as m-final_pay',
-                          'm.half_title as m-half_title','m.half_agreement as m-half_agreement',
-                          'm.half_stamp_duty as m-half_stamp_duty', 'm.half_reg_fee as m-half_reg_fee',
-                          'm.inc_cost as m-inc_cost','m.maintenance_expense as m-maintenance_expense',
-                          'm.identification_fee as m-identification_fee',
-                          //Payment Foriegn Currency
-                          'fc.name as m-fc-name','fc.symbol as m-fc-symbol','fc.exchange_rate as m-fc-rate'
-                        )
-                        ->join('tbl_developement_detail as dt', 'p.folio_no', '=', 'dt.folio_no')
-                        ->join('tbl_address as pa', 'p.address_id', '=', 'pa.id')
-                        ->join('tbl_developer_detail as v', 'p.developer_id', '=', 'v.id')
-                        ->join('tbl_address as va', 'v.address_id', '=', 'va.id')
-                        ->join('tbl_purchaser_detail as b', 'p.purchaser_id', '=', 'b.id')
-                        ->join('tbl_address as ba', 'b.address_id', '=', 'ba.id')
-                        ->join('tbl_attorney_detail as a', 'p.attorney_id', '=', 'a.id')
-                        ->join('tbl_person_info as ao', 'a.officer_id', '=', 'ao.id')
-                        ->join('tbl_address as aa', 'a.address_id', '=', 'aa.id')
-                        ->join('tbl_monetary_detail as m', 'p.payment_id', '=', 'm.id')
-                        ->join('tbl_foriegn_currency as fc', 'm.fc_id', '=', 'fc.id')
-                        ->where('p.id', '=', $id)
-                        ->get(); 
-        /*dd(DB::getQueryLog());*/
+      return $new_data;
+    }
 
-        $mapper = array(
+    public function custom_mapper_t($data){
+
+      $input = '';
+      $data = (array) $data;
+      $mapper = array(
           'p'   => 'property',
           'v'   => 'vendor',
           'b'   => 'buyer',
           'm'   => 'monetary',
           'a'   => 'attorney',
-          'cp'  => 'payment',
-        );                
+          'c'   => 'contractor',
+          'dcp' => 'payment',
+          'ds'  => 'surveyor',
+        ); 
 
-        try{
-          $property_info = (array) $property_info[0];
-        }
-        catch(\Exception $e)
-        {
-          //pre($e->getMessage());
-          $property_info = '';  
-          return $property_info;
-        }
-
-        foreach ($property_info as $key => $value) 
+        foreach ($data as $key => $value) 
         {
             $pieces = explode('-', $key);
             $i = $pieces[0];
@@ -786,16 +1183,111 @@ class Property extends Model
               $input = $pieces[0];
             }
 
-            $property_info[$key]    = array(
+            $data[$key]    = array(
               'prefix'=> $i, 
               'key'   => $input,
               'value' => $value
             );          
             
-        }                
-                         
-        return $property_info;
-      }
+        }
+
+      return $data; 
+
+    }
+
+    public function get_id($tbl_name, $key, $value)
+    {
+      $result = DB::table($tbl_name)->select('id')->where($key,$value)->first();
+
+      $id = !empty($result->id) ? $result->id : '';
+      return $id;
+    }
+
+    public function mergeIntoTemplates($record_id, $template_name, $filename, $extra='')
+    {
+
+        $values['id']   = $this->get_id('tbl_key_id','property_key',$record_id); 
+        
+        $data = $this->get_all($values);
+        $id = $data['p-id']['value']; 
+        $allVendors = $this->getVendors($id,$vCount);
+        $allBuyers = $this->getBuyers($id,$bCount);
+        
+        //Organize Data
+        foreach ($data as $key => $value) {
+          $array[$value['prefix']][$value['key']] = $value['value'];
+        }
+        unset($array['v']);
+        unset($array['b']);
+        //pre($allVendors); die;
+        
+        $i = 0;
+        foreach ($allVendors as $k => $vendor) {
+          foreach ($vendor as $key => $value) {
+            $array[$vendor['prefix']][$vendor['index']][$vendor['key']] = $vendor['value'];    
+          }
+
+          if($vendor['index'] < $vCount - 1)
+          {
+            $array[$vendor['prefix']][$vendor['index']]['cand'] = 'AND';
+            $array[$vendor['prefix']][$vendor['index']]['and'] = 'and';
+            $array[$vendor['prefix']][$vendor['index']]['comma'] = ',';
+            $i++;
+          }
+          else
+            $array[$vendor['prefix']][$vendor['index']]['cand'] = '';
+            $array[$vendor['prefix']][$vendor['index']]['and'] = '';
+            $array[$vendor['prefix']][$vendor['index']]['comma'] = '';
+
+        }
+        
+        foreach ($allBuyers as $k => $buyer) {
+          foreach ($buyer as $key => $value ) {
+            $array[$buyer['prefix']][$buyer['index']][$buyer['key']] = $buyer['value'];
+          }
+
+          if($buyer['index'] < $bCount - 1)
+          {
+            $array[$buyer['prefix']][$buyer['index']]['and'] = 'AND';
+            $i++;
+          }
+          else
+            $array[$buyer['prefix']][$buyer['index']]['and'] = '';
+        }
+
+        
+        if(!empty($extra))
+        {
+          $array = array_merge($array, $extra);
+        }
+        else
+        {
+          //File Counter
+          $var = file_get_contents('counter.txt');
+          $var++;
+          file_put_contents('counter.txt', $var);
+
+          if(strlen($var) == 1)
+            $var = '000'.$var;
+          elseif(strlen($var) == 2)
+            $var = '00'.$var;
+          elseif(strlen($var) == 3)
+            $var = '0'.$var;
+
+          //File Save As Name
+          $buyer = (isset($array['b'][0]['middle'])) ? $array['b'][0]['middle'] : $array['b'][0]['last'];
+          $vendor = (isset($array['v'][0]['middle'])) ? $array['v'][0]['middle'] : $array['v'][0]['last'];
+
+          if(empty($filename)){
+            $filename = $buyer.'_'.$vendor.'_'.$array['p']['volume_no'].'_'.$array['p']['folio_no'].'_'.$var;
+            $filename = str_replace('__', '_', $filename);
+          }
+        }
+
+        //Action
+        saveDoc($template_name, $filename, $array);
+
+        return $filename;
     }
 
 }

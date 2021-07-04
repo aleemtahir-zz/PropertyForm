@@ -43,9 +43,11 @@ class UploadHandler
     public function __construct($options = null, $initialize = true, $error_messages = null) {
         $this->response = array();
         $this->options = array(
-            'script_url' => 'http://localhost:8000/upload',
-            'upload_dir' => dirname($this->get_server_var('SCRIPT_FILENAME')).'/files/',
-            'upload_url' => $this->get_full_url().'/files/',
+            'script_url' => asset('upload'),
+            'upload_dir' => __DIR__.'/../storage/app/public/sheets/',
+            'upload_url' => url('property\\'),
+            /*'upload_url' => realpath(dirname(getcwd())).'\uploads\sheets\\',*/
+            /*'upload_url' => $this->get_full_url().'/files/',*/
             'input_stream' => 'php://input',
             'user_dirs' => false,
             'mkdir_mode' => 0755,
@@ -146,7 +148,7 @@ class UploadHandler
                     'max_width' => 800,
                     'max_height' => 600
                 ),
-		*/
+        */
                 'thumbnail' => array(
                     // Uncomment the following to use a defined directory for the thumbnails
                     // instead of a subdirectory based on the version identifier.
@@ -180,8 +182,11 @@ class UploadHandler
     }
 
     protected function initialize() {
+        //pre(__DIR__.'/../uploads/sheets/'); die;
         switch ($this->get_server_var('REQUEST_METHOD')) {
             case 'OPTIONS':
+                $this->delete($this->options['print_response']);
+                break;
             case 'HEAD':
                 $this->head();
                 break;
@@ -872,11 +877,11 @@ class UploadHandler
         if (!empty($options['auto_orient'])) {
             $image_oriented = $this->imagick_orient_image($image);
         } 
-	    
+        
         $image_resize = false; 
         $new_width = $max_width = $img_width = $image->getImageWidth();
         $new_height = $max_height = $img_height = $image->getImageHeight(); 
-		  
+          
         // use isset(). User might be setting max_width = 0 (auto in regular resizing). Value 0 would be considered empty when you use empty()
         if (isset($options['max_width'])) {
             $image_resize = true; 
@@ -1088,15 +1093,19 @@ class UploadHandler
             $file_path = $this->get_upload_path($file->name);
             $append_file = $content_range && is_file($file_path) &&
                 $file->size > $this->get_file_size($file_path);
+
             if ($uploaded_file && is_uploaded_file($uploaded_file)) {
                 // multipart/formdata uploads (POST method uploads)
                 if ($append_file) {
+                    
                     file_put_contents(
                         $file_path,
                         fopen($uploaded_file, 'r'),
                         FILE_APPEND
                     );
                 } else {
+
+                    //Storage::put('sheets/', $uploaded_file, 'public');
                     move_uploaded_file($uploaded_file, $file_path);
                 }
             } else {
@@ -1288,6 +1297,7 @@ class UploadHandler
                 }
             }
             $this->body($json);
+
         }
         return $content;
     }

@@ -37,7 +37,7 @@ trait InsertOnDuplicateKey
      *
      * @return int 0 if row is ignored, 1 if row is inserted
      */
-    public static function insertIgnore(array $data)
+    public static function insertIgnore(array $data, $table_name='')
     {
         if (empty($data)) {
             return false;
@@ -46,7 +46,7 @@ trait InsertOnDuplicateKey
         if (!isset($data[0])) {
             $data = [$data];
         }
-        $sql = static::buildInsertIgnoreSql($data);
+        $sql = static::buildInsertIgnoreSql($data, $table_name);
         $data = static::inLineArray($data);
         return self::getModelConnectionName()->affectingStatement($sql, $data);
     }
@@ -221,10 +221,10 @@ trait InsertOnDuplicateKey
      *
      * @return string
      */
-    protected static function buildInsertIgnoreSql(array $data)
+    protected static function buildInsertIgnoreSql(array $data, $table_name)
     {
         $first = static::getFirstRow($data);
-        $sql  = 'INSERT IGNORE INTO `' . static::getTablePrefix() . static::getTableName() . '`(' . static::getColumnList($first) . ') VALUES' . PHP_EOL;
+        $sql  = 'INSERT IGNORE INTO `' . $table_name/*static::getTablePrefix() . static::getTableName()*/ . '`(' . static::getColumnList($first) . ') VALUES' . PHP_EOL;
         $sql .=  static::buildQuestionMarks($data);
         return $sql;
     }

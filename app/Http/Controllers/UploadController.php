@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Http\Request;
+
 use Session;
 
 class UploadController extends Controller
@@ -14,7 +16,9 @@ class UploadController extends Controller
      */
     public function index()
     {
+        
         return view('forms.upload_property');
+
     }
 
     /**
@@ -35,51 +39,27 @@ class UploadController extends Controller
      */
     public function store(Request $request)
     {
-        //pre($_FILES);
-        //Upload Developer Logo
-        /*$file = upload_logo('sheet');
-        //pre($file);
-        $file_path = "";
-        if($file['status'] == 1)
-        {
-            $file_path = $file['path'];
-            Session::flash('message', 'Upload Complete!'); 
-            Session::flash('alert-class', 'alert-success'); 
-            return view('forms.upload_property');
-        }*/
 
-        /*
-         * jQuery File Upload Plugin PHP Example
-         * https://github.com/blueimp/jQuery-File-Upload
-         *
-         * Copyright 2010, Sebastian Tschan
-         * https://blueimp.net
-         *
-         * Licensed under the MIT license:
-         * https://opensource.org/licenses/MIT
-         */
-
-        error_reporting(E_ALL | E_STRICT);
+        //error_reporting(E_ALL | E_STRICT);
         $upload_handler = new \UploadHandler();
+die;
 
-        die;
+        // //Upload Sheet Content
+        // $excelReader = \PHPExcel_IOFactory::createReaderForFile($file_path);
+        // $excelObj = $excelReader->load($file_path);
+        // $worksheet = $excelObj->getSheet(0);
+        // $lastRow = $worksheet->getHighestRow();
 
-        //Upload Sheet Content
-        $excelReader = \PHPExcel_IOFactory::createReaderForFile($file_path);
-        $excelObj = $excelReader->load($file_path);
-        $worksheet = $excelObj->getSheet(0);
-        $lastRow = $worksheet->getHighestRow();
-
-        foreach ($worksheet->getRowIterator() AS $row) {
-            $cellIterator = $row->getCellIterator();
-            $cellIterator->setIterateOnlyExistingCells(FALSE); // This loops through all cells,
-            $cells = [];
-            foreach ($cellIterator as $cell) {
-                $cells[] = $cell->getValue();
-            }
-            $rows[] = $cells;
-        }
-        pre($rows);
+        // foreach ($worksheet->getRowIterator() AS $row) {
+        //     $cellIterator = $row->getCellIterator();
+        //     $cellIterator->setIterateOnlyExistingCells(FALSE); // This loops through all cells,
+        //     $cells = [];
+        //     foreach ($cellIterator as $cell) {
+        //         $cells[] = $cell->getValue();
+        //     }
+        //     $rows[] = $cells;
+        // }
+        // pre($rows);
 
         //return view('forms.upload_property');
     }
@@ -92,7 +72,14 @@ class UploadController extends Controller
      */
     public function show($id)
     {
-        return view('forms.upload_property');
+        //error_reporting(E_ALL | E_STRICT);
+        $upload_handler = new \UploadHandler();
+    }
+
+    public function postShow()
+    {
+        //error_reporting(E_ALL | E_STRICT);
+        $upload_handler = new \UploadHandler();
     }
 
     /**
@@ -126,6 +113,10 @@ class UploadController extends Controller
      */
     public function destroy($id)
     {
+        //$url = Storage::exists('sheets/'.$id);
+        //Storage::delete('sheets/'.$id);
+
+        $_GET['file'] = $id;
         error_reporting(E_ALL | E_STRICT);
         $upload_handler = new \UploadHandler();
     }
